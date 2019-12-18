@@ -1,0 +1,1506 @@
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkRequestCompletionHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkRequestCompletionHandler.java
+new file mode 100644
+index 0000000000..5401ed2d91
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkRequestCompletionHandler.java
+@@ -0,0 +1,109 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.handlers;
++
++import org.dcache.services.bulk.job.BulkJob;
++import org.dcache.services.bulk.BulkServiceException;
++
++public interface BulkRequestCompletionHandler
++{
++    /**
++     * Should respond to an external message to cancel
++     * the entire request.
++     *
++     * @param requestId unique identifier
++     */
++    void requestCancelled(String requestId) throws BulkServiceException;
++
++    /**
++     * Called internally when it is determined all the targets
++     * of the request have been processed.
++     *
++     * @param requestId unique identifier
++     */
++    void requestCompleted(String requestId) throws BulkServiceException;
++
++    /**
++     * Called internally when an individual target has been
++     * cancelled.   This will usually also involve a status
++     * update to the request.
++     *
++     * @param job associated with the target
++     */
++    void requestTargetCancelled(BulkJob job) throws BulkServiceException;
++
++    /**
++     * Called internally when an individual target has
++     * completed.  This will usually also involve a status
++     * update to the request.
++     *
++     * @param job associated with the target
++     */
++    void requestTargetCompleted(BulkJob job) throws BulkServiceException;
++
++    /**
++     * Called internally when an individual target has
++     * failed.  This will usually also involve a status
++     * update to the request.
++     *
++     * @param job associated with the target
++     */
++    void requestTargetFailed(BulkJob job) throws BulkServiceException;
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/queue/BulkServiceQueue.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/queue/BulkServiceQueue.java
+new file mode 100644
+index 0000000000..417685edb0
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/queue/BulkServiceQueue.java
+@@ -0,0 +1,688 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.queue;
++
++import com.google.common.annotations.VisibleForTesting;
++import com.google.common.collect.Multimap;
++import com.google.common.collect.TreeMultimap;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++import org.springframework.beans.factory.annotation.Required;
++
++import java.util.ArrayDeque;
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.Comparator;
++import java.util.HashSet;
++import java.util.Iterator;
++import java.util.LinkedHashMap;
++import java.util.List;
++import java.util.Map;
++import java.util.Map.Entry;
++import java.util.Queue;
++import java.util.Set;
++import java.util.concurrent.ExecutorService;
++import java.util.concurrent.atomic.AtomicInteger;
++
++import org.dcache.services.bulk.BulkRequest;
++import org.dcache.services.bulk.BulkRequestStatus.Status;
++import org.dcache.services.bulk.BulkRequestStorageException;
++import org.dcache.services.bulk.BulkServiceException;
++import org.dcache.services.bulk.handlers.BulkRequestCompletionHandler;
++import org.dcache.services.bulk.handlers.BulkSubmissionHandler;
++import org.dcache.services.bulk.job.BulkJob;
++import org.dcache.services.bulk.job.BulkRequestJob;
++import org.dcache.services.bulk.store.BulkRequestStore;
++import org.dcache.services.bulk.util.BulkServiceStatistics;
++import org.dcache.util.FireAndForgetTask;
++import org.dcache.util.RunnableModule;
++
++/**
++ *  Encapsulates a running job queue and a ready job queue.
++ *
++ *  Implements three processors run in succession by the consumer thread; it is
++ *  this thread which is solely responsible for moving stored requests from
++ *  QUEUED to STARTED.  It is similarly solely responsible for activating a
++ *  job and placing it on the running queue.
++ *
++ *  Before scanning the internal job queues, it checks to see if any new
++ *  requests can be started.  It then merges all incoming job submissions,
++ *  held on a separate queue, with the internal ready queue.
++ *
++ *  All job removal is also done by the single consumer; terminal job status,
++ *  however, is updated directly to the jobStore by the handlers.  The consumer
++ *  scans all queues for changed job status, and acts accordingly.
++ *
++ *  For the moment, there is no retry policy.
++ */
++public class BulkServiceQueue extends RunnableModule implements SignalAware
++{
++    private static final Logger                       LOGGER
++                    = LoggerFactory.getLogger(BulkServiceQueue.class);
++
++    private static final int DEFAULT_MAX_RUNNING_JOBS = 200;
++    private static final int DEFAULT_MAX_ACTIVE_REQUESTS = 20;
++
++    private static final Comparator<BulkJob> BULK_JOB_COMPARATOR
++        = (j1, j2) -> j1.getKey().toString().compareTo(j2.getKey().toString());
++
++    /**
++     *  Searches queues to see which operations have completed
++     *  and removes them.
++     *
++     *  Since the handler cancels directly on
++     *  the job object, cancelled jobs can be in any queue.
++     *  We defer looking at the submitted queue until
++     *  we try to merge it with the ready queue.
++     *
++     *  In order to avoid race conditions, all job termination
++     *  post-processing is handled on this thread.
++     */
++    private class TerminalJobProcessor
++    {
++        private final Set<String>   terminatedRequests = new HashSet<>();
++        private final List<BulkJob> terminatedJobs     = new ArrayList<>();
++
++        void process() {
++            LOGGER.trace("TerminalJobProcessor.process()");
++
++            removeTerminatedFrom(runningQueue);
++            removeTerminatedFrom(readyQueue.values());
++
++            LOGGER.debug("TerminalJobProcessor.process(): "
++                                         + "running {}, ready {}.",
++                         runningQueue.size(), readyQueue.size());
++
++            terminatedJobs.stream().forEach(this::postProcessJob);
++            terminatedJobs.clear();
++
++            terminatedRequests.stream().forEach(this::postProcessRequest);
++            terminatedRequests.clear();
++        }
++
++        private void removeTerminatedFrom(Collection<BulkJob> queue) {
++            /*
++             *  Synchronization is not strictly necessary here,
++             *  but removal through the iterator is.
++             */
++            synchronized (queue) {
++                for (Iterator<BulkJob> jiterator = queue.iterator();
++                                jiterator.hasNext(); ) {
++                    BulkJob job = jiterator.next();
++                    if (job.isTerminated()) {
++                        terminatedJobs.add(job);
++                        jiterator.remove();
++                    }
++                }
++            }
++        }
++
++        private void postProcessJob(BulkJob job) {
++            try {
++                if (!(job instanceof BulkRequestJob)) {
++                    switch (job.getState())
++                    {
++                        case CANCELLED:
++                            completionHandler.requestTargetCancelled(job);
++                            break;
++                        case FAILED:
++                            completionHandler.requestTargetFailed(job);
++                            break;
++                        case COMPLETED:
++                            completionHandler.requestTargetCompleted(job);
++                            break;
++                        default:
++                            throw new RuntimeException(
++                                            "Non-terminal job passed to "
++                                                            + "postprocessing; "
++                                                            + "this is a bug.");
++                    }
++                }
++            } catch (BulkServiceException e) {
++                LOGGER.error("Failed to post-process {}: {}.",
++                             job.getKey(),
++                             e.toString());
++            }
++
++            if (job.getCompletionHandler().isRequestCompleted()) {
++                terminatedRequests.add(job.getKey().getRequestId());
++            }
++        }
++
++        private void postProcessRequest(String requestId)
++        {
++            try {
++                completionHandler.requestCompleted(requestId);
++            } catch (BulkServiceException e) {
++                LOGGER.error("Failed to post-process request {}: {}.",
++                             requestId, e.toString());
++            }
++
++            runningRequests.decrementAndGet();
++        }
++    }
++
++    /**
++     *  Elects from the store the next available requests
++     *  to be submitted as jobs.
++     *
++     *  Passes the ready requests off through the handler.
++     *  While these are processed serially on this thread, the conversion
++     *  from request to a top-level job does not involve much work.
++     *  The job is then added here to the submitted queue.
++     *
++     *  This processor should run before the WaitingJobProcessor,
++     *  so that the ready queue is already filled with all jobs
++     *  currently available to run.
++     */
++    private class NextRequestsProcessor
++    {
++        void process()
++        {
++            LOGGER.trace("NextRequestsProcessor.process()");
++
++            int limit = maxRunningRequests - runningRequests.get();
++
++            while (limit > 0) {
++                LOGGER.debug("NextRequestsProcessor.process(), "
++                                 + "{} requests can still be started.",
++                             limit);
++                try {
++                    List<BulkRequest> next = requestStore.next(limit);
++                    if (next.isEmpty()) {
++                        LOGGER.debug("NextRequestsProcessor.process(), no more "
++                                                     + "QUEUED requests to "
++                                                     + "process.");
++                        break;
++                    }
++                    next.stream().forEach(BulkServiceQueue.this::activateRequest);
++                } catch (BulkRequestStorageException e) {
++                    LOGGER.error("Problem retrieving queued requests: {}",
++                                e.toString());
++                    break;
++                }
++
++                limit = maxRunningRequests - runningRequests.get();
++            }
++
++            LOGGER.trace("NextRequestsProcessor.process(): "
++                                         + "running {}, ready {}.",
++                         runningQueue.size(), readyQueue.size());
++        }
++    }
++
++    /**
++     *  First appends to the ready queue from the submitted jobs queue.
++     *
++     *  Checks the size of the running queue for available slots, and fills
++     *  these from the ready queue.
++     */
++    private class WaitingJobProcessor
++    {
++        void process()
++        {
++            appendSubmitted();
++
++            LOGGER.trace("WaitingJobProcessor: starting new jobs if any.");
++
++            /*
++             *  A rudimentary fair-share algorithm which selects
++             *  one job from each request, prioritized according
++             *  to arrival time, then iterates until the max is reached.
++             */
++            while (!readyQueue.isEmpty() && runningQueue.size() < maxRunningJobs)
++            {
++                for (Iterator<Entry<String, Collection<BulkJob>>> i
++                        = readyQueue.asMap().entrySet().iterator();
++                        i.hasNext() && runningQueue.size() < maxRunningJobs; ) {
++                    Entry<String, Collection<BulkJob>> entry = i.next();
++                    Collection<BulkJob> jobs = entry.getValue();
++                    Iterator<BulkJob> j = jobs.iterator();
++                    if (j.hasNext()) {
++                        BulkJob job = j.next();
++                        LOGGER.debug("WaitingJobProcessor.process(): "
++                                                     + "removing {} "
++                                                     + "from ready queue.",
++                                     job.getKey());
++                        startJob(job);
++
++                        if (jobs.size() > 1) {
++                            j.remove();
++                        } else {
++                            /*
++                             *  This is the last job in the collection
++                             *  for this request.
++                             *
++                             *  Emptying the collection automatically
++                             *  removes the key from the multimap.  This would
++                             *  cause a ConcurrentModificationException on the
++                             *  map, so we remove the key through the entry set
++                             *  iterator instead.
++                             */
++                            LOGGER.debug("WaitingJobProcessor.process(): "
++                                                         + "removing last "
++                                                         + "job for {} "
++                                                         + "from ready queue.",
++                                         job.getKey().getRequestId());
++                            i.remove();
++                        }
++                    }
++                }
++
++                LOGGER.debug("WaitingJobProcessor.process(): ready queue is {}.",
++                             readyQueue.asMap());
++            }
++
++            LOGGER.trace("WaitingJobProcessor.process() finished; "
++                                         + "running {}, ready {}.",
++                         runningQueue.size(), readyQueue.size());
++        }
++
++        private void appendSubmitted()
++        {
++            LOGGER.debug("WaitingJobProcessor.appendSubmitted()");
++
++            synchronized (submitted) {
++                LOGGER.trace("WaitingJobProcessor.appendSubmitted(), "
++                                             + "{} submitted",
++                             submitted.size());
++
++                for (Iterator<BulkJob> jobIterator
++                                = submitted.values().iterator();
++                                jobIterator.hasNext();) {
++                    BulkJob job = jobIterator.next();
++                    switch (job.getState())
++                    {
++                        case CANCELLED:
++                        case FAILED:
++                        case COMPLETED:
++                            jobIterator.remove();
++                            LOGGER.debug("WaitingJobProcessor.appendSubmitted(), "
++                                                         + "removed job {} from "
++                                                         + "submitted queue",
++                                         job.getKey());
++                            break;
++                        case CREATED:
++                            readyQueue.put(job.getKey().getRequestId(), job);
++                            LOGGER.debug("WaitingJobProcessor.appendSubmitted(), "
++                                                         + "job {} placed on ready "
++                                                         + "queue {}",
++                                         job.getKey(), readyQueue.asMap());
++                            /*
++                             *  Fall-through to check if we can remove the job.
++                             */
++                        default:
++                            /*
++                             *  Keep the BulkRequestJobs around in case we
++                             *  need to access them for cancellation,
++                             *  since they are not stored.
++                             */
++                            if (!(job instanceof BulkRequestJob)) {
++                                jobIterator.remove();
++                                LOGGER.debug("WaitingJobProcessor.appendSubmitted(), "
++                                                             + "removed job {} from "
++                                                             + "submitted queue",
++                                             job.getKey());
++                            }
++
++                            break;
++                    }
++                }
++            }
++        }
++    }
++
++    /**
++     *  For reporting operations terminated or cancelled while the
++     *  consumer thread is doing work outside the wait monitor.
++     */
++    protected AtomicInteger signalled;
++
++    /*
++     *  Submitted jobs that need to go onto the waiting/ready
++     *  queue.
++     *
++     *  Top-level request jobs are held here until they complete.
++     *
++     *  Needs synchronization because the handler accesses it.
++     */
++    @VisibleForTesting
++    Map<String, BulkJob> submitted;
++
++    /*
++     *  Ready jobs go here.
++     *
++     *  Belongs solely to the consumer thread, so does not need
++     *  synchronization.
++     */
++    @VisibleForTesting
++    Multimap<String, BulkJob> readyQueue;
++
++    /*
++     *  Running jobs go here.
++     *
++     *  Belongs solely to the consumer thread, so does not need
++     *  synchronization.
++     */
++    @VisibleForTesting
++    Queue<BulkJob> runningQueue;
++
++    /**
++     *  Keeps track of how many requests are currently being processed.
++     */
++    @VisibleForTesting
++    AtomicInteger runningRequests;
++
++    /**
++     *  Necessary for callbacks telling the handler that requests
++     *  can be processed or that targets have terminated.
++     */
++    private BulkRequestCompletionHandler completionHandler;
++
++    /**
++     *  Handles the initial request activation.
++     */
++    private BulkSubmissionHandler submissionHandler;
++
++    /**
++     *  Used to fetch ready requests for queueing.
++     */
++    private BulkRequestStore requestStore;
++
++    /**
++     *  The job executor.
++     */
++    private ExecutorService executorService;
++
++    /**
++     *  Serves as the upper limit on the number of jobs
++     *  which can be run at a given time.
++     */
++    private int maxRunningJobs = DEFAULT_MAX_RUNNING_JOBS;
++
++    /**
++     *  Serves as the upper limit on the number of requests which can be
++     *  active at a given time. Sets a loose limit on the size of the
++     *  readyQueue.
++     */
++    private int maxRunningRequests = DEFAULT_MAX_ACTIVE_REQUESTS;
++
++    /**
++     *  Internal queue handlers
++     */
++    private TerminalJobProcessor terminalJobProcessor;
++
++    private NextRequestsProcessor nextRequestsProcessor;
++
++    private WaitingJobProcessor waitingJobProcessor;
++
++    /**
++     *  Records number of jobs and requests processed.
++     */
++    private BulkServiceStatistics statistics;
++
++    public void cancelRequestJob(String requestId)
++    {
++        synchronized (submitted) {
++            BulkJob job = submitted.get(requestId);
++            if (job != null) {
++                if (!(job instanceof BulkRequestJob)) {
++                    throw new RuntimeException("Job registered under request id "
++                                                               + requestId
++                                               + " was not a request job!.");
++                }
++                job.cancel();
++                LOGGER.trace("Request job cancelled for {}.", requestId);
++            }
++        }
++    }
++
++    @Override
++    public int countSignals()
++    {
++        return signalled.get();
++    }
++
++    @Override
++    public void initialize()
++    {
++        terminalJobProcessor = new TerminalJobProcessor();
++        nextRequestsProcessor = new NextRequestsProcessor();
++        waitingJobProcessor = new WaitingJobProcessor();
++
++        submitted = new LinkedHashMap<>();
++        runningQueue = new ArrayDeque<>();
++        readyQueue = TreeMultimap.create(requestStore.getStatusComparator(),
++                                         BULK_JOB_COMPARATOR);
++
++        signalled = new AtomicInteger(0);
++        runningRequests = new AtomicInteger(0);
++
++        super.initialize();
++    }
++
++    @Override
++    public void run()
++    {
++        try {
++            while (!Thread.interrupted()) {
++                LOGGER.trace("Consumer, signalled = {}.", signalled.get());
++
++                signalled.set(0);
++
++                LOGGER.trace("Consumer, starting sweep.");
++
++                sweep();
++
++                LOGGER.trace("Consumer, sweep completed");
++
++                if (signalled.get() > 0) {
++                    /*
++                     *  Give the operations completed during the sweep a chance
++                     *  to free slots immediately, if possible, by sweeping
++                     *  again immediately.
++                     */
++                    LOGGER.trace("Consumer received {} signals; skipping wait.",
++                                 signalled.get());
++                    continue;
++                }
++
++                if (Thread.interrupted()) {
++                    break;
++                }
++
++                LOGGER.trace("Consumer waiting ...");
++                await();
++            }
++        } catch (InterruptedException e) {
++            LOGGER.warn("Consumer was interrupted.");
++        }
++
++        LOGGER.trace("Exiting queue consumer.");
++    }
++
++    @Required
++    public void setCompletionHandler(BulkRequestCompletionHandler completionHandler)
++    {
++        this.completionHandler = completionHandler;
++    }
++
++    @Required
++    public void setStatistics(BulkServiceStatistics statistics)
++    {
++        this.statistics = statistics;
++    }
++
++    @Required
++    public void setExecutorService(ExecutorService executorService)
++    {
++        this.executorService = executorService;
++    }
++
++    @Required
++    public void setMaxRunningJobs(int maxRunningJobs)
++    {
++        this.maxRunningJobs = maxRunningJobs;
++    }
++
++    @Required
++    public void setMaxRunningRequests(int maxRunningRequests)
++    {
++        this.maxRunningRequests = maxRunningRequests;
++    }
++
++    @Required
++    public void setRequestStore(BulkRequestStore requestStore)
++    {
++        this.requestStore = requestStore;
++    }
++
++    @Required
++    public void setSubmissionHandler(BulkSubmissionHandler submissionHandler)
++    {
++        this.submissionHandler = submissionHandler;
++    }
++
++    @Override
++    public void shutdown()
++    {
++        super.shutdown();
++    }
++
++    @Override
++    public synchronized void signal()
++    {
++        signalled.incrementAndGet();
++        notifyAll();
++    }
++
++    /**
++     * Place the job on the submitted queue.
++     *
++     * Called by the queue handler.
++     */
++    public void submit(BulkJob job)
++    {
++        synchronized(submitted)
++        {
++            if (job instanceof BulkRequestJob) {
++                String requestId = job.getKey().getRequestId();
++                LOGGER.trace("submit top-level job for {}.", requestId);
++                submitted.put(requestId, job);
++            } else {
++                LOGGER.trace("submit {}.", job.getKey().getKey());
++                submitted.put(job.getKey().getKey(), job);
++            }
++        }
++
++        signal();
++    }
++
++    @VisibleForTesting
++    void sweep() {
++        long start = System.currentTimeMillis();
++        terminalJobProcessor.process();
++        nextRequestsProcessor.process();
++        waitingJobProcessor.process();
++        statistics.currentlyRunningJobs(runningQueue.size());
++        statistics.currentlyQueuedJobs(readyQueue.size());
++        statistics.activeRequests(runningRequests.get());
++        statistics.sweepFinished(System.currentTimeMillis() - start);
++    }
++
++    private void activateRequest(BulkRequest request)
++    {
++        LOGGER.trace("activateRequest {}.", request.getId());
++
++        try {
++            try {
++                submissionHandler.submitRequest(request);
++                runningRequests.incrementAndGet();
++            } catch (BulkServiceException e) {
++                LOGGER.error("Problem activating request for {}: {}; aborting.",
++                             request.getId(), e.toString());
++                requestStore.abort(request.getId(), e);
++                return;
++            }
++
++            LOGGER.debug("activateRequest, updating {} to STARTED.", request.getId());
++            requestStore.update(request.getId(), Status.STARTED);
++        } catch (BulkRequestStorageException e) {
++            LOGGER.error("Unrecoverable storage update error for {}: {}; aborting.",
++                         request.getId(), e.toString());
++            requestStore.abort(request.getId(), e);
++        }
++    }
++
++    private synchronized void await() throws InterruptedException
++    {
++        wait(timeoutUnit.toMillis(timeout));
++    }
++
++    private void startJob(BulkJob job)
++    {
++        LOGGER.trace("initializng job {}.", job.getKey());
++        job.initialize();
++
++        LOGGER.trace("submitting {} to executor.", job.getKey());
++        job.setFuture(executorService.submit(new FireAndForgetTask(job)));
++        runningQueue.offer(job);
++    }
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/util/BulkServiceStatistics.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/util/BulkServiceStatistics.java
+new file mode 100644
+index 0000000000..d83f811e33
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/util/BulkServiceStatistics.java
+@@ -0,0 +1,234 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.util;
++
++import java.io.PrintWriter;
++import java.util.Date;
++import java.util.Map;
++import java.util.TreeMap;
++import java.util.concurrent.TimeUnit;
++import java.util.concurrent.atomic.AtomicLong;
++
++import dmg.cells.nucleus.CellInfoProvider;
++
++/**
++ *  Provides activity statistics since last restart via the CellInfo
++ *  interface.
++ */
++public class BulkServiceStatistics implements CellInfoProvider
++{
++    private static final String LAST_START          = "Running since: %s";
++    private static final String UP_TIME             = "Uptime %s days, %s hours,"
++                    + " %s minutes, %s seconds";
++    private static final String LAST_SWEEP          = "Last job sweep at %s";
++    private static final String LAST_SWEEP_DURATION = "Last job sweep took %s seconds";
++    private static final String STATS_FORMAT        = "%-20s :    %10s";
++
++    private final Date       started           = new Date();
++
++    private final AtomicLong              requestsReceived  = new AtomicLong(0);
++    private final AtomicLong              requestsCompleted = new AtomicLong(0);
++    private final AtomicLong              requestsCancelled = new AtomicLong(0);
++    private final AtomicLong              jobsAborted       = new AtomicLong(0);
++    private final AtomicLong              jobsCompleted     = new AtomicLong(0);
++    private final AtomicLong              jobsFailed        = new AtomicLong(0);
++    private final AtomicLong              jobsCancelled     = new AtomicLong(0);
++    private final Map<String, AtomicLong> requestTypes      = new TreeMap<>();
++    private final Map<String, AtomicLong> userRequests      = new TreeMap<>();
++
++    private       long                    lastSweep         = started.getTime();
++    private       long                    lastSweepDuration = 0;
++    private       int                     runningJobs = 0;
++    private       int                     queuedJobs = 0;
++    private       int                     activeRequests = 0;
++
++    public void activeRequests(int count)
++    {
++        activeRequests = count;
++    }
++
++    public void addUserRequest(String user)
++    {
++        AtomicLong counter = userRequests.get(user);
++        if (counter == null) {
++            counter = new AtomicLong(0);
++            userRequests.put(user, counter);
++        }
++        counter.incrementAndGet();
++    }
++
++    public void currentlyQueuedJobs(int count)
++    {
++        queuedJobs = count;
++    }
++
++    public void currentlyRunningJobs(int count)
++    {
++        runningJobs = count;
++    }
++
++    public void getInfo(PrintWriter pw)
++    {
++        long elapsed = (System.currentTimeMillis() - started.getTime()) / 1000;
++        long seconds = elapsed % 60;
++        elapsed = elapsed / 60;
++        long minutes = elapsed % 60;
++        elapsed = elapsed / 60;
++        long hours = elapsed % 24;
++        long days = elapsed / 24;
++
++        pw.println(String.format(LAST_START, started));
++        pw.println(String.format(UP_TIME, days, hours, minutes, seconds));
++        pw.println();
++        pw.println(String.format(LAST_SWEEP, new Date(lastSweep)));
++        pw.println(String.format(LAST_SWEEP_DURATION, TimeUnit.MILLISECONDS
++                        .toSeconds(lastSweepDuration)));
++        pw.println();
++
++        pw.println("-------------------- REQUEST INFO --------------------");
++        pw.println(String.format(STATS_FORMAT, "Requests received",
++                                 requestsReceived.get()));
++        pw.println(String.format(STATS_FORMAT, "Requests completed",
++                                 requestsCompleted.get()));
++        pw.println(String.format(STATS_FORMAT, "Requests cancelled",
++                                 requestsCancelled.get()));
++        pw.println();
++
++        pw.println("------------------- REQUEST DETAILS ------------------");
++        requestTypes.entrySet().stream()
++                    .forEach(entry -> pw.println(String.format(STATS_FORMAT,
++                                                               entry.getKey(),
++                                                               entry.getValue()
++                                                                    .get())));
++
++        pw.println();
++
++        pw.println("---------------------- JOB INFO ----------------------");
++        pw.println(String.format(STATS_FORMAT, "Jobs completed",
++                                 jobsCompleted.get()));
++        pw.println(String.format(STATS_FORMAT, "Jobs failed",
++                                 jobsFailed.get()));
++        pw.println(String.format(STATS_FORMAT, "Jobs cancelled",
++                                 jobsCancelled.get()));
++        pw.println(String.format(STATS_FORMAT, "Jobs aborted",
++                                 jobsAborted.get()));
++        pw.println();
++
++        pw.println("---------------------- USER INFO ---------------------");
++        userRequests.entrySet().stream()
++                    .forEach(entry -> pw.println(String.format(STATS_FORMAT,
++                                                               entry.getKey(),
++                                                               entry.getValue()
++                                                                    .get())));
++        pw.println();
++
++        pw.println("--------------------- QUEUE  INFO --------------------");
++        pw.println(String.format(STATS_FORMAT, "Running jobs", runningJobs));
++        pw.println(String.format(STATS_FORMAT, "Queued jobs", queuedJobs));
++        pw.println(String.format(STATS_FORMAT, "Active requests", activeRequests));
++    }
++
++    public void incrementJobsAborted()
++    {
++        jobsAborted.incrementAndGet();
++    }
++
++    public void incrementJobsCancelled()
++    {
++        jobsCancelled.incrementAndGet();
++    }
++
++    public void incrementJobsCompleted()
++    {
++        jobsCompleted.incrementAndGet();
++    }
++
++    public void incrementJobsFailed()
++    {
++        jobsFailed.incrementAndGet();
++    }
++
++    public void incrementRequestsCancelled()
++    {
++        requestsCancelled.incrementAndGet();
++    }
++
++    public void incrementRequestsCompleted()
++    {
++        requestsCompleted.incrementAndGet();
++    }
++
++    public void incrementRequestsReceived(String activity)
++    {
++        requestsReceived.incrementAndGet();
++        AtomicLong counter = requestTypes.get(activity);
++        if (counter == null) {
++            counter = new AtomicLong(0);
++            requestTypes.put(activity, counter);
++        }
++        counter.incrementAndGet();
++    }
++
++    public void sweepFinished(long duration)
++    {
++        lastSweep = System.currentTimeMillis();
++        lastSweepDuration = duration;
++    }
++}
+diff --git a/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/queue/BulkServiceQueueTest.java b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/queue/BulkServiceQueueTest.java
+new file mode 100644
+index 0000000000..8b3cee2479
+--- /dev/null
++++ b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/queue/BulkServiceQueueTest.java
+@@ -0,0 +1,451 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.queue;
++
++import org.junit.Before;
++import org.junit.Test;
++
++import java.util.UUID;
++import java.util.concurrent.ExecutorService;
++
++import diskCacheV111.util.PnfsHandler;
++
++import org.dcache.auth.Subjects;
++import org.dcache.auth.attributes.Restrictions;
++import org.dcache.services.bulk.BulkRequest;
++import org.dcache.services.bulk.BulkRequest.Depth;
++import org.dcache.services.bulk.BulkRequestStatus;
++import org.dcache.services.bulk.BulkRequestStatus.Status;
++import org.dcache.services.bulk.handlers.BulkJobCompletionHandler;
++import org.dcache.services.bulk.handlers.BulkRequestCompletionHandler;
++import org.dcache.services.bulk.handlers.BulkSubmissionHandler;
++import org.dcache.services.bulk.job.BulkJob;
++import org.dcache.services.bulk.job.BulkJob.State;
++import org.dcache.services.bulk.job.BulkJobKey;
++import org.dcache.services.bulk.job.BulkRequestJob;
++import org.dcache.services.bulk.job.MultipleTargetJob.TargetType;
++import org.dcache.services.bulk.job.SingleTargetJob;
++import org.dcache.services.bulk.store.BulkRequestStore;
++import org.dcache.services.bulk.store.memory.InMemoryBulkRequestStore;
++import org.dcache.services.bulk.util.BulkServiceStatistics;
++
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertNotNull;
++import static org.junit.Assert.assertNull;
++import static org.junit.Assert.assertTrue;
++import static org.mockito.Matchers.any;
++import static org.mockito.Mockito.*;
++
++public class BulkServiceQueueTest
++{
++    class PlaceholderJob extends SingleTargetJob
++    {
++        public PlaceholderJob() throws Exception
++        {
++            super(BulkJobKey.newKey(request.getId()),
++                  BulkJobKey.newKey(request.getId()),
++                  "test");
++            this.completionHandler = jobCompletionHandler;
++        }
++
++        @Override
++        protected void doRun()
++        {
++        }
++    }
++
++    BulkServiceQueue             queue;
++    BulkRequestStore             store;
++    BulkSubmissionHandler        submissionHandler;
++    BulkRequestCompletionHandler completionHandler;
++    BulkJobCompletionHandler     jobCompletionHandler;
++    BulkRequest                  request;
++    BulkRequestJob               requestJob;
++
++    @Before
++    public void setUp()
++    {
++        queue = new BulkServiceQueue()
++        {
++            @Override
++            public void run()
++            {
++                /*
++                 * return immediately; all testing done
++                 * through explicit calls to sweep().
++                 */
++            }
++        };
++
++        store = new InMemoryBulkRequestStore();
++        submissionHandler = mock(BulkSubmissionHandler.class);
++        completionHandler = mock(BulkRequestCompletionHandler.class);
++        jobCompletionHandler = mock(BulkJobCompletionHandler.class);
++        queue.setRequestStore(store);
++        queue.setCompletionHandler(completionHandler);
++        queue.setSubmissionHandler(submissionHandler);
++        queue.setExecutorService(mock(ExecutorService.class));
++        queue.setStatistics(mock(BulkServiceStatistics.class));
++        queue.initialize();
++    }
++
++    @Test
++    public void shouldCallSubmitRequestAndUpdateToStartedOnNewRequest()
++                    throws Exception
++    {
++        givenMaxRequests(1);
++        givenMaxRunningJobs(1);
++        givenReceptionOfNewRequest();
++        afterQueueSweep();
++        assertThatSubmitRequestHasBeenCalled();
++        assertThatRunningRequestsEquals(1);
++        assertThatRequestStatusIs(Status.STARTED);
++    }
++
++    @Test
++    public void shouldNotCallSubmitRequestWithMaxRunningRequestsOnNewRequest()
++                    throws Exception
++    {
++        givenMaxRequests(1);
++        givenMaxRunningJobs(1);
++        givenRunningRequestsEquals(1);
++        givenReceptionOfNewRequest();
++        afterQueueSweep();
++        assertThatSubmitRequestHasNotBeenCalled();
++        assertThatRequestStatusIs(Status.QUEUED);
++    }
++
++    @Test
++    public void shouldStartRequestJobWhenSpaceAvailable()
++                    throws Exception
++    {
++        givenMaxRequests(1);
++        givenMaxRunningJobs(1);
++        givenReceptionOfNewRequest();
++        givenSubmissionOfNewRequestJob();
++        afterQueueSweep();
++        assertThatJobIsOnRunningQueue(requestJob);
++        assertThatJobIsOnSubmittedQueue(request.getId());
++        assertThatRunningJobsEquals(1);
++        /*
++         *  not STARTED because the executor is a NOP/mocked
++         */
++        assertThatJobStateIs(requestJob, State.INITIALIZED);
++    }
++
++    @Test
++    public void shouldPutRequestJobOnReadyQueueWhenNoSpaceAvailable()
++        throws Exception
++    {
++        givenMaxRequests(1);
++        givenMaxRunningJobs(1);
++        givenReceptionOfNewRequest();
++        givenSubmissionOfNewRequestJob();
++        givenRunningJobsEquals(1);
++        afterQueueSweep();
++        assertThatJobIsOnReadyQueue(request.getId());
++        assertThatJobIsOnSubmittedQueue(request.getId());
++        assertThatJobStateIs(requestJob, State.CREATED);
++    }
++
++    @Test
++    public void shouldPromoteRequestJobFromReadyQueueWhenAvailable()
++                    throws Exception
++    {
++        givenMaxRequests(1);
++        givenMaxRunningJobs(1);
++        givenReceptionOfNewRequest();
++        givenSubmissionOfNewRequestJob();
++        givenRunningJobsEquals(1);
++        afterQueueSweep();
++        whenRunningJobsHaveCompleted();
++        afterQueueSweep();
++        assertThatJobIsOnRunningQueue(requestJob);
++        assertThatJobIsOnSubmittedQueue(request.getId());
++        assertThatRunningJobsEquals(1);
++        /*
++         *  not STARTED because the executor is a NOP/mocked
++         */
++        assertThatJobStateIs(requestJob, State.INITIALIZED);
++    }
++
++    @Test
++    public void shouldRemoveRequestJobWhenCompleted() throws Exception
++    {
++        givenReceptionOfNewRequest();
++        givenSubmissionOfNewRequestJob();
++        afterQueueSweep();
++        whenRunningRequestJobCompletes();
++        afterQueueSweep();
++        assertThatRequestTargetCompletedHasNotBeenCalled();
++        assertThatJobIsNotOnSubmittedQueue(request.getId());
++        assertThatRunningRequestsEquals(1);
++    }
++
++    @Test
++    public void shouldProcessRequestWhenCompleted() throws Exception
++    {
++        givenReceptionOfNewRequest();
++        givenSubmissionOfNewRequestJob();
++        afterQueueSweep();
++        whenRunningRequestJobCompletes();
++        whenRequestCompletes();
++        afterQueueSweep();
++        assertThatRequestCompletedHasBeenCalled();
++        assertThatRunningRequestsEquals(0);
++    }
++
++    @Test
++    public void shouldCallTargetCompletedWhenRunningJobsComplete() throws Exception
++
++    {
++        givenMaxRunningJobs(3);
++        givenReceptionOfNewRequest();
++        givenSubmissionOfJobs(3);
++        afterQueueSweep();
++        assertThatSubmittedQueueIsEmpty();
++        assertThatRunningJobsEquals(3);
++        whenRunningJobsHaveCompleted();
++        afterQueueSweep();
++        assertThatRequestTargetCompletedHasBeenCalled(3);
++        assertThatRunningJobsEquals(0);
++    }
++
++    @Test
++    public void shouldProcessReadyJobsAsRunningJobsComplete() throws Exception
++
++    {
++        givenMaxRunningJobs(3);
++        givenReceptionOfNewRequest();
++        givenSubmissionOfJobs(10);
++        afterQueueSweep();
++        assertThatSubmittedQueueIsEmpty();
++        assertThatRunningJobsEquals(3);
++        assertThatReadyQueueSizeIs(7);
++        whenRunningJobsHaveCompleted();
++        afterQueueSweep();
++        assertThatRunningJobsEquals(3);
++        assertThatReadyQueueSizeIs(4);
++        whenRunningJobsHaveCompleted();
++        afterQueueSweep();
++        assertThatRunningJobsEquals(3);
++        assertThatReadyQueueSizeIs(1);
++        whenRunningJobsHaveCompleted();
++        afterQueueSweep();
++        assertThatRunningJobsEquals(1);
++        assertThatReadyQueueSizeIs(0);
++        whenRunningJobsHaveCompleted();
++        afterQueueSweep();
++        assertThatRunningJobsEquals(0);
++        assertThatReadyQueueSizeIs(0);
++    }
++
++    private void afterQueueSweep()
++    {
++        queue.sweep();
++    }
++
++    private void assertThatJobIsOnReadyQueue(String id)
++    {
++        assertNotNull(queue.readyQueue.get(id));
++    }
++
++    private void assertThatJobIsOnRunningQueue(BulkJob job)
++    {
++        assertTrue(queue.runningQueue.contains(job));
++    }
++
++    private void assertThatJobIsNotOnSubmittedQueue(String id)
++    {
++        assertNull(queue.submitted.get(id));
++    }
++
++    private void assertThatJobIsOnSubmittedQueue(String id)
++    {
++        assertNotNull(queue.submitted.get(id));
++    }
++
++    private void assertThatJobStateIs(BulkJob job, BulkJob.State state)
++    {
++        assertEquals(state, job.getState());
++    }
++
++    private void assertThatReadyQueueSizeIs(int size)
++    {
++        assertEquals(size, queue.readyQueue.size());
++    }
++
++    private void assertThatRequestStatusIs(BulkRequestStatus.Status status)
++                    throws Exception
++    {
++        assertEquals(store.getStatus(request.getId()).get().getStatus(),
++                     status);
++    }
++
++    private void assertThatRequestTargetCompletedHasBeenCalled(int times)
++                    throws Exception
++    {
++        verify(completionHandler, times(times)).requestTargetCompleted(any(BulkJob.class));
++    }
++
++    private void assertThatRequestTargetCompletedHasNotBeenCalled()
++                    throws Exception
++    {
++        verify(completionHandler, never()).requestTargetCompleted(any(BulkJob.class));
++    }
++
++    private void assertThatRequestCompletedHasBeenCalled()
++                    throws Exception
++    {
++        verify(completionHandler).requestCompleted(request.getId());
++    }
++
++    private void assertThatRunningJobsEquals(int running)
++                    throws Exception
++    {
++        assertEquals(running, queue.runningQueue.size());
++    }
++
++    private void assertThatRunningRequestsEquals(int running)
++                    throws Exception
++    {
++        assertEquals(running, queue.runningRequests.get());
++    }
++
++    private void assertThatSubmitRequestHasBeenCalled() throws Exception
++    {
++        verify(submissionHandler).submitRequest(any(BulkRequest.class));
++    }
++
++    private void assertThatSubmitRequestHasNotBeenCalled() throws Exception
++    {
++        verify(submissionHandler, never()).submitRequest(any(BulkRequest.class));
++    }
++
++    private void  assertThatSubmittedQueueIsEmpty() throws Exception
++    {
++        assertTrue(queue.submitted.isEmpty());
++    }
++
++    private void givenMaxRequests(int maxrequests)
++    {
++        queue.setMaxRunningRequests(maxrequests);
++    }
++
++    private void givenMaxRunningJobs(int maxjobs)
++    {
++        queue.setMaxRunningJobs(maxjobs);
++    }
++
++    private void givenReceptionOfNewRequest() throws Exception
++    {
++        request = new BulkRequest();
++        request.setExpandDirectories(Depth.NONE);
++        request.setActivity("test");
++        request.setTarget("/");
++        request.setId(UUID.randomUUID().toString());
++        request.setClearOnSuccess(true);
++        store.store(Subjects.ROOT, Restrictions.none(), request, null);
++    }
++
++    private void givenRunningJobsEquals(int running) throws Exception
++    {
++        for (int j = 0; j < running; ++j) {
++            queue.runningQueue.add(new PlaceholderJob());
++        }
++    }
++
++    private void givenRunningRequestsEquals(int running)
++    {
++        queue.runningRequests.set(running);
++    }
++
++    private void givenSubmissionOfJobs(int number) throws Exception
++    {
++        for (int j = 0; j < number; ++j) {
++            queue.submit(new PlaceholderJob());
++        }
++    }
++
++    private void givenSubmissionOfNewRequestJob() throws Exception
++    {
++        requestJob = new BulkRequestJob(BulkJobKey.newKey(request.getId()),
++                                        request,
++                                        TargetType.FILE);
++        requestJob.setCompletionHandler(jobCompletionHandler);
++        requestJob.setPnfsManager(mock(PnfsHandler.class));
++        queue.submit(requestJob);
++    }
++
++    private void whenRequestCompletes()
++    {
++        when(jobCompletionHandler.isRequestCompleted()).thenReturn(true);
++    }
++
++    private void whenRunningJobsHaveCompleted()
++    {
++        queue.runningQueue.stream().forEach(j -> j.setState(State.COMPLETED));
++    }
++
++    private void whenRunningRequestJobCompletes()
++    {
++        requestJob.setState(State.COMPLETED);
++    }
++}

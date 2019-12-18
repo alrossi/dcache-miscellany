@@ -1,0 +1,1346 @@
+diff --git a/modules/dcache-bulk/pom.xml b/modules/dcache-bulk/pom.xml
+new file mode 100644
+index 0000000000..a278a7cf7b
+--- /dev/null
++++ b/modules/dcache-bulk/pom.xml
+@@ -0,0 +1,46 @@
++<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++  <modelVersion>4.0.0</modelVersion>
++
++  <parent>
++    <groupId>org.dcache</groupId>
++    <artifactId>dcache-parent</artifactId>
++    <version>6.1.0-SNAPSHOT</version>
++    <relativePath>../../pom.xml</relativePath>
++  </parent>
++
++  <artifactId>dcache-bulk</artifactId>
++  <packaging>jar</packaging>
++
++  <name>dCache bulk execution service provider</name>
++
++  <dependencies>
++    <dependency>
++      <groupId>org.slf4j</groupId>
++      <artifactId>slf4j-api</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>com.google.guava</groupId>
++      <artifactId>guava</artifactId>
++    </dependency>
++    <dependency>
++        <groupId>org.springframework</groupId>
++        <artifactId>spring-tx</artifactId>
++    </dependency>
++
++    <dependency>
++      <groupId>org.dcache</groupId>
++      <artifactId>dcache-common</artifactId>
++      <version>${project.version}</version>
++    </dependency>
++    <dependency>
++      <groupId>org.dcache</groupId>
++      <artifactId>dcache-core</artifactId>
++      <version>${project.version}</version>
++    </dependency>
++    <dependency>
++      <groupId>org.dcache</groupId>
++      <artifactId>common-cli</artifactId>
++      <version>${project.version}</version>
++    </dependency>
++  </dependencies>
++</project>
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java
+new file mode 100644
+index 0000000000..b2b8af573c
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java
+@@ -0,0 +1,267 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.handlers;
++
++import com.google.common.annotations.VisibleForTesting;
++import com.google.common.base.Preconditions;
++import com.google.common.collect.HashMultimap;
++import com.google.common.collect.Multimap;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++
++import javax.annotation.concurrent.GuardedBy;
++
++import java.util.concurrent.TimeUnit;
++
++import org.dcache.services.bulk.job.BulkJob;
++import org.dcache.services.bulk.queue.SignalAware;
++
++/**
++ *  Manages the set of jobs associated with a request.
++ *
++ *  Responsible for determining if all jobs have terminated.
++ *
++ *  Provides special #waitForChildren method for creating a directory
++ *  barrier on asynchronous descendants when required for depth-first
++ *  expansion.
++ */
++public class BulkJobCompletionHandler
++{
++    private static final Logger           LOGGER
++                                     = LoggerFactory.getLogger(BulkJobCompletionHandler.class);
++    private static final Long MARKER = -1L;
++
++    /**
++     *  Node dependency or edge table (parent, child)
++     *  which tracks how many jobs of the request are still
++     *  outstanding, and is used to create a barrier
++     *  on all child jobs of a given directory
++     *  during asynchronous depth-first operations.
++     *
++     *  Request termination is when the table is empty.
++     */
++    private final Multimap<Long, Long> descendants;
++    private final SignalAware          queue;
++
++    public BulkJobCompletionHandler(SignalAware queue)
++    {
++        this.queue = queue;
++        descendants  = HashMultimap.create();
++    }
++
++    /**
++     *  When a job is submitted, it adds itself as the child of a parent
++     *  job.  When it terminates, it removes itself from the parent
++     *  list.  The multimap implementation automatically removes
++     *  the parent key from the table when its child collection is
++     *  empty.
++     *
++     *  Breadth-first directories do not remove themselves from the
++     *  map until all their children are registered.
++     *
++     *  Depth-first directories wait for their immediate children to
++     *  terminate.  Subdirectories of the root expansion node do not
++     *  add themselves as children, since the expansion is done
++     *  by recursion rather than exec'ing a new job (as in breadth-first).
++     */
++    public void addChild(BulkJob job)
++    {
++        Preconditions.checkArgument(job.getParentKey().getRequestId()
++                                       .equals(job.getKey().getRequestId()),
++                                    "Job completion listener is "
++                                                    + "being shared between two "
++                                                    + "different requests! "
++                                                    + "This is a bug.");
++
++        synchronized (descendants)
++        {
++            Long parentId = job.getParentKey().getJobId();
++            Long childId = job.getKey().getJobId();
++            descendants.put(parentId, childId);
++            LOGGER.trace("addChild: parent {}, child {}; descendants {}.",
++                         parentId, childId, descendants);
++        }
++    }
++
++    /**
++     *  In the case of cancellation, all jobs are cleared.
++     */
++    public void clear()
++    {
++        LOGGER.trace("clear called with descendants {}.", descendants);
++        synchronized (descendants) {
++            descendants.clear();
++            LOGGER.trace("clear, descendants now {}.", descendants);
++        }
++    }
++
++    public boolean isRequestCompleted()
++    {
++        synchronized (descendants)
++        {
++            boolean completed = descendants.isEmpty();
++            LOGGER.trace("request completed? {}.", completed);
++            return completed;
++        }
++    }
++
++    public void jobCancelled(BulkJob job)
++    {
++        jobTerminated("Job cancelled", job);
++    }
++
++    public void jobCompleted(BulkJob job)
++    {
++        jobTerminated("Job completed", job);
++    }
++
++    public void jobFailed(BulkJob job)
++    {
++        jobTerminated("Job failed", job);
++    }
++
++    public void jobInterrupted(BulkJob job)
++    {
++        jobTerminated("Job interrupted", job);
++    }
++
++    /**
++     *  Called by the BulkRequestJob before exiting.
++     */
++    public void requestProcessingFinished(Long requestJobId)
++    {
++        synchronized(descendants)
++        {
++            descendants.remove(requestJobId, MARKER);
++        }
++    }
++
++    /**
++     *  Called by the BulkRequestJob when it begins to run.
++     *
++     *  The top-level job registers a MARKER as child
++     *  and removes it when it has finished submitting all of its
++     *  targets.  This is to prevent premature handling of request
++     *  completion, should the targets it has submitted complete
++     *  before it has finished submitting all targets.
++     */
++    public void requestProcessingStarted(Long requestJobId)
++    {
++        synchronized(descendants)
++        {
++            descendants.put(requestJobId, MARKER);
++        }
++    }
++
++    /**
++     *  Used during depth-first expansions.
++     */
++    public void waitForChildren(Long parentId) throws InterruptedException {
++        synchronized (descendants)
++        {
++            LOGGER.trace("waitForChildren of {} called; descendants {}.",
++                         parentId, descendants);
++            while (!areChildrenAllTerminated(parentId)) {
++                LOGGER.trace("waitForChildren of {}; descendants {}, waiting ....",
++                             parentId, descendants);
++                descendants.wait(TimeUnit.SECONDS.toMillis(1));
++            }
++
++            LOGGER.trace("waitForChildren of {}, returning: descendants {}.",
++                         parentId, descendants);
++        }
++    }
++
++    @GuardedBy("descendants")
++    @VisibleForTesting
++    boolean areChildrenAllTerminated(Long parentId)
++    {
++        return descendants.isEmpty() || descendants.get(parentId).isEmpty();
++    }
++
++    private void jobTerminated(String how, BulkJob job)
++    {
++        LOGGER.trace("{} called for {}", how, job.getKey());
++        if (job.getErrorObject() != null) {
++            LOGGER.debug("{} terminated with exception: {}.",
++                        job.getKey(),
++                        job.getErrorObject().getMessage());
++        }
++
++        synchronized (descendants)
++        {
++            LOGGER.trace("removing job {} from parent {}",
++                         job.getKey(),
++                         job.getParentKey().getJobId());
++            Long parentId = job.getParentKey().getJobId();
++            Long childId = job.getKey().getJobId();
++
++            descendants.remove(parentId, childId);
++
++            LOGGER.trace("parent {} now has children {}",
++                         parentId,
++                         descendants.get(parentId));
++
++            descendants.notifyAll();
++        }
++
++        queue.signal();
++    }
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
+new file mode 100644
+index 0000000000..1ca53981e4
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
+@@ -0,0 +1,300 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.job;
++
++import com.google.common.base.Preconditions;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++
++import javax.security.auth.Subject;
++
++import java.util.concurrent.Future;
++
++import org.dcache.auth.attributes.Restriction;
++import org.dcache.services.bulk.BulkJobExecutionException;
++import org.dcache.services.bulk.handlers.BulkJobCompletionHandler;
++import org.dcache.vehicles.FileAttributes;
++
++/**
++ *  The basic bulk job definition.
++ *
++ *  This class should not be extended directly to add new types
++ *  of activity (use the SingleTargetJob instead).  It is public
++ *  only because it needs to be visible to other internal packages.
++ */
++public abstract class BulkJob implements Runnable
++{
++    protected static final Logger LOGGER = LoggerFactory.getLogger(BulkJob.class);
++
++    public enum State
++    {
++        CREATED, INITIALIZED, STARTED, CANCELLED, COMPLETED, FAILED
++    }
++
++    protected final BulkJobKey key;
++    protected final BulkJobKey parentKey;
++    protected final String     activity;
++
++    protected String         target;
++    protected FileAttributes attributes;
++    protected Subject        subject;
++    protected Restriction    restriction;
++    protected State          state = State.CREATED;
++    protected Throwable      errorObject;
++
++
++    protected BulkJobCompletionHandler completionHandler;
++    protected Future                   future;
++
++    private   long           startTime;
++
++    protected BulkJob(BulkJobKey key, BulkJobKey parentKey, String activity)
++    {
++        this.key = key;
++        this.parentKey = parentKey;
++        this.activity = activity;
++    }
++
++    public boolean cancel()
++    {
++        synchronized (state)
++        {
++            switch(state)
++            {
++                case CREATED:
++                case INITIALIZED:
++                case STARTED:
++                    state = State.CANCELLED;
++                    if (future != null) {
++                        future.cancel(true);
++                    }
++
++                    if (errorObject == null) {
++                        errorObject = new BulkJobExecutionException(key.toString()
++                                                                    + ":" + state);
++                    }
++
++                    completionHandler.jobCancelled(this);
++                    return true;
++                default:
++                    /*
++                     * Already terminated.
++                     */
++                    return false;
++            }
++        }
++    }
++
++    public String getActivity()
++    {
++        return activity;
++    }
++
++    public BulkJobCompletionHandler getCompletionHandler()
++    {
++        return completionHandler;
++    }
++
++    public Throwable getErrorObject()
++    {
++        return errorObject;
++    }
++
++    public BulkJobKey getKey()
++    {
++        return key;
++    }
++
++    public BulkJobKey getParentKey()
++    {
++        return parentKey;
++    }
++
++    public Restriction getRestriction()
++    {
++        return restriction;
++    }
++
++    public long getStartTime()
++    {
++        return startTime;
++    }
++
++    public State getState()
++    {
++        synchronized (state)
++        {
++            return state;
++        }
++    }
++
++    public Subject getSubject()
++    {
++        return subject;
++    }
++
++    public String getTarget()
++    {
++        return target;
++    }
++
++    public void initialize()
++    {
++        LOGGER.trace("BulkJob, initialize() called ...");
++        Preconditions.checkNotNull(completionHandler,
++                                   "Job completion handler "
++                                                   + "was not set!  This is a bug.");
++
++        doInitialize();
++
++        synchronized (state)
++        {
++            state = State.INITIALIZED;
++        }
++    }
++
++    public boolean isTerminated()
++    {
++        synchronized (state)
++        {
++            switch (state)
++            {
++                case FAILED:
++                case CANCELLED:
++                case COMPLETED:
++                    return true;
++                default:
++                    return false;
++            }
++        }
++    }
++
++    public void run()
++    {
++        LOGGER.trace("{}, run() called ...", key);
++
++        synchronized (state)
++        {
++            state = State.STARTED;
++            startTime = System.currentTimeMillis();
++        }
++
++        doRun();
++
++        synchronized (state)
++        {
++            state = State.COMPLETED;
++        }
++
++        postCompletion();
++    }
++
++    public void setAttributes(FileAttributes attributes)
++    {
++        this.attributes = attributes;
++    }
++
++    public void setCompletionHandler(BulkJobCompletionHandler completionHandler)
++    {
++        this.completionHandler = completionHandler;
++    }
++
++    public void setErrorObject(Throwable errorObject)
++    {
++        this.errorObject = errorObject;
++    }
++
++    public void setFuture(Future future)
++    {
++        this.future = future;
++    }
++
++    public void setRestriction(Restriction restriction)
++    {
++        this.restriction = restriction;
++    }
++
++    public void setState(State state)
++    {
++        synchronized(state)
++        {
++            this.state = state;
++        }
++    }
++
++    public void setSubject(Subject subject)
++    {
++        this.subject = subject;
++    }
++
++    public void setTarget(String target)
++    {
++        this.target = target;
++    }
++
++    protected abstract void doRun();
++
++    protected abstract void postCompletion();
++
++    protected void doInitialize()
++    {
++        // Optional
++    }
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobKey.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobKey.java
+new file mode 100644
+index 0000000000..772a964711
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobKey.java
+@@ -0,0 +1,141 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.job;
++
++import com.google.common.base.Preconditions;
++
++import java.text.ParseException;
++import java.util.concurrent.atomic.AtomicLong;
++
++import org.dcache.services.bulk.BulkServiceException;
++
++/**
++ *  For storage and searching.
++ */
++public class BulkJobKey
++{
++    private static final AtomicLong ID_GENERATOR = new AtomicLong(0);
++    private static final String SEPARATOR = "::";
++
++    private String requestId;
++    private Long   jobId;
++
++    public static BulkJobKey newKey(String requestId) throws BulkServiceException
++    {
++        try {
++            String error = "Cannot construct key without request id.";
++            return new BulkJobKey(Preconditions.checkNotNull(requestId, error),
++                                  null);
++        } catch (IllegalArgumentException e) {
++            throw new BulkServiceException("newKey", e);
++        }
++    }
++
++    public static BulkJobKey parse(String key) throws BulkServiceException
++    {
++        String[] parts = key.split(SEPARATOR);
++        Preconditions.checkArgument(parts.length == 2,
++                                    "Malformed job key string.");
++        if (parts.length != 2) {
++            ParseException cause
++                            = new ParseException("Could not parse " + key, -1);
++            throw new BulkServiceException("BulkJobKey parse", cause);
++        }
++        String requestId = parts[0];
++        Long jobId;
++        try {
++            jobId = Long.valueOf(parts[1]);
++        } catch (NumberFormatException e) {
++            throw new BulkServiceException("BulkJobKey parse", e);
++        }
++
++        return new BulkJobKey(requestId, jobId);
++    }
++
++    private BulkJobKey(String requestId, Long jobId)
++    {
++        this.requestId = requestId;
++        if (jobId != null) {
++            this.jobId = jobId;
++        } else {
++            this.jobId = ID_GENERATOR.getAndIncrement();
++        }
++    }
++
++    public String getRequestId()
++    {
++        return requestId;
++    }
++
++    public Long getJobId()
++    {
++        return jobId;
++    }
++
++    public String getKey()
++    {
++        return requestId + SEPARATOR + jobId;
++    }
++
++    public String toString()
++    {
++        return getKey();
++    }
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/queue/SignalAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/queue/SignalAware.java
+new file mode 100644
+index 0000000000..a74c56305a
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/queue/SignalAware.java
+@@ -0,0 +1,74 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.queue;
++
++public interface SignalAware
++{
++    /**
++     *  Signals the queue, alerting it to new or updated data.
++     */
++    void signal();
++
++    /**
++     * @return the number of signals received by the queue but
++     *         currently unprocessed.
++     */
++    int countSignals();
++}
+diff --git a/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandlerTest.java b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandlerTest.java
+new file mode 100644
+index 0000000000..24dec999d3
+--- /dev/null
++++ b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandlerTest.java
+@@ -0,0 +1,290 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.handlers;
++
++import org.junit.Before;
++import org.junit.Test;
++
++import java.util.UUID;
++import java.util.concurrent.atomic.AtomicInteger;
++
++import org.dcache.services.bulk.BulkServiceException;
++import org.dcache.services.bulk.job.BulkJob;
++import org.dcache.services.bulk.job.BulkJobKey;
++import org.dcache.services.bulk.queue.SignalAware;
++
++/**
++ *  Tests the logic of the completion listener for correctness.
++ */
++public class BulkJobCompletionHandlerTest
++{
++    class SimpleTestJob extends BulkJob
++    {
++        SimpleTestJob(BulkJobKey parentKey) throws BulkServiceException
++        {
++            super(BulkJobKey.newKey(requestId), parentKey, "test");
++        }
++
++        @Override
++        protected void doRun()
++        {
++            // NOP
++        }
++
++        @Override
++        protected void postCompletion()
++        {
++            // NOP
++        }
++    }
++
++    class JobSet
++    {
++        static final int ROOT = 0;
++        static final int FILE_1 = 1;
++        static final int DIR_1 = 2;
++        static final int FILE_2 = 3;
++        static final int DIR_2 = 4;
++        static final int FILE_3 = 5;
++        static final int DIR_3 = 6;
++
++        BulkJob[] jobs;
++
++        JobSet(String requestId) throws Exception
++        {
++            jobs = new BulkJob[7];
++            jobs[ROOT] = addJobWithParent(BulkJobKey.newKey(requestId));
++            jobs[FILE_1] = addJobWithParent(jobs[ROOT].getKey());
++            jobs[DIR_1] = addJobWithParent(jobs[ROOT].getKey());
++            jobs[FILE_2] = addJobWithParent(jobs[DIR_1].getKey());
++            jobs[DIR_2] = addJobWithParent(jobs[DIR_1].getKey());
++            jobs[FILE_3] = addJobWithParent(jobs[DIR_1].getKey());
++            jobs[DIR_3] = addJobWithParent(jobs[DIR_2].getKey());
++        }
++
++        Long idOf(int job)
++        {
++            return jobs[job].getKey().getJobId();
++        }
++
++        void whenAllJobsTerminate()
++        {
++            for (BulkJob job : jobs) {
++                listener.jobCompleted(job);
++            }
++        }
++
++        void whenJobTerminates(int job)
++        {
++            listener.jobCompleted(jobs[job]);
++        }
++
++        private BulkJob addJobWithParent(BulkJobKey parentId)
++                        throws Exception
++        {
++            SimpleTestJob job = new SimpleTestJob(parentId);
++            listener.addChild(job);
++            return job;
++        }
++    }
++
++    class SignalAwareQueue implements SignalAware
++    {
++        private AtomicInteger signalled = new AtomicInteger(0);
++
++        @Override
++        public void signal()
++        {
++            signalled.incrementAndGet();
++        }
++
++        @Override
++        public int countSignals()
++        {
++            return signalled.get();
++        }
++    }
++
++    SignalAware              queue;
++    BulkJobCompletionHandler listener;
++    String                   requestId;
++    Long                     requestJobId;
++    JobSet                   jobSet;
++
++    @Before
++    public void setup() throws Exception
++    {
++        queue = new SignalAwareQueue();
++        listener = new BulkJobCompletionHandler(queue);
++        requestId = UUID.randomUUID().toString();
++        requestJobId = BulkJobKey.newKey(requestId).getJobId();
++    }
++
++    @Test(expected = IllegalArgumentException.class)
++    public void shouldThrowExceptionWhenListenerIsShared() throws Exception
++    {
++        givenJobWithParentFromDifferentRequest();
++    }
++
++    @Test
++    public void shouldConsiderChildrenTerminatedForEmptyDir() throws Exception
++    {
++        givenNewJobSet();
++        assertChildrenHaveAllTerminated(jobSet.idOf(JobSet.DIR_3));
++    }
++
++    @Test
++    public void shouldConsiderChildrenTerminatedForDirWithOnlyChildTerminated() throws Exception
++    {
++        givenNewJobSet();
++        jobSet.whenJobTerminates(JobSet.DIR_3);
++        assertChildrenHaveAllTerminated(jobSet.idOf(JobSet.DIR_2));
++    }
++
++    @Test
++    public void shouldNotConsiderChildrenTerminatedPrematurely() throws Exception
++    {
++        givenNewJobSet();
++        jobSet.whenJobTerminates(JobSet.DIR_3);
++        assertChildrenHaveNotAllTerminated(jobSet.idOf(JobSet.DIR_1));
++        jobSet.whenJobTerminates(JobSet.DIR_2);
++        assertChildrenHaveNotAllTerminated(jobSet.idOf(JobSet.DIR_1));
++        jobSet.whenJobTerminates(JobSet.FILE_2);
++        assertChildrenHaveNotAllTerminated(jobSet.idOf(JobSet.DIR_1));
++        jobSet.whenJobTerminates(JobSet.FILE_3);
++        assertChildrenHaveAllTerminated(jobSet.idOf(JobSet.DIR_1));
++    }
++
++    @Test
++    public void shouldNotConsiderRequestCompletedWithNoJobsButMarkerPresent() throws Exception
++    {
++        givenRequestProcessingStarted();
++        givenNewJobSet();
++        jobSet.whenAllJobsTerminate();
++        assertRequestNotTerminated();
++    }
++
++    @Test
++    public void shouldCompleteRequestIfAllJobsTerminated() throws Exception
++    {
++        givenRequestProcessingStarted();
++        givenNewJobSet();
++        givenRequestProcessingFinished();
++        jobSet.whenAllJobsTerminate();
++        assertRequestTerminated();
++    }
++
++    @Test
++    public void queueShouldReceiveSignalFromQueueOnJobTermination() throws Exception
++    {
++        givenNewJobSet();
++        jobSet.whenAllJobsTerminate();
++        assertAllJobsHaveSignalledQueue();
++    }
++
++    private void assertRequestTerminated()
++    {
++        assert(listener.isRequestCompleted());
++    }
++
++    private void assertRequestNotTerminated()
++    {
++        assert(!listener.isRequestCompleted());
++    }
++
++    private void assertChildrenHaveAllTerminated(Long parentId)
++    {
++        assert(listener.areChildrenAllTerminated(parentId));
++    }
++
++    private void assertChildrenHaveNotAllTerminated(Long parentId)
++    {
++        assert(!listener.areChildrenAllTerminated(parentId));
++    }
++
++    private void assertAllJobsHaveSignalledQueue()
++    {
++        assert(queue.countSignals() == jobSet.jobs.length);
++    }
++
++    private void givenNewJobSet() throws Exception
++    {
++        jobSet = new JobSet(requestId);
++    }
++
++    private BulkJob givenJobWithParentFromDifferentRequest()
++                    throws Exception
++    {
++        SimpleTestJob job = new SimpleTestJob(BulkJobKey.newKey(UUID.randomUUID()
++                                                                    .toString()));
++        listener.addChild(job);
++        return job;
++    }
++
++    private void givenRequestProcessingStarted()
++    {
++        listener.requestProcessingStarted(requestJobId);
++    }
++
++    private void givenRequestProcessingFinished()
++    {
++        listener.requestProcessingFinished(requestJobId);
++    }
++}
+diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkJobExecutionException.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkJobExecutionException.java
+new file mode 100644
+index 0000000000..dd8d7cc988
+--- /dev/null
++++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkJobExecutionException.java
+@@ -0,0 +1,73 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk;
++
++public class BulkJobExecutionException extends BulkServiceException
++{
++    public BulkJobExecutionException(String message)
++    {
++        super(message);
++    }
++
++    public BulkJobExecutionException(String message, Throwable cause)
++    {
++        super(message, cause);
++    }
++}
+diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkServiceException.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkServiceException.java
+new file mode 100644
+index 0000000000..58f945acf7
+--- /dev/null
++++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkServiceException.java
+@@ -0,0 +1,75 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk;
++
++public class BulkServiceException extends Exception
++{
++    private static final long serialVersionUID = -4571161713625369620L;
++
++    public BulkServiceException(String message)
++    {
++        super(message);
++    }
++
++    public BulkServiceException(String message, Throwable cause)
++    {
++        super(message, cause);
++    }
++}
+diff --git a/packages/pom.xml b/packages/pom.xml
+index 8c91346d13..4e36b559da 100644
+--- a/packages/pom.xml
++++ b/packages/pom.xml
+@@ -20,9 +20,14 @@
+     </dependency>
+     <dependency>
+         <groupId>org.dcache</groupId>
+-        <artifactId>dcache-core</artifactId>
++        <artifactId>dcache-bulk</artifactId>
+         <version>${project.version}</version>
+     </dependency>
++    <dependency>
++      <groupId>org.dcache</groupId>
++      <artifactId>dcache-core</artifactId>
++      <version>${project.version}</version>
++    </dependency>
+     <dependency>
+         <groupId>org.dcache</groupId>
+         <artifactId>dcache-chimera</artifactId>
+diff --git a/pom.xml b/pom.xml
+index 7e08af8542..57a95e8527 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -1428,6 +1428,7 @@
+         <module>modules/dcache-vehicles</module>
+         <module>modules/dcache-nearline-spi</module>
+         <module>modules/dcache</module>
++        <module>modules/dcache-bulk</module>
+         <module>modules/dcache-chimera</module>
+         <module>modules/dcache-ftp</module>
+         <module>modules/dcache-resilience</module>

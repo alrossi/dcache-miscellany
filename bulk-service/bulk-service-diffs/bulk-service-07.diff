@@ -1,0 +1,713 @@
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PinManagerAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PinManagerAware.java
+new file mode 100644
+index 0000000000..fbd3228f39
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PinManagerAware.java
+@@ -0,0 +1,71 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk;
++
++import org.dcache.cells.CellStub;
++
++public interface PinManagerAware
++{
++    /**
++     *  If a single-target job implements this interface, the handler
++     *  will inject the stub.
++     */
++    void setPinManager(CellStub pinManager);
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PoolManagerAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PoolManagerAware.java
+new file mode 100644
+index 0000000000..3f9c2c6b6b
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PoolManagerAware.java
+@@ -0,0 +1,71 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk;
++
++import org.dcache.cells.CellStub;
++
++public interface PoolManagerAware
++{
++    /**
++     *  If a single-target job implements this interface, the handler
++     *  will inject the stub.
++     */
++    void setPoolManager(CellStub poolManager);
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkRequestHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkRequestHandler.java
+new file mode 100644
+index 0000000000..7ddf6542dd
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkRequestHandler.java
+@@ -0,0 +1,540 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.handlers;
++
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++import org.springframework.beans.factory.annotation.Required;
++
++import javax.security.auth.Subject;
++
++import java.util.Optional;
++
++import diskCacheV111.util.PnfsHandler;
++
++import dmg.cells.nucleus.CellEndpoint;
++import dmg.cells.nucleus.CellMessageSender;
++
++import org.dcache.auth.attributes.Restriction;
++import org.dcache.cells.CellStub;
++import org.dcache.services.bulk.BulkRequest;
++import org.dcache.services.bulk.BulkRequestStatus.Status;
++import org.dcache.services.bulk.BulkServiceException;
++import org.dcache.services.bulk.BulkStorageException;
++import org.dcache.services.bulk.PinManagerAware;
++import org.dcache.services.bulk.PnfsManagerAware;
++import org.dcache.services.bulk.PoolManagerAware;
++import org.dcache.services.bulk.job.BulkJob;
++import org.dcache.services.bulk.job.BulkJobFactory;
++import org.dcache.services.bulk.job.BulkJobKey;
++import org.dcache.services.bulk.job.BulkRequestJob;
++import org.dcache.services.bulk.job.MultipleTargetJob;
++import org.dcache.services.bulk.job.SingleTargetJob;
++import org.dcache.services.bulk.job.TargetExpansionJob;
++import org.dcache.services.bulk.queue.BulkServiceQueue;
++import org.dcache.services.bulk.store.BulkJobStore;
++import org.dcache.services.bulk.store.BulkRequestStore;
++import org.dcache.services.bulk.util.BulkServiceStatistics;
++import org.dcache.util.list.ListDirectoryHandler;
++import org.dcache.vehicles.FileAttributes;
++
++/**
++ *  The task of this handler is to take the appropriate action
++ *  at the various phases in the lifetime of a given request.
++ *
++ *  This includes submitting and handling the completion of individual target jobs.
++ *
++ *  It interacts with the queue, the job factory and the stores.
++ *
++ *  It receives callbacks from the queue upon job and request termination.
++ */
++public class BulkRequestHandler implements
++                                BulkSubmissionHandler,
++                                BulkRequestCompletionHandler,
++                                CellMessageSender
++{
++    private static final Logger LOGGER
++                    = LoggerFactory.getLogger(BulkRequestHandler.class);
++
++    private ListDirectoryHandler  listHandler;
++    private BulkServiceQueue      queue;
++    private BulkJobStore          jobStore;
++    private BulkRequestStore      requestStore;
++    private BulkJobFactory        jobFactory;
++    private BulkServiceStatistics statistics;
++
++    private CellStub pnfsManager;
++    private CellStub pinManager;
++    private CellStub poolManager;
++    private CellEndpoint endpoint;
++
++    /*
++     *  Caused by an internal issue.
++     *
++     *  Essentially a premature failure.
++     */
++    @Override
++    public void abortRequestTarget(String requestId,
++                                   String target,
++                                   Throwable exception)
++                    throws BulkServiceException
++    {
++        LOGGER.trace("requestTargetAborted {}, {}, {}; calling "
++                                     + "abort on request store",
++                     requestId, target, exception.toString());
++
++        requestStore.targetAborted(requestId, target, exception);
++        queue.signal();
++
++        statistics.incrementJobsAborted();
++    }
++
++    /*
++     *  Queries the jobStore to see if there are running jobs
++     *  belonging to the request, and cancels them.
++     *
++     *  Calls update on the requestStore.
++     */
++    @Override
++    public void clearRequest(Subject subject, String requestId)
++                    throws BulkServiceException
++    {
++        LOGGER.trace("clearRequest {}, {}.", requestId, requestId);
++
++        cancelAllJobs(requestId);
++
++        LOGGER.trace("clearRequest {}, calling clear on request store",
++                     requestId);
++        requestStore.clear(subject, requestId);
++    }
++
++    /*
++     *  Incoming from the admin user.
++     *
++     *  Cancels all jobs bound to this request that are not in a terminal state.
++     *
++     *  Upon job termination, the queue should call request completed (below).
++     */
++    @Override
++    public void requestCancelled(String requestId) throws BulkServiceException
++    {
++        LOGGER.trace("requestCancelled: {}.", requestId);
++
++        cancelAllJobs(requestId);
++
++        statistics.incrementRequestsCancelled();
++    }
++
++    /*
++     *  Callback from the queue.
++     *
++     *  Updates the status of the request.
++     */
++    @Override
++    public void requestCompleted(String requestId) throws BulkServiceException
++    {
++        LOGGER.trace("requestCompleted {}, calling update to COMPLETED "
++                                     + "on request store",
++                     requestId);
++
++        if (isRequestAlreadyCleared(requestId)) {
++            return;
++        }
++
++        requestStore.update(requestId, Status.COMPLETED);
++        statistics.incrementRequestsCompleted();
++    }
++
++    /*
++     *  Callback from the queue.
++     *
++     *  Removes the job from the job store.
++     *
++     *  Updates the status of the request.
++     */
++    @Override
++    public void requestTargetCancelled(BulkJob job) throws BulkServiceException
++    {
++        BulkJobKey key = job.getKey();
++        LOGGER.trace("requestTargetCancelled: {}, calling delete on job "
++                                     + "store.", key.getKey());
++        jobStore.delete(key);
++
++        String requestId = key.getRequestId();
++        if (isRequestAlreadyCleared(requestId)) {
++            return;
++        }
++
++        if (job instanceof SingleTargetJob) {
++            LOGGER.trace("requestTargetCancelled: {}, {}, calling target "
++                                         + "completed on "
++                                         + "request store.",
++                         key.getKey(), job.getTarget());
++            requestStore.targetCompleted(requestId,
++                                         job.getTarget(),
++                                         job.getErrorObject());
++        }
++
++        statistics.incrementJobsCancelled();
++    }
++
++    /*
++     *  Callback from the queue.
++     *
++     *  Removes the job from the job store.
++     *
++     *  Updates the status of the request.
++     */
++    @Override
++    public void requestTargetFailed(BulkJob job) throws BulkServiceException
++    {
++        BulkJobKey key = job.getKey();
++        LOGGER.trace("requestTargetFailed: {}, calling delete on job "
++                                     + "store.", key.getKey());
++        jobStore.delete(key);
++
++        String requestId = key.getRequestId();
++        if (isRequestAlreadyCleared(requestId)) {
++            return;
++        }
++
++        if (job instanceof SingleTargetJob) {
++            LOGGER.trace("requestTargetFailed: {}, {}, calling target "
++                                         + "completed on "
++                                         + "request store.",
++                         key.getKey(), job.getTarget());
++
++            requestStore.targetCompleted(requestId,
++                                         job.getTarget(),
++                                         job.getErrorObject());
++        }
++
++        statistics.incrementJobsFailed();
++    }
++
++    /*
++     *  Callback from the queue.
++     *
++     *  Removes the job from the job store.
++     *
++     *  Updates the status of the request.
++     */
++    @Override
++    public void requestTargetCompleted(BulkJob job) throws BulkServiceException
++    {
++        BulkJobKey key = job.getKey();
++        LOGGER.trace("requestTargetCompleted: {}, calling delete on job "
++                                     + "store.", key.getKey());
++        jobStore.delete(key);
++
++        String requestId = key.getRequestId();
++        if (isRequestAlreadyCleared(requestId)) {
++            return;
++        }
++
++        if (job instanceof SingleTargetJob) {
++            LOGGER.trace("requestTargetCompleted: {}, {}, calling target "
++                                         + "completed on "
++                                         + "request store.",
++                         key.getKey(), job.getTarget());
++            requestStore.targetCompleted(requestId,
++                                         job.getTarget(),
++                                         job.getErrorObject());
++        }
++
++        statistics.incrementJobsCompleted();
++    }
++
++    @Override
++    public void setCellEndpoint(CellEndpoint endpoint)
++    {
++        this.endpoint = endpoint;
++    }
++
++    @Required
++    public void setJobFactory(BulkJobFactory jobFactory)
++    {
++        this.jobFactory = jobFactory;
++    }
++
++    @Required
++    public void setJobStore(BulkJobStore jobStore)
++    {
++        this.jobStore = jobStore;
++    }
++
++    @Required
++    public void setListHandler(ListDirectoryHandler listHandler)
++    {
++        this.listHandler = listHandler;
++    }
++
++    @Required
++    public void setPinManager(CellStub pinManager)
++    {
++        this.pinManager = pinManager;
++    }
++
++    @Required
++    public void setPnfsManager(CellStub pnfsManager)
++    {
++        this.pnfsManager = pnfsManager;
++    }
++
++    @Required
++    public void setPoolManager(CellStub poolManager)
++    {
++        this.poolManager = poolManager;
++    }
++
++    @Required
++    public void setQueue(BulkServiceQueue queue)
++    {
++        this.queue = queue;
++    }
++
++    @Required
++    public void setRequestStore(BulkRequestStore requestStore)
++    {
++        this.requestStore = requestStore;
++    }
++
++    @Required
++    public void setStatistics(BulkServiceStatistics statistics)
++    {
++        this.statistics = statistics;
++    }
++
++    /*
++     *  Processes the request as a top-level BulkRequestJob, adds a completion
++     *  listener, and submits the job to the queue.
++     */
++    @Override
++    public void submitRequest(BulkRequest request) throws BulkServiceException
++    {
++        LOGGER.trace("submitRequest {}.", request.getId());
++
++        String requestId = request.getId();
++        Optional<Subject> subject = requestStore.getSubject(requestId);
++        if (!subject.isPresent()) {
++            throw new BulkServiceException("Cannot submit job without subject, "
++                                                           + "missing for "
++                                                           + requestId);
++        }
++
++        Optional<Restriction> restriction
++                        = requestStore.getRestriction(requestId);
++        if (!restriction.isPresent()) {
++            throw new BulkServiceException(
++                            "Cannot submit job without specified "
++                                            + "restrictions, "
++                                            + "missing for "
++                                            + requestId);
++        }
++
++        LOGGER.trace("submitRequest {}, creating multiple target job.",
++                     request);
++        BulkRequestJob job = jobFactory.createRequestJob(request);
++        job.setSubject(subject.get());
++        job.setRestriction(restriction.get());
++        configureEndpoints(job);
++        job.setSubmissionHandler(this);
++
++        LOGGER.trace("submitRequest {}, setting a new completion handler.",
++                     job.getKey().getKey());
++        job.setCompletionHandler(new BulkJobCompletionHandler(queue));
++
++        LOGGER.trace("submitRequest {}, calling submit.", requestId);
++        queue.submit(job);
++    }
++
++    @Override
++    public void submitSingleTargetJob(String target,
++                                      BulkJobKey parentKey,
++                                      FileAttributes attributes,
++                                      MultipleTargetJob parent)
++                    throws BulkServiceException
++    {
++        SingleTargetJob job = jobFactory.createSingleTargetJob(parentKey,
++                                                               parent.getActivity());
++        configureTarget(target, attributes, job);
++        configurePermissionsFromParent(parent, job);
++        configureEndpoints(job);
++        configureHandler(parent, job);
++        BulkRequest request = parent.getRequest();
++        job.setArguments(request.getArguments());
++        job.setPath(MultipleTargetJob.computeFsPath(request.getTargetPrefix(),
++                                                    target));
++        submit(job);
++    }
++
++    @Override
++    public void submitTargetExpansionJob(String target,
++                                         FileAttributes attributes,
++                                         MultipleTargetJob parent)
++                    throws BulkServiceException
++    {
++        /*
++         *  The parent key is always the key of this job.
++         */
++        TargetExpansionJob job
++                        = jobFactory.createTargetExpansionJob(parent.getKey(),
++                                                              parent.getRequest());
++        configureTarget(target, attributes, job);
++        configurePermissionsFromParent(parent, job);
++        configureEndpoints(job);
++        configureHandler(parent, job);
++        job.setListHandler(listHandler);
++        job.setSubmissionHandler(this);
++        submit(job);
++    }
++
++    private void cancelAllJobs(String requestId) throws BulkServiceException
++    {
++        LOGGER.trace("cancelAllJobs: {}.", requestId);
++
++        /*
++         *  The top-level BulkRequestJobs are not stored,
++         *  so we need to find them on the queue if they are still there.
++         */
++        queue.cancelRequestJob(requestId);
++
++        jobStore.cancelAll(requestId);
++    }
++
++    private void configureEndpoints(BulkJob job)
++    {
++        if (job instanceof PnfsManagerAware) {
++            PnfsHandler pnfsHandler = new PnfsHandler(pnfsManager);
++            pnfsHandler.setRestriction(job.getRestriction());
++            pnfsHandler.setSubject(job.getSubject());
++            ((PnfsManagerAware) job).setPnfsManager(pnfsHandler);
++        }
++
++        if (job instanceof PinManagerAware) {
++            ((PinManagerAware) job).setPinManager(pinManager);
++        }
++
++        if (job instanceof PoolManagerAware) {
++            ((PoolManagerAware) job).setPoolManager(poolManager);
++        }
++
++        if (job instanceof CellMessageSender) {
++            ((CellMessageSender)job).setCellEndpoint(endpoint);
++        }
++    }
++
++    private void configureHandler(MultipleTargetJob parent, BulkJob job)
++    {
++        BulkJobCompletionHandler handler = parent.getCompletionHandler();
++        job.setCompletionHandler(handler);
++        handler.addChild(job);
++    }
++
++    private void configurePermissionsFromParent(MultipleTargetJob parent,
++                                                BulkJob job)
++    {
++        job.setSubject(parent.getSubject());
++        job.setRestriction(parent.getRestriction());
++    }
++
++    private void configureTarget(String target,
++                                 FileAttributes attributes,
++                                 BulkJob job)
++    {
++        job.setTarget(target);
++        job.setAttributes(attributes);
++    }
++
++    private boolean isRequestAlreadyCleared(String requestId)
++                    throws BulkStorageException
++    {
++        /*
++         *  There could be a race if an automatic clear option is set.
++         */
++        if (!requestStore.getRequest(requestId).isPresent()) {
++            LOGGER.debug("request already cleared", requestId);
++            return true;
++        }
++
++        return false;
++    }
++
++    /*
++     *  Stores the job.
++     *
++     *  Submits the job to the queue.
++     */
++    private void submit(BulkJob job) throws BulkStorageException {
++        BulkJobKey key = job.getKey();
++
++        LOGGER.trace("submit: {}, storing job.", key.getKey());
++        jobStore.store(job);
++
++        if (job instanceof SingleTargetJob) {
++            LOGGER.trace("submit: {}, adding target to request store.",
++                         key.getKey());
++            requestStore.addTarget(key.getRequestId());
++        }
++
++        LOGGER.trace("submit: {}, passing job to the queue.", key.getKey());
++        queue.submit(job);
++    }
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
+index 1c5e7c0555..b0d73354bd 100644
+--- a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
+@@ -498,7 +498,7 @@ public class FileBulkRequestStore extends AbstractObjectFileStore<FileBulkReques
+                         = delegate.getRequest(requestId);
+         if (!optionalRequest.isPresent()) {
+             throw new BulkRequestStorageException("Request " + requestId
+-                                                                  + " not found.");
++                                                             + " not found.");
+         }
+ 
+         BulkRequest request = optionalRequest.get();

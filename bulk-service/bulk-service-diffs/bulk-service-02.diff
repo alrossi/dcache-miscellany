@@ -1,0 +1,1886 @@
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsManagerAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsManagerAware.java
+new file mode 100644
+index 0000000000..bd43503667
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsManagerAware.java
+@@ -0,0 +1,71 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk;
++
++import diskCacheV111.util.PnfsHandler;
++
++public interface PnfsManagerAware
++{
++    /**
++     *  If a single-target job implements this interface, the handler
++     *  will inject the stub.
++     */
++    void setPnfsManager(PnfsHandler pnfsHandler);
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java
+new file mode 100644
+index 0000000000..5e6ab7a0c3
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java
+@@ -0,0 +1,128 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.handlers;
++
++import javax.security.auth.Subject;
++
++import org.dcache.services.bulk.BulkRequest;
++import org.dcache.services.bulk.BulkServiceException;
++import org.dcache.services.bulk.job.BulkJobKey;
++import org.dcache.services.bulk.job.MultipleTargetJob;
++import org.dcache.vehicles.FileAttributes;
++
++/**
++ *  Defines the basic submission methods for interacting with the queue.
++ */
++public interface BulkSubmissionHandler
++{
++    /**
++     * Unrecoverable internal failure.  This usually means
++     * that the target has not yet been processed into a job.
++     *
++     * @param requestId unique identifier
++     * @param target specific target
++     * @param exception error
++     */
++    void abortRequestTarget(String requestId, String target,
++                            Throwable exception)
++                    throws BulkServiceException;
++
++    /**
++     * Services request (from user) to (cancel) and free all data
++     * associated with the request.
++     *
++     * @param subject of the user.
++     * @param requestId of the request to clear.
++     * @throws BulkServiceException
++     */
++    void clearRequest(Subject subject, String requestId)
++                    throws BulkServiceException;
++
++    /**
++     * Should configure and submit the top-level job responsible for
++     * processing all targets defined by the bulk request.
++     *
++     * @param request to be processed.
++     * @throws BulkServiceException
++     */
++    void submitRequest(BulkRequest request) throws BulkServiceException;
++
++    /**
++     * Submits a job which takes action on a specific target.  The
++     * job is created by the factory on the basis of the request's
++     * activity definition (this is passed through the parent).
++     *
++     * @param target file or directory.
++     * @param parentKey key of the generating job (i.e., with a directory target).
++     * @param attributes received during directory listing.
++     * @param parent the generating job.
++     * @throws BulkServiceException
++     */
++    void submitSingleTargetJob(String target,
++                               BulkJobKey parentKey,
++                               FileAttributes attributes,
++                               MultipleTargetJob parent)
++                    throws BulkServiceException;
++
++    void submitTargetExpansionJob(String target,
++                                  FileAttributes attributes,
++                                  MultipleTargetJob parent)
++                    throws BulkServiceException;
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java
+new file mode 100644
+index 0000000000..80cc74755f
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java
+@@ -0,0 +1,228 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.job;
++
++import com.google.gson.GsonBuilder;
++
++import java.util.Collections;
++import java.util.EnumSet;
++import java.util.Set;
++
++import diskCacheV111.util.CacheException;
++import diskCacheV111.util.FsPath;
++import diskCacheV111.util.PnfsHandler;
++
++import org.dcache.namespace.FileAttribute;
++import org.dcache.namespace.FileType;
++import org.dcache.services.bulk.BulkRequest;
++import org.dcache.services.bulk.BulkRequest.Depth;
++import org.dcache.services.bulk.BulkServiceException;
++import org.dcache.services.bulk.PnfsManagerAware;
++import org.dcache.vehicles.FileAttributes;
++
++/**
++ *  Acts as a shallow container for a list of targets which
++ *  may not be associated with each other via a common parent.
++ *  Immediate wrapper for a BulkRequest.
++ */
++public class BulkRequestJob extends MultipleTargetJob
++                            implements PnfsManagerAware
++{
++    protected static final Set<FileAttribute> REQUIRED_ATTRIBUTES
++                    = Collections.unmodifiableSet(EnumSet.of(FileAttribute.PNFSID,
++                                                             FileAttribute.TYPE));
++
++    private PnfsHandler pnfsHandler;
++
++    public BulkRequestJob(BulkJobKey key,
++                          BulkRequest request,
++                          TargetType targetType)
++    {
++        /*
++         *  Top-level job has no parent.
++         */
++        super(key, null, request, targetType);
++        this.target = request.getTarget();
++    }
++
++    @Override
++    public void setPnfsManager(PnfsHandler pnfsHandler)
++    {
++        this.pnfsHandler = pnfsHandler;
++    }
++
++    @Override
++    protected void doRun()
++    {
++        LOGGER.trace("RequestJob, doRun() called ...");
++
++        /*
++         *  Requests support a compound target, which takes the form
++         *  of a json array.
++         */
++        String[] targets;
++        if (target.contains("[")) {
++            GsonBuilder builder = new GsonBuilder();
++            targets = builder.create().fromJson(target, String[].class);
++        } else {
++            targets = new String[] { target };
++        }
++
++        String prefix = request.getTargetPrefix();
++
++        completionHandler.requestProcessingStarted(key.getJobId());
++
++        for (String t : targets) {
++            FsPath path = computeFsPath(prefix, t);
++            LOGGER.debug("RequestJob, path {}.", path);
++            try {
++                FileAttributes attributes
++                                = pnfsHandler.getFileAttributes(path,
++                                                                REQUIRED_ATTRIBUTES);
++                if (attributes.getFileType() == FileType.DIR) {
++                    handleDirectory(t, attributes);
++                } else if (attributes.getFileType() != FileType.SPECIAL) {
++                    handleFile(t, attributes);
++                }
++            } catch (CacheException | BulkServiceException e) {
++                LOGGER.error("RequestJob, path {}, error {}.",
++                             path, e.toString());
++                try {
++                    submissionHandler.abortRequestTarget(request.getId(), t, e);
++                } catch (BulkServiceException e1) {
++                    LOGGER.error("RequestJob, could not abort {}: {}.",
++                                 t, e1.toString());
++                }
++            }
++
++            if (errorObject != null) {
++                break;
++            }
++        }
++
++        LOGGER.trace("{}, RequestJob, doRun() exiting ...", target);
++    }
++
++    protected void postCompletion()
++    {
++        completionHandler.requestProcessingFinished(key.getJobId());
++    }
++
++    private void handleDirectory(String target, FileAttributes attributes)
++                    throws BulkServiceException
++    {
++        LOGGER.trace("RequestJob, handleDirectory() called for {}.",
++                     target);
++
++        Depth expand = request.getExpandDirectories();
++        switch (expand) {
++            case ALL:
++            case TARGETS:
++                LOGGER.debug("RequestJob, expand {},"
++                                             + " submitting directory {}"
++                                             + " for expansion.",
++                            expand, target);
++                submitTargetExpansionJob(target,
++                                         attributes);
++                break;
++            case NONE:
++            default:
++                if (targetType != TargetType.FILE) {
++                    LOGGER.debug("RequestJob, expand NONE, directory {} "
++                                                 + "included as target.",
++                                 target);
++                    submitSingleTargetJob(target, key, attributes);
++                }
++                LOGGER.debug("RequestJob, expand NONE, directory {} "
++                                             + "not included as target, skipping.",
++                             target);
++        }
++
++        LOGGER.trace("RequestJob, handleDirectory() for {} exiting ...",
++                     target);
++    }
++
++    private void handleFile(String target,
++                            FileAttributes attributes)
++                    throws BulkServiceException
++    {
++        LOGGER.trace("RequestJob handleFile() called for {}.",
++                     target);
++
++        switch(targetType)
++        {
++            case BOTH:
++            case FILE:
++                LOGGER.debug("RequestJob, file {} included"
++                                             + " as target.",
++                             target);
++                submitSingleTargetJob(target, key, attributes);
++                break;
++            default:
++                LOGGER.debug("RequestJob, file {} "
++                                             + "not included"
++                                             + " as target, skipping.",
++                             target);
++        }
++
++        LOGGER.trace("RequestJob, handleFile() for {} exiting ...",
++                     target);
++    }
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java
+new file mode 100644
+index 0000000000..648d32a128
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java
+@@ -0,0 +1,166 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.job;
++
++import java.util.Collections;
++import java.util.EnumSet;
++import java.util.Set;
++
++import diskCacheV111.util.FsPath;
++
++import org.dcache.namespace.FileAttribute;
++import org.dcache.services.bulk.BulkRequest;
++import org.dcache.services.bulk.BulkServiceException;
++import org.dcache.services.bulk.handlers.BulkSubmissionHandler;
++import org.dcache.vehicles.FileAttributes;
++
++/**
++ *  Parent of job types which handle multiple targets, including
++ *  directories.
++ */
++public abstract class MultipleTargetJob extends BulkJob
++{
++    public static FsPath computeFsPath(String prefix, String target)
++    {
++        FsPath path;
++
++        if (prefix == null) {
++            path = FsPath.create(FsPath.ROOT + target);
++        } else {
++            path = FsPath.create(FsPath.ROOT + (prefix.endsWith("/")
++                            ? prefix : prefix + "/") + target);
++        }
++
++        return path;
++    }
++
++    public enum TargetType
++    {
++        FILE, DIR, BOTH
++    }
++
++    protected static final Set<FileAttribute> REQUIRED_ATTRIBUTES
++                    = Collections.unmodifiableSet(EnumSet.of(FileAttribute.PNFSID,
++                                                             FileAttribute.TYPE));
++
++    protected final BulkRequest        request;
++    protected final TargetType         targetType;
++
++    protected BulkSubmissionHandler submissionHandler;
++
++    protected MultipleTargetJob(BulkJobKey key,
++                                BulkJobKey parentKey,
++                                BulkRequest request,
++                                TargetType targetType)
++    {
++        super(key, parentKey, request.getActivity());
++        this.request = request;
++        this.targetType = targetType;
++    }
++
++    public BulkRequest getRequest()
++    {
++        return request;
++    }
++
++    public TargetType getTargetType()
++    {
++        return targetType;
++    }
++
++    public void setSubmissionHandler(BulkSubmissionHandler requestHandler)
++    {
++        this.submissionHandler = requestHandler;
++    }
++
++    protected void submitTargetExpansionJob(String target,
++                                            FileAttributes attributes)
++                    throws BulkServiceException
++    {
++        if (errorObject != null) {
++            return;
++        }
++
++        LOGGER.trace("MultipleTargetJob, submitTargetExpansionJob() "
++                                     + "called for {}.", target);
++
++        submissionHandler.submitTargetExpansionJob(target,
++                                                attributes,
++                                                this);
++    }
++
++    protected void submitSingleTargetJob(String target,
++                                         BulkJobKey parentKey,
++                                         FileAttributes attributes)
++                    throws BulkServiceException
++    {
++        if (errorObject != null) {
++            return;
++        }
++
++        LOGGER.trace("MultipleTargetJob, submitSingleTargetJob() "
++                                     + "called for {}.", target);
++
++        submissionHandler.submitSingleTargetJob(target,
++                                             parentKey,
++                                             attributes,
++                                             this);
++    }
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java
+new file mode 100644
+index 0000000000..ae769938fc
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java
+@@ -0,0 +1,96 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.job;
++
++import java.util.Map;
++
++import diskCacheV111.util.FsPath;
++
++/**
++ * This is the class which should be extended for all
++ * activity types and mapped to the job factory's map.
++ */
++public abstract class SingleTargetJob extends BulkJob
++{
++    protected FsPath path;
++    protected Map<String, String> arguments;
++
++    protected SingleTargetJob(BulkJobKey key,
++                              BulkJobKey parentKey,
++                              String activity)
++    {
++        super(key, parentKey, activity);
++    }
++
++    public void setArguments(Map<String, String> arguments)
++    {
++        this.arguments = arguments;
++    }
++
++    public void setPath(FsPath path)
++    {
++        this.path = path;
++    }
++
++    protected void postCompletion()
++    {
++        completionHandler.jobCompleted(this);
++    }
++}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
+new file mode 100644
+index 0000000000..8e006f349d
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
+@@ -0,0 +1,427 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.job;
++
++import com.google.common.collect.Range;
++
++import diskCacheV111.util.CacheException;
++import diskCacheV111.util.FsPath;
++
++import org.dcache.services.bulk.BulkJobExecutionException;
++import org.dcache.services.bulk.BulkRequest;
++import org.dcache.services.bulk.BulkServiceException;
++import org.dcache.util.list.DirectoryEntry;
++import org.dcache.util.list.DirectoryStream;
++import org.dcache.util.list.ListDirectoryHandler;
++import org.dcache.vehicles.FileAttributes;
++
++/**
++ *  For expanding the contents of directories.
++ *
++ *  Provides both breadth-first and depth-first algorithms.
++ *
++ *  These, along with what kinds of targets the expansion should submit as
++ *  single target jobs, are determined by the specific activity.
++ */
++public final class TargetExpansionJob extends MultipleTargetJob
++{
++    public enum ExpansionType
++    {
++        BREADTH_FIRST, DEPTH_FIRST
++    }
++
++    /**
++     *  Set on the basis of the specific request.
++     */
++    private final ExpansionType   expansionType;
++
++    /**
++     *  Streaming pnfs list handler for scalability.
++     */
++    private ListDirectoryHandler listHandler;
++
++    public TargetExpansionJob(BulkJobKey key,
++                              BulkJobKey parentKey,
++                              BulkRequest request,
++                              TargetType targetType,
++                              ExpansionType expansionType)
++    {
++        super(key, parentKey, request, targetType);
++        this.expansionType = expansionType;
++    }
++
++    @Override
++    public boolean cancel()
++    {
++        if (super.cancel()) {
++            completionHandler.clear();
++            return true;
++        }
++
++        return false;
++    }
++
++    public void setListHandler(ListDirectoryHandler listHandler)
++    {
++        this.listHandler = listHandler;
++    }
++
++    /**
++     *  Entry point for the job.
++     *
++     *  In breadth-first expansion, each directory encountered "forks"
++     *  a new job.
++     *
++     *  In depth-first expansion, the "root" expansion job is responsible
++     *  for all expansion of subdirectories (via recursion).  This is
++     *  avoids memory-unfriendly chain of job dependencies (breadth-first
++     *  expansions have no such chained dependencies).
++     */
++    @Override
++    protected void doRun()
++    {
++        LOGGER.trace("{}, doRun() called ...", loggingPrefix());
++
++        switch (expansionType)
++        {
++            case BREADTH_FIRST:
++            case DEPTH_FIRST:
++                break;
++            default:
++                String error = String.format("Expansion of %s failed; unknown "
++                                                             + "expansion "
++                                                             + "algorithm: %s.",
++                                             key, expansionType.name());
++                errorObject = new BulkJobExecutionException(error);
++                completionHandler.jobFailed(this);
++                return;
++        }
++
++        expand(target, key);
++
++        LOGGER.trace("{}, doRun(), key {}, target {} exiting ...",
++                     loggingPrefix(), key, target);
++    }
++
++    protected void postCompletion()
++    {
++        completionHandler.jobCompleted(this);
++    }
++
++    private void expand(String target, BulkJobKey parentKey)
++    {
++        if (state == State.CANCELLED || state == State.FAILED) {
++            LOGGER.debug("{}, expansion job for {} {}; returning ...",
++                         loggingPrefix(), target, state.name());
++            return;
++        }
++
++        LOGGER.trace("{}, expand() called for {}.", loggingPrefix(), target);
++
++        switch (expansionType)
++        {
++            case BREADTH_FIRST:
++                /*
++                 *  In breadth-first it should not matter that directories
++                 *  are processed as targets before their children.
++                 */
++                checkForDirectoryTarget(target,
++                                        key,
++                                        attributes);
++                break;
++            default:
++                break;
++        }
++
++        try {
++            DirectoryStream stream = getDirectoryListing(target);
++
++            for (DirectoryEntry entry : stream) {
++                handleChildTarget(target, parentKey, entry);
++                if (state == State.CANCELLED || state == State.FAILED) {
++                    LOGGER.debug("{}, expansion job for {} {}; returning ...",
++                                 loggingPrefix(), target, state.name());
++                    return;
++                }
++            }
++
++            switch (expansionType)
++            {
++                case DEPTH_FIRST:
++                    /*
++                     *  Choosing depth-first implies the need to preserve
++                     *  that order in the visiting of the nodes.  Since
++                     *  submission and execution are asynchronous, it is thus
++                     *  necessary to wait after a directory expansion until
++                     *  all its children have completed. This guarantees these
++                     *  directories will always be processed only after all
++                     *  their descendants have been (necessary for, say,
++                     *  deletion).
++                     */
++                    LOGGER.debug("{}, {}, waiting for children of "
++                                                 + "{} to terminate.",
++                                 loggingPrefix(),
++                                 expansionType.name(),
++                                 parentKey.getJobId());
++
++                    completionHandler.waitForChildren(parentKey.getJobId());
++
++                    /*
++                     *  In depth-first it may indeed be necessary to process
++                     *  directories as targets only after all their children
++                     *  have terminated, so we do this here.
++                     */
++                    checkForDirectoryTarget(target,
++                                            key,
++                                            attributes);
++                    break;
++            }
++        } catch (InterruptedException e) {
++            State state = getState();
++            if (state == State.CANCELLED) {
++                /*
++                 *  The call to cancel will have
++                 *  already notified the listener.
++                 */
++            } else {
++                setState(State.CANCELLED);
++                completionHandler.jobInterrupted(this);
++            }
++        } catch (CacheException | BulkServiceException e) {
++            errorObject = e;
++            completionHandler.jobFailed(this);
++        }
++
++        LOGGER.trace("{}, expand() {}, exiting ...", loggingPrefix(), target);
++    }
++
++    /*
++     *  Creates single target jobs for files and for directories if
++     *  they are not to be expanded but are targets.
++     *
++     *  For breadth-first expansion of directories, a new job is submitted.
++     *  Each job carries this job's key as parent key.
++     *
++     *  Depth-first does not submit a new job, but calls expand recursively.
++     */
++    private void handleChildTarget(String target,
++                                   BulkJobKey parentKey,
++                                   DirectoryEntry entry)
++                    throws BulkServiceException
++    {
++        if (state == State.CANCELLED || state == State.FAILED) {
++            LOGGER.debug("{}, expansion job for {} {}; returning ...",
++                         loggingPrefix(), target, state.name());
++            return;
++        }
++
++        LOGGER.trace("{}, expandDepthFirst() called for {}, entry {}, parent {}.",
++                     loggingPrefix(), target, entry.getName(), parentKey.getKey());
++
++        String childTarget = target + "/" + entry.getName();
++        FileAttributes attributes = entry.getFileAttributes();
++
++        switch (attributes.getFileType())
++        {
++            case DIR:
++                switch (request.getExpandDirectories()) {
++                    case ALL:
++                        LOGGER.debug("{}, {}, found directory {}, expand ALL.",
++                                     loggingPrefix(),
++                                     expansionType.name(),
++                                     childTarget);
++
++                        switch (expansionType)
++                        {
++                            case BREADTH_FIRST:
++                                submitTargetExpansionJob(childTarget, attributes);
++                                break;
++                            case DEPTH_FIRST:
++                                /*
++                                 *  The new key is merely a numerical marker
++                                 *  and does not actually represent a new job
++                                 *  (as in the case of breadth-first).
++                                 *
++                                 *  The expansion method gives all child tasks
++                                 *  this key as parent key, so that waitForChildren
++                                 *  can identify which jobs belong to the barrier.
++                                 *
++                                 *  This expansion only returns when all such
++                                 *  children complete.
++                                 */
++                                expand(childTarget, BulkJobKey.newKey(request.getId()));
++                                break;
++                        }
++                        break;
++                    case TARGETS:
++                        /*
++                         *  We only need to check this if the directory
++                         *  is not being expanded.  An expanded directory
++                         *  is checked for target status in the main
++                         *  expand method.
++                         */
++                        checkForDirectoryTarget(childTarget,
++                                                parentKey,
++                                                attributes);
++                        break;
++                        /*
++                         *  If expandDirectories == NONE, we wouldn't
++                         *  be here.
++                         */
++
++                    default:
++                }
++                break;
++            case LINK:
++            case REGULAR:
++                checkForFileTarget(childTarget,
++                                   parentKey,
++                                   attributes);
++                break;
++            case SPECIAL:
++            default:
++                LOGGER.trace("{}, depth-first, cannot handle special file {}.",
++                             loggingPrefix(), childTarget);
++                break;
++        }
++    }
++
++    private DirectoryStream getDirectoryListing(String target)
++                    throws CacheException, InterruptedException
++    {
++        LOGGER.trace("{}, getDirectoryListing() called ...", loggingPrefix());
++
++        FsPath path = computeFsPath(request.getTargetPrefix(), target);
++
++        LOGGER.trace("{}, getDirectoryListing(), path {}, calling list ...",
++                     loggingPrefix(), path);
++        return listHandler.list(subject,
++                                restriction,
++                                path,
++                                null,
++                                Range.closedOpen(0, Integer.MAX_VALUE),
++                                REQUIRED_ATTRIBUTES);
++    }
++
++    private void checkForDirectoryTarget(String target,
++                                         BulkJobKey parentKey,
++                                         FileAttributes attributes)
++    {
++        if (state == State.CANCELLED || state == State.FAILED) {
++            LOGGER.debug("{}, expansion job for {} {}; returning ...",
++                         loggingPrefix(), target, state.name());
++            return;
++        }
++
++        try {
++            switch (targetType)
++            {
++                case BOTH:
++                case DIR:
++                    LOGGER.debug("{} {}, directory {} included as target.",
++                                 loggingPrefix(), expansionType.name(), target);
++                    submitSingleTargetJob(target, parentKey, attributes);
++                    break;
++                default:
++                    LOGGER.debug("{} {}, directory {} not included as target, "
++                                                 + "skipping.",
++                                 loggingPrefix(), expansionType.name(), target);
++            }
++        } catch (BulkServiceException e) {
++            errorObject = e;
++            completionHandler.jobFailed(this);
++        }
++    }
++
++    private void checkForFileTarget(String target,
++                                    BulkJobKey parentKey,
++                                    FileAttributes attributes)
++    {
++        if (state == State.CANCELLED || state == State.FAILED) {
++            LOGGER.debug("{}, expansion job for {} {}; returning ...",
++                         loggingPrefix(), target, state.name());
++            return;
++        }
++
++        try {
++            switch (targetType)
++            {
++                case BOTH:
++                case FILE:
++                    LOGGER.debug("{} {}, file {} included as target.",
++                                 loggingPrefix(), expansionType.name(), target);
++                    submitSingleTargetJob(target, parentKey, attributes);
++                    break;
++                default:
++                    LOGGER.debug("{} {}, file {} not included as target, "
++                                                 + "skipping.",
++                                 loggingPrefix(), expansionType.name(), target);
++            }
++        } catch (BulkServiceException e) {
++            errorObject = e;
++            completionHandler.jobFailed(this);
++        }
++    }
++
++    private String loggingPrefix()
++    {
++        return this.target + " TargetExpansionJob";
++    }
++}
+diff --git a/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java
+new file mode 100644
+index 0000000000..37da3f5131
+--- /dev/null
++++ b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java
+@@ -0,0 +1,534 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk.job;
++
++import com.google.common.base.Strings;
++import com.google.common.collect.HashMultimap;
++import com.google.common.collect.Multimap;
++import org.junit.Before;
++import org.junit.Test;
++
++import java.io.File;
++import java.util.HashMap;
++import java.util.Map;
++import java.util.Random;
++import java.util.Set;
++import java.util.UUID;
++
++import diskCacheV111.util.PnfsHandler;
++import diskCacheV111.util.PnfsId;
++import diskCacheV111.vehicles.PnfsMessage;
++
++import org.dcache.auth.attributes.Restrictions;
++import org.dcache.cells.CellStub;
++import org.dcache.namespace.FileAttribute;
++import org.dcache.namespace.FileType;
++import org.dcache.services.bulk.BulkRequest;
++import org.dcache.services.bulk.BulkRequest.Depth;
++import org.dcache.services.bulk.handlers.BulkJobCompletionHandler;
++import org.dcache.services.bulk.handlers.BulkSubmissionHandler;
++import org.dcache.services.bulk.job.MultipleTargetJob.TargetType;
++import org.dcache.services.bulk.job.TargetExpansionJob.ExpansionType;
++import org.dcache.services.bulk.queue.SignalAware;
++import org.dcache.util.list.DirectoryEntry;
++import org.dcache.util.list.ListDirectoryHandler;
++import org.dcache.vehicles.FileAttributes;
++import org.dcache.vehicles.PnfsListDirectoryMessage;
++
++import static org.dcache.namespace.FileType.DIR;
++import static org.dcache.namespace.FileType.REGULAR;
++import static org.dcache.services.bulk.BulkRequest.Depth.ALL;
++import static org.dcache.services.bulk.BulkRequest.Depth.TARGETS;
++import static org.dcache.services.bulk.job.MultipleTargetJob.TargetType.BOTH;
++import static org.dcache.services.bulk.job.MultipleTargetJob.TargetType.FILE;
++import static org.dcache.services.bulk.job.TargetExpansionJob.ExpansionType.BREADTH_FIRST;
++import static org.dcache.services.bulk.job.TargetExpansionJob.ExpansionType.DEPTH_FIRST;
++import static org.mockito.Matchers.any;
++import static org.mockito.Mockito.mock;
++import static org.mockito.Mockito.times;
++import static org.mockito.Mockito.verify;
++
++public class BulkMultipleTargetJobTest implements SignalAware
++{
++    private static Random random = new Random(System.currentTimeMillis());
++
++    private static PnfsId nextPnfsId()
++    {
++        String next = String.format("%x", Math.abs(random.nextInt()));
++        return new PnfsId(Strings.padStart(next, 36, '0'));
++    }
++
++    class TestPnfsHandler extends PnfsHandler
++    {
++        public TestPnfsHandler()
++        {
++            super((CellStub) null);
++        }
++
++        public long getPnfsTimeout()
++        {
++            return 0L;
++        }
++
++        public void send(PnfsMessage msg)
++        {
++            if (msg instanceof PnfsListDirectoryMessage) {
++                PnfsListDirectoryMessage listMessage
++                                = (PnfsListDirectoryMessage) msg;
++                fileTree.get(listMessage.getFsPath().name())
++                        .stream()
++                        .forEach(de -> listMessage.addEntry(de.getName(),
++                                                            de.getFileAttributes()));
++                listMessage.setSucceeded(1);
++                listMessage.setReply();
++                listDirectoryHandler.messageArrived(listMessage);
++            }
++        }
++
++        public FileAttributes getFileAttributes(String path, Set<FileAttribute> attr)
++        {
++            return attributesMap.get(new File(path).getName());
++        }
++    }
++
++    Multimap<String, DirectoryEntry> fileTree;
++    Map<String, FileAttributes>      attributesMap;
++    TestPnfsHandler                  pnfsHandler;
++    ListDirectoryHandler             listDirectoryHandler;
++    BulkSubmissionHandler            submissionHandler;
++    BulkJobCompletionHandler         completionHandler;
++
++    BulkRequest        request;
++    BulkJobKey         requestKey;
++    TargetExpansionJob targetExpansionJob;
++    BulkRequestJob     requestJob;
++
++    @Test
++    public void requestJobShouldSubmitOneExpansionJob()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", ALL);
++        givenRequestJobOfType(FILE);
++        whenRequestJobRuns();
++        assertThatExpansionSubmitWasCalled(1);
++    }
++
++    @Test
++    public void requestJobAllShouldSubmitTwoExpansionJobs()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("['pnfs', 'pnfs/fs']", ALL);
++        givenRequestJobOfType(FILE);
++        whenRequestJobRuns();
++        assertThatExpansionSubmitWasCalled(2);
++    }
++
++    @Test
++    public void requestJobShouldSubmitSixSingleTargetJobs()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("['pnfs/fs/scratch/scratch-file-1', "
++                                                       + "'pnfs/fs/scratch/scratch-file-2',"
++                                                       + "'pnfs/fs/scratch/scratch-file-3',"
++                                                       + "'pnfs/fs/scratch/scratch-file-4',"
++                                                       + "'pnfs/fs/scratch/scratch-file-5',"
++                                                       + "'pnfs/fs/scratch/scratch-file-6']",
++                                       Depth.NONE);
++        givenRequestJobOfType(FILE);
++        whenRequestJobRuns();
++        assertThatSingleTargetSubmitWasCalled(6);
++    }
++
++    @Test
++    public void requestJobTargetsShouldSubmitTwoExpansionJobs()
++                    throws Exception
++    {
++        /*
++         * The request job is like the expansion job in that it defers
++         * treating directories as actual targets in the directory is also
++         * to be expanded.
++         */
++        givenRequestWithTargetAndDepth("['pnfs', 'pnfs/fs']", Depth.TARGETS);
++        givenRequestJobOfType(TargetType.DIR);
++        whenRequestJobRuns();
++        assertThatExpansionSubmitWasCalled(2);
++        assertThatSingleTargetSubmitWasCalled(0);
++    }
++
++    @Test
++    public void requestJobShouldSubmitTwoSingleTargetJobs()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("['pnfs', 'pnfs/fs']", Depth.NONE);
++        givenRequestJobOfType(TargetType.DIR);
++        whenRequestJobRuns();
++        assertThatSingleTargetSubmitWasCalled(2);
++    }
++
++    @Test
++    public void breadthFirstExpansionShouldSubmitTargetExpansionJobOnce()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", ALL);
++        givenExpansionWith("pnfs", BREADTH_FIRST, FILE);
++        whenExpansionJobRuns();
++        assertThatExpansionSubmitWasCalled(1);
++    }
++
++    @Test
++    public void depthFirstExpansionShouldSubmitTargetExpansionJobOnce()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", ALL);
++        givenExpansionWith("pnfs", DEPTH_FIRST, FILE);
++        whenExpansionJobRuns();
++        /*
++         *  Depth-first does not submit new directory expansion tasks,
++         *  but does them recursively.
++         */
++        assertThatExpansionSubmitWasCalled(0);
++    }
++
++    @Test
++    public void breadthFirstExpansionShouldSubmitNoExpansionJob()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", TARGETS);
++        givenExpansionWith("pnfs", BREADTH_FIRST, FILE);
++        whenExpansionJobRuns();
++        assertThatExpansionSubmitWasCalled( 0);
++    }
++
++    @Test
++    public void depthFirstExpansionShouldSubmitNoExpansionJob()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", TARGETS);
++        givenExpansionWith("pnfs", DEPTH_FIRST, FILE);
++        whenExpansionJobRuns();
++        assertThatExpansionSubmitWasCalled(0);
++    }
++
++    @Test
++    public void breadthFirstExpansionShouldSubmitTargetExpansionJobTwice()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", ALL);
++        givenExpansionWith("test", BREADTH_FIRST, FILE);
++        whenExpansionJobRuns();
++        assertThatExpansionSubmitWasCalled(2);
++    }
++
++    @Test
++    public void breadthFirstExpansionShouldSubmitSingleTargetJobTwice()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", TARGETS);
++        givenExpansionWith("test-child-2", BREADTH_FIRST, FILE);
++        whenExpansionJobRuns();
++        assertThatSingleTargetSubmitWasCalled(2);
++    }
++
++    @Test
++    public void depthFirstExpansionShouldSubmitSingleTargetJobTwice()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", TARGETS);
++        givenExpansionWith("test-child-2", DEPTH_FIRST, FILE);
++        whenExpansionJobRuns();
++        assertThatSingleTargetSubmitWasCalled(2);
++    }
++
++    @Test
++    public void breadthFirstExpansionShouldSubmitSelfAndChildAsSingleTargetJob()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", TARGETS);
++        givenExpansionWith("test-child-2", BREADTH_FIRST, TargetType.DIR);
++        whenExpansionJobRuns();
++        assertThatSingleTargetSubmitWasCalled(2);
++    }
++
++    @Test
++    public void breadthFirstExpansionShouldSubmitOnlySelfAsSingleTargetJob()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", TARGETS);
++        givenExpansionWith("scratch", BREADTH_FIRST, TargetType.DIR);
++        whenExpansionJobRuns();
++        assertThatSingleTargetSubmitWasCalled(1);
++    }
++
++    @Test
++    public void depthFirstExpansionShouldSubmitSelfAndChildAsSingleTargetJob()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", TARGETS);
++        givenExpansionWith("test-child-2", DEPTH_FIRST, TargetType.DIR);
++        whenExpansionJobRuns();
++        assertThatSingleTargetSubmitWasCalled(2);
++    }
++
++    @Test
++    public void depthFirstExpansionShouldSubmitOnlySelfAsSingleTargetJob()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", TARGETS);
++        givenExpansionWith("scratch", DEPTH_FIRST, TargetType.DIR);
++        whenExpansionJobRuns();
++        assertThatSingleTargetSubmitWasCalled(1);
++    }
++
++    @Test
++    public void breadthFirstExpansionShouldSubmitFourSingleTargetJobs()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", TARGETS);
++        givenExpansionWith("test-child-2", BREADTH_FIRST, BOTH);
++        whenExpansionJobRuns();
++        assertThatSingleTargetSubmitWasCalled(4);
++    }
++
++    @Test
++    public void depthFirstExpansionShouldSubmitFourSingleTargetJobs()
++                    throws Exception
++    {
++        givenRequestWithTargetAndDepth("pnfs", TARGETS);
++        givenExpansionWith("test-child-2", DEPTH_FIRST, BOTH);
++        whenExpansionJobRuns();
++        assertThatSingleTargetSubmitWasCalled(4);
++    }
++
++    @Test
++    public void depthFirstExpansionShouldSubmitThirteenSingleTargetJobs()
++                    throws Exception
++    {
++        /*
++         * Because the mocked submission handler does not add children
++         * to the completion handler, depth-first should walk the entire
++         * tree.
++         */
++        givenRequestWithTargetAndDepth("pnfs", ALL);
++        givenExpansionWith("pnfs", DEPTH_FIRST, TargetType.FILE);
++        whenExpansionJobRuns();
++        assertThatSingleTargetSubmitWasCalled(13);
++    }
++
++    @Test
++    public void depthFirstExpansionShouldSubmitSevenSingleTargetJobs()
++                    throws Exception
++    {
++        /*
++         * Because the mocked submission handler does not add children
++         * to the completion handler, depth-first should walk the entire
++         * tree.
++         */
++        givenRequestWithTargetAndDepth("pnfs", ALL);
++        givenExpansionWith("pnfs", DEPTH_FIRST, TargetType.DIR);
++        whenExpansionJobRuns();
++        assertThatSingleTargetSubmitWasCalled(7);
++    }
++
++    @Test
++    public void breadthFirstExpansionShouldSubmitSelfAndFileSingleTargetJobs()
++                    throws Exception
++    {
++        /*
++         *  Because a directory is treated "up front" as a target in
++         *  breadth-first, and this is deferred (done by the new
++         *  expansion job) when expansion is "on", we should see here
++         *  only the directory itself plus its file children submitted
++         *  as single target jobs.
++         */
++        givenRequestWithTargetAndDepth("pnfs", ALL);
++        givenExpansionWith("test", BREADTH_FIRST, BOTH);
++        whenExpansionJobRuns();
++        assertThatSingleTargetSubmitWasCalled(3);
++    }
++
++    @Before
++    public void setup() throws Exception
++    {
++        fileTree = HashMultimap.create();
++        attributesMap = new HashMap<>();
++        loadEntries();
++        pnfsHandler = new TestPnfsHandler();
++        listDirectoryHandler = new ListDirectoryHandler(pnfsHandler);
++        submissionHandler = mock(BulkSubmissionHandler.class);
++        completionHandler = new BulkJobCompletionHandler(this);
++    }
++
++    @Override
++    public void signal()
++    {
++        // NOP
++    }
++
++    @Override
++    public int countSignals()
++    {
++        return 0;
++    }
++
++    private void assertThatExpansionSubmitWasCalled(int times)
++                    throws Exception
++    {
++        verify(submissionHandler, times(times))
++                        .submitTargetExpansionJob(any(String.class),
++                                                  any(FileAttributes.class),
++                                                  any(MultipleTargetJob.class));
++    }
++
++    private void assertThatSingleTargetSubmitWasCalled(int times)
++        throws Exception
++    {
++        verify(submissionHandler, times(times))
++                        .submitSingleTargetJob(any(String.class),
++                                               any(BulkJobKey.class),
++                                               any(FileAttributes.class),
++                                               any(MultipleTargetJob.class));
++    }
++
++    private void add(String dir, String name, FileType type)
++    {
++        FileAttributes attr = new FileAttributes();
++        attr.setFileType(type);
++        attr.setPnfsId(nextPnfsId());
++        DirectoryEntry entry = new DirectoryEntry(name, attr);
++        attributesMap.put(name, attr);
++        fileTree.put(dir, entry);
++    }
++
++    private void givenExpansionWith(String target,
++                                    ExpansionType expansionType,
++                                    TargetType targetType)
++                    throws Exception
++    {
++        targetExpansionJob = new TargetExpansionJob(
++                        BulkJobKey.newKey(requestKey.getRequestId()),
++                        requestKey,
++                        request,
++                        targetType,
++                        expansionType);
++        targetExpansionJob.setTarget(target);
++        targetExpansionJob.setRestriction(Restrictions.none());
++        targetExpansionJob.setSubmissionHandler(submissionHandler);
++        targetExpansionJob.setListHandler(listDirectoryHandler);
++        targetExpansionJob.setCompletionHandler(completionHandler);
++    }
++
++    private void givenRequestJobOfType(TargetType targetType) throws Exception
++    {
++        requestJob = new BulkRequestJob(requestKey, request, targetType);
++        requestJob.setPnfsManager(pnfsHandler);
++        requestJob.setCompletionHandler(completionHandler);
++        requestJob.setSubmissionHandler(submissionHandler);
++        requestJob.setRestriction(Restrictions.none());
++    }
++
++    private void givenRequestWithTargetAndDepth(String target, Depth depth)
++                    throws Exception
++    {
++        request = new BulkRequest();
++        request.setExpandDirectories(depth);
++        request.setTarget(target);
++        request.setActivity("TEST");
++        request.setUrlPrefix(null);
++        request.setId(UUID.randomUUID().toString());
++        requestKey = BulkJobKey.newKey(request.getId());
++    }
++
++    private void loadEntries()
++    {
++        FileAttributes attr = new FileAttributes();
++        attr.setFileType(FileType.DIR);
++        attr.setPnfsId(nextPnfsId());
++        attributesMap.put("pnfs", attr);
++        add("pnfs", "fs", DIR);
++        add("fs", "test", DIR);
++        add("fs", "scratch", DIR);
++        add("test", "test-file-1", REGULAR);
++        add("test", "test-file-2", REGULAR);
++        add("test", "test-child-1", DIR);
++        add("test", "test-child-2", DIR);
++        add("scratch", "scratch-file-1", REGULAR);
++        add("scratch", "scratch-file-2", REGULAR);
++        add("scratch", "scratch-file-3", REGULAR);
++        add("scratch", "scratch-file-4", REGULAR);
++        add("scratch", "scratch-file-5", REGULAR);
++        add("scratch", "scratch-file-6", REGULAR);
++        add("test-child-1", "test-child-1-file-1", REGULAR);
++        add("test-child-1", "test-child-1-file-2", REGULAR);
++        add("test-child-1", "test-child-1-file-3", REGULAR);
++        add("test-child-2", "test-child-2-file-1", REGULAR);
++        add("test-child-2", "test-child-2-file-2", REGULAR);
++        add("test-child-2", "test-child-2-empty", DIR);
++    }
++
++    private void whenExpansionJobRuns()
++    {
++        targetExpansionJob.run();
++    }
++
++    private void whenRequestJobRuns()
++    {
++        requestJob.run();
++    }
++}
+diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
+new file mode 100644
+index 0000000000..47053e175b
+--- /dev/null
++++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
+@@ -0,0 +1,188 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk;
++
++import java.io.Serializable;
++import java.util.Map;
++
++/**
++ *  Generic bulk request.  It is up to the request store to
++ *  map the request to an appropriate id and type.
++ */
++public class BulkRequest implements Serializable
++{
++    private static final long serialVersionUID = 5314015926727327490L;
++
++    public enum Depth
++    {
++        NONE, TARGETS, ALL
++    }
++
++    private String                    urlPrefix;
++    private String                    id;
++    private String                    target;
++    private String                    targetPrefix;
++    private String                    activity;
++    private Boolean                   clearOnSuccess;
++    private Boolean                   clearOnFailure;
++    private Integer                   delayClear;
++    private Map<String, String>       arguments;
++    private Depth                     expandDirectories;
++
++    public String getActivity()
++    {
++        return activity;
++    }
++
++    public Map<String, String> getArguments()
++    {
++        return arguments;
++    }
++
++    public Boolean getClearOnFailure()
++    {
++        return clearOnFailure;
++    }
++
++    public Boolean getClearOnSuccess()
++    {
++        return clearOnSuccess;
++    }
++
++    public Integer getDelayClear()
++    {
++        return delayClear;
++    }
++
++    public Depth getExpandDirectories()
++    {
++        return expandDirectories;
++    }
++
++    public String getId()
++    {
++        return id;
++    }
++
++    public String getTarget()
++    {
++        return target;
++    }
++
++    public String getTargetPrefix()
++    {
++        return targetPrefix;
++    }
++
++    public String getUrlPrefix()
++    {
++        return urlPrefix;
++    }
++
++    public void setActivity(String activity)
++    {
++        this.activity = activity;
++    }
++
++    public void setArguments(Map<String, String> arguments)
++    {
++        this.arguments = arguments;
++    }
++
++    public void setClearOnFailure(Boolean clearOnFailure)
++    {
++        this.clearOnFailure = clearOnFailure;
++    }
++
++    public void setClearOnSuccess(Boolean clearOnSuccess)
++    {
++        this.clearOnSuccess = clearOnSuccess;
++    }
++
++    public void setDelayClear(Integer delayClear)
++    {
++        this.delayClear = delayClear;
++    }
++
++    public void setExpandDirectories(Depth expandDirectories)
++    {
++        this.expandDirectories = expandDirectories;
++    }
++
++    public void setId(String id)
++    {
++        this.id = id;
++    }
++
++    public void setTarget(String target)
++    {
++        this.target = target;
++    }
++
++    public void setTargetPrefix(String targetPrefix)
++    {
++        this.targetPrefix = targetPrefix;
++    }
++
++    public void setUrlPrefix(String urlPrefix)
++    {
++        this.urlPrefix = urlPrefix;
++    }
++}
