@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStore.java
 new file mode 100644
-index 0000000000..c045a40291
+index 0000000..c045a40
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStore.java
 @@ -0,0 +1,87 @@
@@ -93,7 +93,7 @@ index 0000000000..c045a40291
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePrivate.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePrivate.java
 new file mode 100644
-index 0000000000..3e4bb63c6b
+index 0000000..3e4bb63
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePrivate.java
 @@ -0,0 +1,231 @@
@@ -330,7 +330,7 @@ index 0000000000..3e4bb63c6b
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePublic.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePublic.java
 new file mode 100644
-index 0000000000..1e32a09ef1
+index 0000000..1e32a09
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePublic.java
 @@ -0,0 +1,125 @@
@@ -461,7 +461,7 @@ index 0000000000..1e32a09ef1
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/AbstractObjectFileStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/AbstractObjectFileStore.java
 new file mode 100644
-index 0000000000..7dbbda3b24
+index 0000000..7dbbda3
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/AbstractObjectFileStore.java
 @@ -0,0 +1,250 @@
@@ -717,7 +717,7 @@ index 0000000000..7dbbda3b24
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
 new file mode 100644
-index 0000000000..1c5e7c0555
+index 0000000..1c5e7c0
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
 @@ -0,0 +1,578 @@
@@ -1301,10 +1301,10 @@ index 0000000000..1c5e7c0555
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java
 new file mode 100644
-index 0000000000..000403f434
+index 0000000..ae462cc
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java
-@@ -0,0 +1,556 @@
+@@ -0,0 +1,578 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -1366,6 +1366,7 @@ index 0000000000..000403f434
 + */
 +package org.dcache.services.bulk.store.memory;
 +
++import com.google.common.base.Strings;
 +import com.google.common.collect.HashMultimap;
 +import com.google.common.collect.Multimap;
 +
@@ -1744,13 +1745,8 @@ index 0000000000..000403f434
 +    {
 +        write.lock();
 +        try {
-+            BulkRequestStatus stored = this.status.get(requestId);
-+            if (stored == null) {
-+                String error = "request id " + requestId
-+                                + " is no longer valid!";
-+                throw new BulkRequestStorageException(error);
-+            }
-+            stored.targetAborted(target, exception);
++            target = checkTarget(requestId, target);
++            getNonNullStatus(requestId).targetAborted(target, exception);
 +        } finally {
 +            write.unlock();
 +        }
@@ -1762,13 +1758,8 @@ index 0000000000..000403f434
 +    {
 +        write.lock();
 +        try {
-+            BulkRequestStatus stored = this.status.get(requestId);
-+            if (stored == null) {
-+                String error = "request id " + requestId
-+                                + " is no longer valid!";
-+                throw new BulkRequestStorageException(error);
-+            }
-+            stored.targetCompleted(target, exception);
++            target = checkTarget(requestId, target);
++            getNonNullStatus(requestId).targetCompleted(target, exception);
 +        } finally {
 +            write.unlock();
 +        }
@@ -1819,12 +1810,43 @@ index 0000000000..000403f434
 +        }
 +    }
 +
++    @GuardedBy("write")
++    private BulkRequestStatus getNonNullStatus(String requestId)
++    {
++        BulkRequestStatus stored = this.status.get(requestId);
++        if (stored == null) {
++            String error = "request id " + requestId
++                            + " is missing a status object; this is a bug!";
++            throw new RuntimeException(error);
++        }
++        return stored;
++    }
++
 +    private boolean isRequestSubject(Subject subject, String requestId)
 +    {
 +        Subject requestSubject = this.requestSubject.get(requestId);
 +        return Subjects.isRoot(subject) ||
 +                        uidGidKey(subject)
 +                                   .equals(uidGidKey(requestSubject));
++    }
++
++    @GuardedBy("write")
++    private String checkTarget(String requestId, String target)
++                    throws BulkRequestStorageException
++    {
++        BulkRequest request = this.requests.get(requestId);
++        if (request == null) {
++            String error = "request id " + requestId
++                            + " is no longer valid!";
++            throw new BulkRequestStorageException(error);
++        }
++
++        String prefix = request.getTargetPrefix();
++        if (Strings.emptyToNull(prefix) != null && target.startsWith(prefix)) {
++            target = target.substring(prefix.length());
++        }
++
++        return target;
 +    }
 +
 +    @GuardedBy("write")
@@ -1863,7 +1885,7 @@ index 0000000000..000403f434
 +}
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkFailures.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkFailures.java
 new file mode 100644
-index 0000000000..7d38e60c93
+index 0000000..7d38e60
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkFailures.java
 @@ -0,0 +1,138 @@
@@ -2007,7 +2029,7 @@ index 0000000000..7d38e60c93
 +}
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkPermissionDeniedException.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkPermissionDeniedException.java
 new file mode 100644
-index 0000000000..45c6a9ee51
+index 0000000..45c6a9e
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkPermissionDeniedException.java
 @@ -0,0 +1,75 @@
@@ -2088,7 +2110,7 @@ index 0000000000..45c6a9ee51
 +}
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequestStatus.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequestStatus.java
 new file mode 100644
-index 0000000000..f0d8f2593d
+index 0000000..f0d8f25
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequestStatus.java
 @@ -0,0 +1,181 @@
@@ -2275,7 +2297,7 @@ index 0000000000..f0d8f2593d
 +}
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequestStorageException.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequestStorageException.java
 new file mode 100644
-index 0000000000..8cc52044e7
+index 0000000..8cc5204
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequestStorageException.java
 @@ -0,0 +1,75 @@
