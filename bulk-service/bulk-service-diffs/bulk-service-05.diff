@@ -93,10 +93,10 @@ index 0000000..c045a40
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePrivate.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePrivate.java
 new file mode 100644
-index 0000000..7d228f5
+index 0000000..ab148ce
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePrivate.java
-@@ -0,0 +1,208 @@
+@@ -0,0 +1,236 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -163,6 +163,8 @@ index 0000000..7d228f5
 +import java.util.Comparator;
 +import java.util.List;
 +import java.util.Optional;
++import java.util.function.Predicate;
++import java.util.stream.Stream;
 +
 +import org.dcache.auth.attributes.Restriction;
 +import org.dcache.services.bulk.BulkRequest;
@@ -197,6 +199,11 @@ index 0000000..7d228f5
 +    void addTarget(String requestId) throws BulkRequestStorageException;
 +
 +    /**
++     * @param requestId unique id for request.
++     */
++    void clear(String requestId);
++
++    /**
 +     * @param user originator of the requests (=uidGidKey).
 +     * @return the number of (matching) requests owned by the owner
 +     *         which have yet to be completed.
@@ -205,13 +212,17 @@ index 0000000..7d228f5
 +    int countNonTerminated(String user) throws BulkRequestStorageException;
 +
 +    /**
-+     * Checks to see if the subject owns or has access to the request.
-+     *
-+     * @param subject of the user
-+     * @param requestId to check
-+     * @return true if request is accessible by user
++     * @param requestFilter optional filter on the request.
++     * @param statusFilter  optional filter on the request status
++     * @param limit         max requests to return (can be <code>null</code>).
++     * @return a stream of requests in the store which match
++     *                      the filters, if present; no filter means return all.
++     * @throws BulkRequestStorageException
 +     */
-+    boolean isRequestSubject(Subject subject, String requestId);
++    Stream<BulkRequest> find(Optional<Predicate<BulkRequest>> requestFilter,
++                             Optional<Predicate<BulkRequestStatus>> statusFilter,
++                             Long limit)
++                    throws BulkRequestStorageException;
 +
 +    /**
 +     * @param requestId unique id for request.
@@ -251,19 +262,36 @@ index 0000000..7d228f5
 +                    throws BulkRequestStorageException;
 +
 +    /**
++     * Checks to see if the subject owns or has access to the request.
++     *
++     * @param subject of the user
++     * @param requestId to check
++     * @return true if request is accessible by user
++     */
++    boolean isRequestSubject(Subject subject, String requestId);
++
++    /**
 +     * Load the store into memory.
 +     * May be a NOP.
 +     */
 +    List<BulkRequest> load() throws BulkStorageException;
 +
 +    /**
++     * @param  limit max requests to return
 +     * @return list of requests in the store
 +     *          which are queued to start;
-+     * these should be ordered by arrival time.
++     *          these should be ordered by arrival time.
 +     * @throws BulkRequestStorageException
-+     * @limit max requests to return
 +     */
 +    List<BulkRequest> next(long limit) throws BulkRequestStorageException;
++
++    /**
++     * Reset the request to QUEUED state.
++     *
++     * @param requestId unique id for request.
++     * @throws BulkRequestStorageException
++     */
++    void reset(String requestId) throws BulkRequestStorageException;
 +
 +    /**
 +     * Persist the store from memory.
@@ -695,10 +723,10 @@ index 0000000..7dbbda3
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
 new file mode 100644
-index 0000000..dd18930
+index 0000000..462cf76
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
-@@ -0,0 +1,566 @@
+@@ -0,0 +1,578 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -775,6 +803,7 @@ index 0000000..dd18930
 +import java.util.concurrent.ScheduledExecutorService;
 +import java.util.concurrent.TimeUnit;
 +import java.util.function.Predicate;
++import java.util.stream.Stream;
 +
 +import org.dcache.auth.attributes.Restriction;
 +import org.dcache.services.bulk.BulkFailures;
@@ -991,11 +1020,43 @@ index 0000000..dd18930
 +    }
 +
 +    @Override
++    public void clear(String requestId)
++    {
++        LOGGER.trace("clear {}.", requestId);
++
++        Optional<BulkRequest> request = delegate.getRequest(requestId);
++
++        if (!request.isPresent()) {
++            return;
++        }
++
++        Integer delay = request.get().getDelayClear();
++        if (delay == null || delay == 0) {
++            delegate.clear(requestId);
++            deleteFromDisk(requestId);
++        } else {
++            scheduler.scheduleWithFixedDelay(() -> {
++                delegate.clear(requestId);
++                deleteFromDisk(requestId);
++            }, 0, delay, TimeUnit.SECONDS);
++        }
++    }
++
++    @Override
 +    public int countNonTerminated(String user)
 +    {
 +        LOGGER.trace("count {}, {}.", user);
 +
 +        return delegate.countNonTerminated(user);
++    }
++
++    @Override
++    public Stream<BulkRequest> find(Optional<Predicate<BulkRequest>> requestFilter,
++                             Optional<Predicate<BulkRequestStatus>> statusFilter,
++                             Long limit)
++                    throws BulkRequestStorageException
++    {
++        return delegate.find(requestFilter, statusFilter, limit);
 +    }
 +
 +    @Override
@@ -1081,6 +1142,14 @@ index 0000000..dd18930
 +    }
 +
 +    @Override
++    public void reset(String requestId) throws BulkRequestStorageException
++    {
++        LOGGER.trace("reset {}.", requestId);
++        delegate.reset(requestId);
++        writeToDisk(requestId);
++    }
++
++    @Override
 +    public void save()
 +    {
 +        writeToDisk();
@@ -1158,7 +1227,7 @@ index 0000000..dd18930
 +                        = delegate.getRequest(requestId);
 +        if (!optionalRequest.isPresent()) {
 +            throw new BulkRequestStorageException("Request " + requestId
-+                                                                  + " not found.");
++                                                             + " not found.");
 +        }
 +
 +        BulkRequest request = optionalRequest.get();
@@ -1209,35 +1278,6 @@ index 0000000..dd18930
 +                       wrapper.getStatus());
 +    }
 +
-+    private void clear(String requestId)
-+    {
-+        LOGGER.trace("clear {}.", requestId);
-+
-+        Optional<BulkRequest> request = delegate.getRequest(requestId);
-+
-+        if (!request.isPresent()) {
-+            return;
-+        }
-+
-+        Integer delay = request.get().getDelayClear();
-+        if (delay == null || delay == 0) {
-+            delegate.clear(requestId);
-+            deleteFromDisk(requestId);
-+        } else {
-+            scheduler.scheduleWithFixedDelay(() -> {
-+                delegate.clear(requestId);
-+                deleteFromDisk(requestId);
-+            }, 0, delay, TimeUnit.SECONDS);
-+        }
-+    }
-+
-+    private void reset(String requestId) throws BulkRequestStorageException
-+    {
-+        LOGGER.trace("reset {}.", requestId);
-+        delegate.reset(requestId);
-+        writeToDisk(requestId);
-+    }
-+
 +    private void resetUnfinished()
 +    {
 +        LOGGER.trace("resetUnfinished called.");
@@ -1267,10 +1307,10 @@ index 0000000..dd18930
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java
 new file mode 100644
-index 0000000..f744399
+index 0000000..3fe87c4
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java
-@@ -0,0 +1,532 @@
+@@ -0,0 +1,587 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -1350,6 +1390,7 @@ index 0000000..f744399
 +import java.util.TreeSet;
 +import java.util.function.Predicate;
 +import java.util.stream.Collectors;
++import java.util.stream.Stream;
 +
 +import org.dcache.auth.Subjects;
 +import org.dcache.auth.attributes.Restriction;
@@ -1508,6 +1549,40 @@ index 0000000..f744399
 +    }
 +
 +    @Override
++    public Stream<BulkRequest> find(Optional<Predicate<BulkRequest>> requestFilter,
++                                    Optional<Predicate<BulkRequestStatus>> statusFilter,
++                                    Long limit)
++    {
++        read.lock();
++        try {
++            if (limit == null) {
++                limit = Long.MAX_VALUE;
++            }
++
++            Stream<String> keys;
++
++            if (statusFilter.isPresent()) {
++                Predicate<BulkRequestStatus> sf = statusFilter.get();
++                keys = status.entrySet().stream().filter(e -> sf.test(e.getValue()))
++                             .map(Entry::getKey);
++            } else {
++                keys = requests.keySet().stream();
++            }
++
++            if (requestFilter.isPresent()) {
++                Predicate<BulkRequest> rf = requestFilter.get();
++                return keys.map(requests::get)
++                           .filter(rf::test)
++                           .limit(limit);
++            } else {
++                return keys.map(requests::get).limit(limit);
++            }
++        } finally {
++            read.unlock();
++        }
++    }
++
++    @Override
 +    public Comparator<String> getStatusComparator()
 +    {
 +        return comparator;
@@ -1657,6 +1732,7 @@ index 0000000..f744399
 +        }
 +    }
 +
++    @Override
 +    public void reset(String requestId) throws BulkRequestStorageException
 +    {
 +        write.lock();
@@ -1726,12 +1802,31 @@ index 0000000..f744399
 +                case CANCELLED:
 +                case STARTED:
 +                    queued.remove(requestId);
-+                    /*
-+                     * fall through to update status.
-+                     */
 +                default:
-+                    getNonNullStatus(requestId).setStatus(status);
++                    break;
 +            }
++
++            BulkRequestStatus current = getNonNullStatus(requestId);
++
++            switch (current.getStatus())
++            {
++                case COMPLETED:
++                case CANCELLED:
++                    break;
++                case STARTED:
++                    switch (status) {
++                        case COMPLETED:
++                        case CANCELLED:
++                            current.setStatus(status);
++                            break;
++                    }
++                    break;
++                case QUEUED:
++                default:
++                    current.setStatus(status);
++                    break;
++            }
++
 +        } finally {
 +            write.unlock();
 +        }
