@@ -14,7 +14,7 @@ index 474e50b..108252d 100644
  @Provider
 diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java
 new file mode 100644
-index 0000000..2694abb
+index 0000000..d7cf7dc
 --- /dev/null
 +++ b/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java
 @@ -0,0 +1,385 @@
@@ -155,7 +155,7 @@ index 0000000..2694abb
 +     * @status A comma-separated list of non-repeating elements,
 +     *         each of which is one of: queued, started, completed, cancelled.
 +     *
-+     * @return List of absolute URLs of a bulk request made by this user
++     * @return List of absolute URLs of bulk requests made by this user
 +     *         and that have not been cleared. If the client includes no query
 +     *         string then the response contains all bulk requests made by this
 +     *         user that have not been cleared.  If the user has made no bulk
