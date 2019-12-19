@@ -1,9 +1,9 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/BulkService.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/BulkService.java
 new file mode 100644
-index 0000000..01194a3
+index 0000000..3557945
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/BulkService.java
-@@ -0,0 +1,359 @@
+@@ -0,0 +1,363 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -73,6 +73,7 @@ index 0000000..01194a3
 +
 +import java.util.List;
 +import java.util.Optional;
++import java.util.UUID;
 +import java.util.concurrent.ExecutorService;
 +
 +import diskCacheV111.vehicles.Message;
@@ -166,12 +167,15 @@ index 0000000..01194a3
 +                Subject subject = message.getSubject();
 +                checkQuota(subject);
 +                checkRestrictions(message.getRestriction(), request.getId());
++                request.setId(UUID.randomUUID().toString());
 +                requestStore.store(subject,
 +                                   message.getRestriction(),
 +                                   request,
 +                                   null);
 +                queue.signal();
 +                statistics.incrementRequestsReceived(request.getActivity());
++                message.setRequestUrl(request.getUrlPrefix()
++                                                      + "/" + request.getId());
 +                reply.reply(message);
 +            } catch (BulkServiceException e) {
 +                LOGGER.error("messageArrived(BulkRequestMessage) {}: {}",
@@ -735,10 +739,10 @@ index 0000000..f28c5c2
 +
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequestMessage.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequestMessage.java
 new file mode 100644
-index 0000000..bdf8645
+index 0000000..a2421e8
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequestMessage.java
-@@ -0,0 +1,91 @@
+@@ -0,0 +1,101 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -803,13 +807,14 @@ index 0000000..bdf8645
 +import org.dcache.auth.attributes.Restriction;
 +
 +/**
-+ *   Single generic bulk message type which serves various activities.
++ * Single generic bulk message type which serves various activities.
 + */
 +public class BulkRequestMessage extends BulkServiceMessage
 +{
 +    private static final long serialVersionUID = 957050116233062328L;
 +
 +    private final BulkRequest request;
++    private       String      requestUrl;
 +
 +    public BulkRequestMessage(BulkRequest request, Restriction restriction)
 +    {
@@ -822,10 +827,19 @@ index 0000000..bdf8645
 +        return request;
 +    }
 +
++    public String getRequestUrl()
++    {
++        return requestUrl;
++    }
++
++    public void setRequestUrl(String requestUrl)
++    {
++        this.requestUrl = requestUrl;
++    }
++
 +    public String toString()
 +    {
-+        return "BulkRequestMessage for request " + request.getUrlPrefix()
-+                        + "/" + request.getId() + ", target: "
++        return "BulkRequestMessage for request " + requestUrl + ", target: "
 +                        + request.getTarget() + ", activity: "
 +                        + request.getActivity();
 +    }

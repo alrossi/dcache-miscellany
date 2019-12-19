@@ -1,3 +1,299 @@
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePrivate.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePrivate.java
+index 7d228f5..ab148ce 100644
+--- a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePrivate.java
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStorePrivate.java
+@@ -64,6 +64,8 @@ import javax.security.auth.Subject;
+ import java.util.Comparator;
+ import java.util.List;
+ import java.util.Optional;
++import java.util.function.Predicate;
++import java.util.stream.Stream;
+ 
+ import org.dcache.auth.attributes.Restriction;
+ import org.dcache.services.bulk.BulkRequest;
+@@ -98,6 +100,11 @@ public interface BulkRequestStorePrivate
+     void addTarget(String requestId) throws BulkRequestStorageException;
+ 
+     /**
++     * @param requestId unique id for request.
++     */
++    void clear(String requestId);
++
++    /**
+      * @param user originator of the requests (=uidGidKey).
+      * @return the number of (matching) requests owned by the owner
+      *         which have yet to be completed.
+@@ -106,13 +113,17 @@ public interface BulkRequestStorePrivate
+     int countNonTerminated(String user) throws BulkRequestStorageException;
+ 
+     /**
+-     * Checks to see if the subject owns or has access to the request.
+-     *
+-     * @param subject of the user
+-     * @param requestId to check
+-     * @return true if request is accessible by user
++     * @param requestFilter optional filter on the request.
++     * @param statusFilter  optional filter on the request status
++     * @param limit         max requests to return (can be <code>null</code>).
++     * @return a stream of requests in the store which match
++     *                      the filters, if present; no filter means return all.
++     * @throws BulkRequestStorageException
+      */
+-    boolean isRequestSubject(Subject subject, String requestId);
++    Stream<BulkRequest> find(Optional<Predicate<BulkRequest>> requestFilter,
++                             Optional<Predicate<BulkRequestStatus>> statusFilter,
++                             Long limit)
++                    throws BulkRequestStorageException;
+ 
+     /**
+      * @param requestId unique id for request.
+@@ -152,21 +163,38 @@ public interface BulkRequestStorePrivate
+                     throws BulkRequestStorageException;
+ 
+     /**
++     * Checks to see if the subject owns or has access to the request.
++     *
++     * @param subject of the user
++     * @param requestId to check
++     * @return true if request is accessible by user
++     */
++    boolean isRequestSubject(Subject subject, String requestId);
++
++    /**
+      * Load the store into memory.
+      * May be a NOP.
+      */
+     List<BulkRequest> load() throws BulkStorageException;
+ 
+     /**
++     * @param  limit max requests to return
+      * @return list of requests in the store
+      *          which are queued to start;
+-     * these should be ordered by arrival time.
++     *          these should be ordered by arrival time.
+      * @throws BulkRequestStorageException
+-     * @limit max requests to return
+      */
+     List<BulkRequest> next(long limit) throws BulkRequestStorageException;
+ 
+     /**
++     * Reset the request to QUEUED state.
++     *
++     * @param requestId unique id for request.
++     * @throws BulkRequestStorageException
++     */
++    void reset(String requestId) throws BulkRequestStorageException;
++
++    /**
+      * Persist the store from memory.
+      * May be a NOP.
+      */
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
+index 5399994..462cf76 100644
+--- a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
+@@ -74,6 +74,7 @@ import java.util.Set;
+ import java.util.concurrent.ScheduledExecutorService;
+ import java.util.concurrent.TimeUnit;
+ import java.util.function.Predicate;
++import java.util.stream.Stream;
+ 
+ import org.dcache.auth.attributes.Restriction;
+ import org.dcache.services.bulk.BulkFailures;
+@@ -290,6 +291,29 @@ public class FileBulkRequestStore extends AbstractObjectFileStore<FileBulkReques
+     }
+ 
+     @Override
++    public void clear(String requestId)
++    {
++        LOGGER.trace("clear {}.", requestId);
++
++        Optional<BulkRequest> request = delegate.getRequest(requestId);
++
++        if (!request.isPresent()) {
++            return;
++        }
++
++        Integer delay = request.get().getDelayClear();
++        if (delay == null || delay == 0) {
++            delegate.clear(requestId);
++            deleteFromDisk(requestId);
++        } else {
++            scheduler.scheduleWithFixedDelay(() -> {
++                delegate.clear(requestId);
++                deleteFromDisk(requestId);
++            }, 0, delay, TimeUnit.SECONDS);
++        }
++    }
++
++    @Override
+     public int countNonTerminated(String user)
+     {
+         LOGGER.trace("count {}, {}.", user);
+@@ -298,6 +322,15 @@ public class FileBulkRequestStore extends AbstractObjectFileStore<FileBulkReques
+     }
+ 
+     @Override
++    public Stream<BulkRequest> find(Optional<Predicate<BulkRequest>> requestFilter,
++                             Optional<Predicate<BulkRequestStatus>> statusFilter,
++                             Long limit)
++                    throws BulkRequestStorageException
++    {
++        return delegate.find(requestFilter, statusFilter, limit);
++    }
++
++    @Override
+     public List<String> getRequestUrls(Subject subject, Set<Status> status)
+     {
+         LOGGER.trace("getRequestUrls {}, {}.", uidGidKey(subject),
+@@ -380,6 +413,14 @@ public class FileBulkRequestStore extends AbstractObjectFileStore<FileBulkReques
+     }
+ 
+     @Override
++    public void reset(String requestId) throws BulkRequestStorageException
++    {
++        LOGGER.trace("reset {}.", requestId);
++        delegate.reset(requestId);
++        writeToDisk(requestId);
++    }
++
++    @Override
+     public void save()
+     {
+         writeToDisk();
+@@ -508,35 +549,6 @@ public class FileBulkRequestStore extends AbstractObjectFileStore<FileBulkReques
+                        wrapper.getStatus());
+     }
+ 
+-    private void clear(String requestId)
+-    {
+-        LOGGER.trace("clear {}.", requestId);
+-
+-        Optional<BulkRequest> request = delegate.getRequest(requestId);
+-
+-        if (!request.isPresent()) {
+-            return;
+-        }
+-
+-        Integer delay = request.get().getDelayClear();
+-        if (delay == null || delay == 0) {
+-            delegate.clear(requestId);
+-            deleteFromDisk(requestId);
+-        } else {
+-            scheduler.scheduleWithFixedDelay(() -> {
+-                delegate.clear(requestId);
+-                deleteFromDisk(requestId);
+-            }, 0, delay, TimeUnit.SECONDS);
+-        }
+-    }
+-
+-    private void reset(String requestId) throws BulkRequestStorageException
+-    {
+-        LOGGER.trace("reset {}.", requestId);
+-        delegate.reset(requestId);
+-        writeToDisk(requestId);
+-    }
+-
+     private void resetUnfinished()
+     {
+         LOGGER.trace("resetUnfinished called.");
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java
+index f744399..3fe87c4 100644
+--- a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java
+@@ -77,6 +77,7 @@ import java.util.Set;
+ import java.util.TreeSet;
+ import java.util.function.Predicate;
+ import java.util.stream.Collectors;
++import java.util.stream.Stream;
+ 
+ import org.dcache.auth.Subjects;
+ import org.dcache.auth.attributes.Restriction;
+@@ -235,6 +236,40 @@ public class InMemoryBulkRequestStore extends InMemoryStore
+     }
+ 
+     @Override
++    public Stream<BulkRequest> find(Optional<Predicate<BulkRequest>> requestFilter,
++                                    Optional<Predicate<BulkRequestStatus>> statusFilter,
++                                    Long limit)
++    {
++        read.lock();
++        try {
++            if (limit == null) {
++                limit = Long.MAX_VALUE;
++            }
++
++            Stream<String> keys;
++
++            if (statusFilter.isPresent()) {
++                Predicate<BulkRequestStatus> sf = statusFilter.get();
++                keys = status.entrySet().stream().filter(e -> sf.test(e.getValue()))
++                             .map(Entry::getKey);
++            } else {
++                keys = requests.keySet().stream();
++            }
++
++            if (requestFilter.isPresent()) {
++                Predicate<BulkRequest> rf = requestFilter.get();
++                return keys.map(requests::get)
++                           .filter(rf::test)
++                           .limit(limit);
++            } else {
++                return keys.map(requests::get).limit(limit);
++            }
++        } finally {
++            read.unlock();
++        }
++    }
++
++    @Override
+     public Comparator<String> getStatusComparator()
+     {
+         return comparator;
+@@ -384,6 +419,7 @@ public class InMemoryBulkRequestStore extends InMemoryStore
+         }
+     }
+ 
++    @Override
+     public void reset(String requestId) throws BulkRequestStorageException
+     {
+         write.lock();
+@@ -453,12 +489,31 @@ public class InMemoryBulkRequestStore extends InMemoryStore
+                 case CANCELLED:
+                 case STARTED:
+                     queued.remove(requestId);
+-                    /*
+-                     * fall through to update status.
+-                     */
+                 default:
+-                    getNonNullStatus(requestId).setStatus(status);
++                    break;
++            }
++
++            BulkRequestStatus current = getNonNullStatus(requestId);
++
++            switch (current.getStatus())
++            {
++                case COMPLETED:
++                case CANCELLED:
++                    break;
++                case STARTED:
++                    switch (status) {
++                        case COMPLETED:
++                        case CANCELLED:
++                            current.setStatus(status);
++                            break;
++                    }
++                    break;
++                case QUEUED:
++                default:
++                    current.setStatus(status);
++                    break;
+             }
++
+         } finally {
+             write.unlock();
+         }
 diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/ApiConfig.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/ApiConfig.java
 index 474e50b..108252d 100644
 --- a/modules/dcache-frontend/src/main/java/org/dcache/restful/ApiConfig.java
@@ -14,10 +310,10 @@ index 474e50b..108252d 100644
  @Provider
 diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java
 new file mode 100644
-index 0000000..d7cf7dc
+index 0000000..c154957
 --- /dev/null
 +++ b/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java
-@@ -0,0 +1,385 @@
+@@ -0,0 +1,450 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -93,6 +389,7 @@ index 0000000..d7cf7dc
 +import org.springframework.stereotype.Component;
 +
 +import javax.inject.Inject;
++import javax.security.auth.Subject;
 +import javax.servlet.http.HttpServletRequest;
 +import javax.ws.rs.BadRequestException;
 +import javax.ws.rs.ClientErrorException;
@@ -117,6 +414,9 @@ index 0000000..d7cf7dc
 +import java.util.List;
 +import java.util.Set;
 +
++import org.dcache.auth.Subjects;
++import org.dcache.auth.attributes.Restriction;
++import org.dcache.auth.attributes.Restrictions;
 +import org.dcache.restful.util.RequestUser;
 +import org.dcache.restful.util.bulk.BulkSerivceCommunicator;
 +import org.dcache.services.bulk.BulkPermissionDeniedException;
@@ -181,6 +481,10 @@ index 0000000..d7cf7dc
 +                                             + "completed, cancelled.")
 +                                   @QueryParam("status") String status)
 +    {
++        if (RequestUser.isAnonymous()) {
++            throw new NotAuthorizedException("User cannot be anonymous.");
++        }
++
 +        Set<Status> filter;
 +        if (Strings.emptyToNull(status) != null) {
 +            String[] options = status.split("[,]");
@@ -233,6 +537,10 @@ index 0000000..d7cf7dc
 +                                    required = true)
 +                           String requestPayload)
 +    {
++        if (RequestUser.isAnonymous()) {
++            throw new NotAuthorizedException("User cannot be anonymous.");
++        }
++
 +        BulkRequest request;
 +
 +        try {
@@ -242,6 +550,11 @@ index 0000000..d7cf7dc
 +            throw new BadRequestException(e);
 +        }
 +
++        /*
++         *  Frontend sets the URL.  The backend service provides the UUID
++         */
++        request.setUrlPrefix(this.request.getRequestURI());
++
 +        BulkRequestMessage message
 +                        = new BulkRequestMessage(request,
 +                                                 RequestUser.getRestriction());
@@ -250,11 +563,20 @@ index 0000000..d7cf7dc
 +
 +        checkError(message);
 +
++        Response response = successfulResponse(Response.Status.CREATED);
++        response.getStringHeaders().add("request-url",
++                                        message.getRequestUrl());
++
 +        return successfulResponse(Response.Status.CREATED);
 +    }
 +
 +    /**
 +     * Get status information for an individual request.
++     *
++     * Note: GET, PATCH and POST methods on the {id} path
++     * allow operations by ROOT.
++     *
++     * Submission of the request, however, must be done by a non-root Subject.
 +     *
 +     * @param id of the request.
 +     *
@@ -275,10 +597,16 @@ index 0000000..d7cf7dc
 +    public BulkRequestStatus getBulkRequestStatus(@ApiParam("The unique id of the request.")
 +                                                  @PathParam("id") String id)
 +    {
++        if (RequestUser.isAnonymous()) {
++            throw new NotAuthorizedException("User cannot be anonymous.");
++        }
++
++        Subject subject = getSubject();
++        Restriction restriction = getRestriction();
++
 +        BulkRequestStatusMessage message
-+                        = new BulkRequestStatusMessage(id,
-+                                                       RequestUser.getRestriction());
-+        message.setSubject(RequestUser.getSubject());
++                        = new BulkRequestStatusMessage(id, restriction);
++        message.setSubject(subject);
 +        message = service.send(message);
 +
 +        checkError(message);
@@ -295,6 +623,11 @@ index 0000000..d7cf7dc
 +     * The corresponding bulk request status is updated to cancelled if
 +     * it is currently queued or started.  It does not change in the status
 +     * is cancelled or completed.
++     *
++     * Note: GET, PATCH and POST methods on the {id} path
++     * allow operations by ROOT.
++     *
++     * Submission of the request, however, must be done by a non-root Subject.
 +     *
 +     * @param id of the request.
 +     * @param requestPayload A JSON Object with an 'action' item specifying
@@ -323,6 +656,10 @@ index 0000000..d7cf7dc
 +                                                                + "\"cancel\" }") }))
 +                           String requestPayload)
 +    {
++        if (RequestUser.isAnonymous()) {
++            throw new NotAuthorizedException("User cannot be anonymous.");
++        }
++
 +        JSONObject reqPayload = new JSONObject(requestPayload);
 +
 +        String action = reqPayload.getString("action");
@@ -331,10 +668,12 @@ index 0000000..d7cf7dc
 +            throw new BadRequestException(action + " not supported.");
 +        }
 +
++        Subject subject = getSubject();
++        Restriction restriction = getRestriction();
++
 +        BulkRequestCancelMessage message
-+                        = new BulkRequestCancelMessage(id,
-+                                                       RequestUser.getRestriction());
-+        message.setSubject(RequestUser.getSubject());
++                        = new BulkRequestCancelMessage(id, restriction);
++        message.setSubject(subject);
 +        message = service.send(message);
 +
 +        checkError(message);
@@ -349,6 +688,9 @@ index 0000000..d7cf7dc
 +     * The bulk request is cleared.  No further activity will take place
 +     * for this request.  The server will respond to subsequent GET requests
 +     * targeting this resource with a 404 (Not Found) status code.
++     *
++     * Note: GET, PATCH and POST methods on the {id} path
++     * allow operations by ROOT.
 +     *
 +     * @param id of the request.
 +     *
@@ -368,10 +710,16 @@ index 0000000..d7cf7dc
 +    public Response clearRequest(@ApiParam("The unique id of the request.")
 +                                 @PathParam("id") String id)
 +    {
++        if (RequestUser.isAnonymous()) {
++            throw new NotAuthorizedException("User cannot be anonymous.");
++        }
++
++        Subject subject = getSubject();
++        Restriction restriction = getRestriction();
++
 +        BulkRequestClearMessage message
-+                        = new BulkRequestClearMessage(id,
-+                                                      RequestUser.getRestriction());
-+        message.setSubject(RequestUser.getSubject());
++                        = new BulkRequestClearMessage(id, restriction);
++        message.setSubject(subject);
 +        message = service.send(message);
 +
 +        checkError(message);
@@ -385,13 +733,8 @@ index 0000000..d7cf7dc
 +
 +        if (error != null) {
 +            if (error instanceof BulkPermissionDeniedException) {
-+                if (RequestUser.isAnonymous()) {
-+                    throw new NotAuthorizedException(error);
-+                } else {
-+                    throw new ForbiddenException(error);
-+                }
-+            } else if (error instanceof BulkQuotaExceededException)
-+            {
++                throw new ForbiddenException(error);
++            } else if (error instanceof BulkQuotaExceededException) {
 +                throw new ClientErrorException(429, error);
 +            } else if (error instanceof BulkRequestNotFoundException) {
 +                throw new ClientErrorException(404, error);
@@ -401,6 +744,24 @@ index 0000000..d7cf7dc
 +                throw new InternalServerErrorException(error);
 +            }
 +        }
++    }
++
++    private Subject getSubject()
++    {
++        if (RequestUser.isAdmin()) {
++            return Subjects.ROOT;
++        }
++
++        return RequestUser.getSubject();
++    }
++
++    private Restriction getRestriction()
++    {
++        if (RequestUser.isAdmin()) {
++            return Restrictions.none();
++        }
++
++        return RequestUser.getRestriction();
 +    }
 +}
 diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkSerivceCommunicator.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkSerivceCommunicator.java
