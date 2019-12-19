@@ -1,0 +1,591 @@
+diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/ApiConfig.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/ApiConfig.java
+index 474e50b..108252d 100644
+--- a/modules/dcache-frontend/src/main/java/org/dcache/restful/ApiConfig.java
++++ b/modules/dcache-frontend/src/main/java/org/dcache/restful/ApiConfig.java
+@@ -75,7 +75,8 @@ import javax.ws.rs.ext.Provider;
+             @Tag(name = "spacemanager", description = "Ensuring enough capacity for uploads"),
+             @Tag(name = "transfers", description = "The movement of data between dCache and clients"),
+             @Tag(name = "events", description = "Support for SSE clients receiving dCache events"),
+-            @Tag(name = "doors", description = "Information about doors")
++            @Tag(name = "doors", description = "Information about doors"),
++            @Tag(name = "bulk-requests", description = "Support for mass operations (such as pinning, deleting, qos transitions)")
+         }
+ )
+ @Provider
+diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java
+new file mode 100644
+index 0000000..2694abb
+--- /dev/null
++++ b/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java
+@@ -0,0 +1,385 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.restful.resources.bulk;
++
++import com.fasterxml.jackson.databind.ObjectMapper;
++import com.google.common.base.Strings;
++import io.swagger.annotations.Api;
++import io.swagger.annotations.ApiOperation;
++import io.swagger.annotations.ApiParam;
++import io.swagger.annotations.ApiResponse;
++import io.swagger.annotations.ApiResponses;
++import io.swagger.annotations.Authorization;
++import io.swagger.annotations.Example;
++import io.swagger.annotations.ExampleProperty;
++import org.json.JSONObject;
++import org.springframework.stereotype.Component;
++
++import javax.inject.Inject;
++import javax.servlet.http.HttpServletRequest;
++import javax.ws.rs.BadRequestException;
++import javax.ws.rs.ClientErrorException;
++import javax.ws.rs.Consumes;
++import javax.ws.rs.DELETE;
++import javax.ws.rs.ForbiddenException;
++import javax.ws.rs.GET;
++import javax.ws.rs.InternalServerErrorException;
++import javax.ws.rs.NotAuthorizedException;
++import javax.ws.rs.PATCH;
++import javax.ws.rs.POST;
++import javax.ws.rs.Path;
++import javax.ws.rs.PathParam;
++import javax.ws.rs.Produces;
++import javax.ws.rs.QueryParam;
++import javax.ws.rs.core.Context;
++import javax.ws.rs.core.MediaType;
++import javax.ws.rs.core.Response;
++
++import java.io.IOException;
++import java.util.HashSet;
++import java.util.List;
++import java.util.Set;
++
++import org.dcache.restful.util.RequestUser;
++import org.dcache.restful.util.bulk.BulkSerivceCommunicator;
++import org.dcache.services.bulk.BulkPermissionDeniedException;
++import org.dcache.services.bulk.BulkQuotaExceededException;
++import org.dcache.services.bulk.BulkRequest;
++import org.dcache.services.bulk.BulkRequestCancelMessage;
++import org.dcache.services.bulk.BulkRequestClearMessage;
++import org.dcache.services.bulk.BulkRequestListMessage;
++import org.dcache.services.bulk.BulkRequestMessage;
++import org.dcache.services.bulk.BulkRequestNotFoundException;
++import org.dcache.services.bulk.BulkRequestStatus;
++import org.dcache.services.bulk.BulkRequestStatus.Status;
++import org.dcache.services.bulk.BulkRequestStatusMessage;
++import org.dcache.services.bulk.BulkServiceException;
++import org.dcache.services.bulk.BulkServiceMessage;
++
++import static org.dcache.restful.providers.SuccessfulResponse.successfulResponse;
++
++/**
++ * <p>RESTful API to the BulkService.</p>
++ *
++ * @version v1.0
++ */
++@Component
++@Api(value = "bulk-requests", authorizations = {@Authorization("basicAuth")})
++@Path("/bulk-requests")
++public final class BulkResources
++{
++    @Context
++    private HttpServletRequest request;
++
++    @Inject
++    private BulkSerivceCommunicator service;
++
++    /**
++     * @status A comma-separated list of non-repeating elements,
++     *         each of which is one of: queued, started, completed, cancelled.
++     *
++     * @return List of absolute URLs of a bulk request made by this user
++     *         and that have not been cleared. If the client includes no query
++     *         string then the response contains all bulk requests made by this
++     *         user that have not been cleared.  If the user has made no bulk
++     *         requests or all bulk requests have been cleared then the response
++     *         is an empty array. If the client specified a query string then
++     *         the response contains  all bulk requests that match the query
++     *         string arguments and have not been cleared.  If the user
++     *         has no bulk requests that match the query string and have
++     *         not been cleared then the response is an empty array.
++     */
++    @GET
++    @ApiOperation("Get the status of bulk operations submitted by the user.")
++    @ApiResponses({
++                    @ApiResponse(code = 400, message = "Bad request"),
++                    @ApiResponse(code = 401, message = "Not authorized"),
++                    @ApiResponse(code = 500, message = "Internal Server Error")
++    })
++    @Produces(MediaType.APPLICATION_JSON)
++    public List<String> getRequests(@ApiParam("A comma-separated list "
++                                             + "of non-repeating "
++                                             + "elements, each of which is "
++                                             + "one of: queued, started, "
++                                             + "completed, cancelled.")
++                                   @QueryParam("status") String status)
++    {
++        Set<Status> filter;
++        if (Strings.emptyToNull(status) != null) {
++            String[] options = status.split("[,]");
++            filter = new HashSet<>();
++            for (String option: options) {
++                filter.add(Status.valueOf(option));
++            }
++        } else {
++            filter = null;
++        }
++
++        BulkRequestListMessage message
++                        = new BulkRequestListMessage(filter,
++                                                     RequestUser.getRestriction());
++        message.setSubject(RequestUser.getSubject());
++        message = service.send(message);
++
++        checkError(message);
++
++        return message.getRequests();
++    }
++
++    /**
++     * Submit a bulk request.  See {@link BulkRequest}.
++     *
++     * @return response which includes a location HTTP response header
++     *         with a value that is the absolute URL for the resource associated
++     *         with this bulk request.
++     */
++    @POST
++    @ApiOperation(value="Submit a bulk request.")
++    @ApiResponses({
++                    @ApiResponse(code = 201, message = "Created"),
++                    @ApiResponse(code = 400, message = "Bad request"),
++                    @ApiResponse(code = 401, message = "Unauthorized"),
++                    @ApiResponse(code = 403, message = "Forbidden"),
++                    @ApiResponse(code = 429, message = "Too many requests"),
++                    @ApiResponse(code = 500, message = "Internal Server Error")
++    })
++    @Consumes({ MediaType.APPLICATION_JSON})
++    @Produces(MediaType.APPLICATION_JSON)
++    public Response submit(@ApiParam(value = "Description of the request, which "
++                                              + "defines the following: target, "
++                                              + "targetPrefix, activity, "
++                                              + "clearOnSuccess, clearOnFailure, "
++                                              + "delayClear, expandDirectories "
++                                              + "(NONE, TARGETS, ALL), and "
++                                              + "any additional arguments "
++                                              + "(name-value pairs) required.",
++                                    required = true)
++                           String requestPayload)
++    {
++        BulkRequest request;
++
++        try {
++            request = new ObjectMapper().readValue(requestPayload,
++                                                   BulkRequest.class);
++        } catch (IOException e) {
++            throw new BadRequestException(e);
++        }
++
++        BulkRequestMessage message
++                        = new BulkRequestMessage(request,
++                                                 RequestUser.getRestriction());
++        message.setSubject(RequestUser.getSubject());
++        message = service.send(message);
++
++        checkError(message);
++
++        return successfulResponse(Response.Status.CREATED);
++    }
++
++    /**
++     * Get status information for an individual request.
++     *
++     * @param id of the request.
++     *
++     * @return Object which describes the status of the request.
++     *         See {@link BulkRequestStatus} for the data fields.
++     */
++    @GET
++    @ApiOperation("Get the status information for an individual bulk request.")
++    @ApiResponses({
++                    @ApiResponse(code = 400, message = "Bad request"),
++                    @ApiResponse(code = 401, message = "Unauthorized"),
++                    @ApiResponse(code = 403, message = "Forbidden"),
++                    @ApiResponse(code = 404, message = "Not found"),
++                    @ApiResponse(code = 500, message = "Internal Server Error")
++    })
++    @Path("/{id}")
++    @Produces(MediaType.APPLICATION_JSON)
++    public BulkRequestStatus getBulkRequestStatus(@ApiParam("The unique id of the request.")
++                                                  @PathParam("id") String id)
++    {
++        BulkRequestStatusMessage message
++                        = new BulkRequestStatusMessage(id,
++                                                       RequestUser.getRestriction());
++        message.setSubject(RequestUser.getSubject());
++        message = service.send(message);
++
++        checkError(message);
++
++        return message.getStatus();
++    }
++
++    /**
++     * Currently supports only 'action: cancel'.
++     *
++     * If the bulk operation is in state started then all dCache activity
++     * for this bulk request is stopped.
++     *
++     * The corresponding bulk request status is updated to cancelled if
++     * it is currently queued or started.  It does not change in the status
++     * is cancelled or completed.
++     *
++     * @param id of the request.
++     * @param requestPayload A JSON Object with an 'action' item specifying
++     *                       an action to take.
++     * @return response
++     */
++    @PATCH
++    @ApiOperation("Take some action on a bulk request.")
++    @ApiResponses({
++                    @ApiResponse(code = 200, message = "Successful"),
++                    @ApiResponse(code = 400, message = "Bad request"),
++                    @ApiResponse(code = 401, message = "Unauthorized"),
++                    @ApiResponse(code = 403, message = "Forbidden"),
++                    @ApiResponse(code = 404, message = "Not found"),
++                    @ApiResponse(code = 500, message = "Internal Server Error")
++    })
++    @Path("/{id}")
++    @Consumes(MediaType.APPLICATION_JSON)
++    @Produces(MediaType.APPLICATION_JSON)
++    public Response update(@ApiParam("The unique id of the request.")
++                           @PathParam("id") String id,
++                           @ApiParam(value = "A JSON Object with an 'action' "
++                                              + "item specifying an action to take.",
++                                     examples = @Example({
++                                                @ExampleProperty("{\"action\" : "
++                                                                + "\"cancel\" }") }))
++                           String requestPayload)
++    {
++        JSONObject reqPayload = new JSONObject(requestPayload);
++
++        String action = reqPayload.getString("action");
++
++        if (!"cancel".equalsIgnoreCase(action)) {
++            throw new BadRequestException(action + " not supported.");
++        }
++
++        BulkRequestCancelMessage message
++                        = new BulkRequestCancelMessage(id,
++                                                       RequestUser.getRestriction());
++        message.setSubject(RequestUser.getSubject());
++        message = service.send(message);
++
++        checkError(message);
++
++        return Response.ok().build();
++    }
++
++    /**
++     * If the bulk operation was in state started then all dCache activity
++     * triggered by this bulk request is stopped.
++     *
++     * The bulk request is cleared.  No further activity will take place
++     * for this request.  The server will respond to subsequent GET requests
++     * targeting this resource with a 404 (Not Found) status code.
++     *
++     * @param id of the request.
++     *
++     * @return response
++     */
++    @DELETE
++    @ApiOperation("Clear all resources pertaining to the given bulk request id.")
++    @ApiResponses({
++                    @ApiResponse(code = 204, message = "No content"),
++                    @ApiResponse(code = 400, message = "Bad request"),
++                    @ApiResponse(code = 401, message = "Unauthorized"),
++                    @ApiResponse(code = 403, message = "Forbidden"),
++                    @ApiResponse(code = 500, message = "Internal Server Error")
++    })
++    @Path("/{id}")
++    @Produces(MediaType.APPLICATION_JSON)
++    public Response clearRequest(@ApiParam("The unique id of the request.")
++                                 @PathParam("id") String id)
++    {
++        BulkRequestClearMessage message
++                        = new BulkRequestClearMessage(id,
++                                                      RequestUser.getRestriction());
++        message.setSubject(RequestUser.getSubject());
++        message = service.send(message);
++
++        checkError(message);
++
++        return Response.noContent().build();
++    }
++
++    private void checkError(BulkServiceMessage message)
++    {
++        Throwable error = (Throwable) message.getErrorObject();
++
++        if (error != null) {
++            if (error instanceof BulkPermissionDeniedException) {
++                if (RequestUser.isAnonymous()) {
++                    throw new NotAuthorizedException(error);
++                } else {
++                    throw new ForbiddenException(error);
++                }
++            } else if (error instanceof BulkQuotaExceededException)
++            {
++                throw new ClientErrorException(429, error);
++            } else if (error instanceof BulkRequestNotFoundException) {
++                throw new ClientErrorException(404, error);
++            } else if (error instanceof BulkServiceException) {
++                throw new BadRequestException(error);
++            } else {
++                throw new InternalServerErrorException(error);
++            }
++        }
++    }
++}
+diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkSerivceCommunicator.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkSerivceCommunicator.java
+new file mode 100644
+index 0000000..4890d0d
+--- /dev/null
++++ b/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkSerivceCommunicator.java
+@@ -0,0 +1,98 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.restful.util.bulk;
++
++import org.springframework.beans.factory.annotation.Required;
++
++import javax.ws.rs.BadRequestException;
++
++import diskCacheV111.util.CacheException;
++
++import dmg.cells.nucleus.NoRouteToCellException;
++
++import org.dcache.cells.CellStub;
++import org.dcache.services.bulk.BulkServiceMessage;
++
++/**
++ *  For injection convenience.
++ */
++public class BulkSerivceCommunicator
++{
++    protected CellStub bulkService;
++
++    public <M extends BulkServiceMessage> M send(M message)
++                    throws BadRequestException
++    {
++        try {
++            return bulkService.sendAndWait(message);
++        } catch (CacheException |
++                        InterruptedException |
++                        NoRouteToCellException e) {
++            throw new BadRequestException(e.getMessage(), e);
++
++        }
++    }
++
++    @Required
++    public void setBulkService(CellStub bulkService)
++    {
++        this.bulkService = bulkService;
++    }
++}
+diff --git a/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml b/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml
+index dc2d1f3..b6fe2b9 100644
+--- a/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml
++++ b/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml
+@@ -234,6 +234,13 @@
+     <property name="destination" value="${frontend.service.pinmanager}"/>
+   </bean>
+ 
++  <bean id="bulk-service" class="org.dcache.cells.CellStub">
++    <description>Bulk request service cell stub</description>
++    <property name="timeout" value="${frontend.service.bulk-service.timeout}"/>
++    <property name="timeoutUnit" value="${frontend.service.bulk-service.timeout.unit}"/>
++    <property name="destination" value="${frontend.service.bulk-service}"/>
++  </bean>
++
+   <bean id="billing-info-collector" class="org.dcache.restful.util.billing.BillingInfoCollector">
+         <description>Collects information from billing backend (database).</description>
+         <property name="billingPath">
+@@ -294,6 +301,10 @@
+     <property name="executorService" ref="scheduling-service"/>
+   </bean>
+ 
++  <bean id="bulk-service-communicator" class="org.dcache.restful.util.bulk.BulkSerivceCommunicator">
++    <property name="bulkService" ref="bulk-service"/>
++  </bean>
++
+     <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+         <property name="scopes">
+             <map>
+@@ -545,6 +556,7 @@
+     <bean class="org.dcache.restful.resources.billing.BillingResources" scope="request">
+       <property name="unlimitedOperationVisibility" value="${frontend.authz.unlimited-operation-visibility}"/>
+     </bean>
++    <bean class="org.dcache.restful.resources.bulk.BulkResources" scope="request"/>
+     <bean class="org.dcache.restful.resources.cells.CellInfoResources" scope="request"/>
+     <bean class="org.dcache.restful.resources.doors.DoorsResources" scope="request"/>
+     <bean class="org.dcache.restful.resources.identity.UserResource" scope="request"/>
+diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
+index 24363e6..47053e1 100644
+--- a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
++++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
+@@ -83,7 +83,7 @@ public class BulkRequest implements Serializable
+     private Boolean                   clearOnSuccess;
+     private Boolean                   clearOnFailure;
+     private Integer                   delayClear;
+-    private Map<String, String> arguments;
++    private Map<String, String>       arguments;
+     private Depth                     expandDirectories;
+ 
+     public String getActivity()
+diff --git a/skel/share/defaults/frontend.properties b/skel/share/defaults/frontend.properties
+index a01fdd5..15b7fe8 100644
+--- a/skel/share/defaults/frontend.properties
++++ b/skel/share/defaults/frontend.properties
+@@ -134,6 +134,13 @@ frontend.service.pool-info.update-threads=10
+ # as flushes, restores, movers, etc.
+ frontend.service.pool-info.maxPoolActivityListSize=1000
+ 
++# Cell address of bulk service
++frontend.service.bulk-service=${dcache.service.bulk}
++
++# Timeout for bulk service messaging
++frontend.service.bulk-service.timeout=1
++(one-of?MILLISECONDS|SECONDS|MINUTES|HOURS|DAYS)frontend.service.bulk-service.timeout.unit=MINUTES
++
+ # Topic on which to expect pool monitor updates
+ frontend.pool-monitor.topic = ${dcache.pool-monitor.topic}
+ 
+diff --git a/skel/share/services/frontend.batch b/skel/share/services/frontend.batch
+index cb370ec..9d36b5d 100644
+--- a/skel/share/services/frontend.batch
++++ b/skel/share/services/frontend.batch
+@@ -44,6 +44,9 @@ check -strong frontend.service.pool-info.timeout.unit
+ check -strong frontend.service.pool-history.timeout
+ check -strong frontend.service.pool-history.timeout.unit
+ check -strong frontend.service.pool-history
++check -strong frontend.service.bulk-service
++check -strong frontend.service.bulk-service.timeout
++check -strong frontend.service.bulk-service.timeout.unit
+ check -strong frontend.authn.accept-client-cert
+ check -strong frontend.authn.require-client-cert
+ check -strong frontend.authn.basic

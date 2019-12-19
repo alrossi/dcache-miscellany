@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsManagerAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsManagerAware.java
 new file mode 100644
-index 0000000000..bd43503667
+index 0000000..bd43503
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsManagerAware.java
 @@ -0,0 +1,71 @@
@@ -77,10 +77,10 @@ index 0000000000..bd43503667
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java
 new file mode 100644
-index 0000000000..5e6ab7a0c3
+index 0000000..f7071e6
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java
-@@ -0,0 +1,128 @@
+@@ -0,0 +1,138 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -168,7 +168,17 @@ index 0000000000..5e6ab7a0c3
 +                    throws BulkServiceException;
 +
 +    /**
-+     * Services request (from user) to (cancel) and free all data
++     * Services request (from user) to (cancel) the request.
++     *
++     * @param subject of the user.
++     * @param requestId of the request to cancel.
++     * @throws BulkServiceException
++     */
++    void cancelRequest(Subject subject, String requestId)
++                    throws BulkServiceException;
++
++    /**
++     * Services request (from user) to free all data
 +     * associated with the request.
 +     *
 +     * @param subject of the user.
@@ -211,7 +221,7 @@ index 0000000000..5e6ab7a0c3
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java
 new file mode 100644
-index 0000000000..80cc74755f
+index 0000000..80cc747
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java
 @@ -0,0 +1,228 @@
@@ -445,7 +455,7 @@ index 0000000000..80cc74755f
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java
 new file mode 100644
-index 0000000000..648d32a128
+index 0000000..648d32a
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java
 @@ -0,0 +1,166 @@
@@ -617,7 +627,7 @@ index 0000000000..648d32a128
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java
 new file mode 100644
-index 0000000000..ae769938fc
+index 0000000..ae76993
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java
 @@ -0,0 +1,96 @@
@@ -719,7 +729,7 @@ index 0000000000..ae769938fc
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
 new file mode 100644
-index 0000000000..8e006f349d
+index 0000000..8e006f3
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
 @@ -0,0 +1,427 @@
@@ -1152,7 +1162,7 @@ index 0000000000..8e006f349d
 +}
 diff --git a/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java
 new file mode 100644
-index 0000000000..37da3f5131
+index 0000000..37da3f5
 --- /dev/null
 +++ b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java
 @@ -0,0 +1,534 @@
@@ -1692,7 +1702,7 @@ index 0000000000..37da3f5131
 +}
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
 new file mode 100644
-index 0000000000..47053e175b
+index 0000000..47053e1
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
 @@ -0,0 +1,188 @@
