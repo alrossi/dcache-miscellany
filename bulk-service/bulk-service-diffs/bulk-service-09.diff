@@ -1,9 +1,9 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/admin/BulkServiceCommands.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/admin/BulkServiceCommands.java
 new file mode 100644
-index 0000000..68745d6
+index 0000000000..c21779bd88
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/admin/BulkServiceCommands.java
-@@ -0,0 +1,1016 @@
+@@ -0,0 +1,1017 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -707,7 +707,8 @@ index 0000000..68745d6
 +
 +            service.messageArrived(message);
 +
-+            return "sent " + message + " to service.";
++            return "sent message to service to submit " + request.getUrlPrefix()
++                            + "/" + request.getId();
 +        }
 +    }
 +

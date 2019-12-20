@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsManagerAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsManagerAware.java
 new file mode 100644
-index 0000000..bd43503
+index 0000000000..bd43503667
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsManagerAware.java
 @@ -0,0 +1,71 @@
@@ -77,7 +77,7 @@ index 0000000..bd43503
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java
 new file mode 100644
-index 0000000..f7071e6
+index 0000000000..f7071e6b98
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java
 @@ -0,0 +1,138 @@
@@ -221,7 +221,7 @@ index 0000000..f7071e6
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java
 new file mode 100644
-index 0000000..80cc747
+index 0000000000..80cc74755f
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java
 @@ -0,0 +1,228 @@
@@ -455,7 +455,7 @@ index 0000000..80cc747
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java
 new file mode 100644
-index 0000000..648d32a
+index 0000000000..648d32a128
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java
 @@ -0,0 +1,166 @@
@@ -627,7 +627,7 @@ index 0000000..648d32a
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java
 new file mode 100644
-index 0000000..ae76993
+index 0000000000..ae769938fc
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java
 @@ -0,0 +1,96 @@
@@ -729,7 +729,7 @@ index 0000000..ae76993
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
 new file mode 100644
-index 0000000..8e006f3
+index 0000000000..8e006f349d
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
 @@ -0,0 +1,427 @@
@@ -1162,7 +1162,7 @@ index 0000000..8e006f3
 +}
 diff --git a/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java
 new file mode 100644
-index 0000000..37da3f5
+index 0000000000..37da3f5131
 --- /dev/null
 +++ b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java
 @@ -0,0 +1,534 @@
@@ -1702,7 +1702,7 @@ index 0000000..37da3f5
 +}
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
 new file mode 100644
-index 0000000..47053e1
+index 0000000000..70d98215e5
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
 @@ -0,0 +1,188 @@
@@ -1788,8 +1788,8 @@ index 0000000..47053e1
 +    private String                    target;
 +    private String                    targetPrefix;
 +    private String                    activity;
-+    private Boolean                   clearOnSuccess;
-+    private Boolean                   clearOnFailure;
++    private boolean                   clearOnSuccess;
++    private boolean                   clearOnFailure;
 +    private Integer                   delayClear;
 +    private Map<String, String>       arguments;
 +    private Depth                     expandDirectories;
@@ -1804,12 +1804,12 @@ index 0000000..47053e1
 +        return arguments;
 +    }
 +
-+    public Boolean getClearOnFailure()
++    public boolean getClearOnFailure()
 +    {
 +        return clearOnFailure;
 +    }
 +
-+    public Boolean getClearOnSuccess()
++    public boolean getClearOnSuccess()
 +    {
 +        return clearOnSuccess;
 +    }
@@ -1854,12 +1854,12 @@ index 0000000..47053e1
 +        this.arguments = arguments;
 +    }
 +
-+    public void setClearOnFailure(Boolean clearOnFailure)
++    public void setClearOnFailure(boolean clearOnFailure)
 +    {
 +        this.clearOnFailure = clearOnFailure;
 +    }
 +
-+    public void setClearOnSuccess(Boolean clearOnSuccess)
++    public void setClearOnSuccess(boolean clearOnSuccess)
 +    {
 +        this.clearOnSuccess = clearOnSuccess;
 +    }
@@ -1894,3 +1894,16 @@ index 0000000..47053e1
 +        this.urlPrefix = urlPrefix;
 +    }
 +}
+diff --git a/pom.xml b/pom.xml
+index 57a95e8527..bb9bebd58f 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -266,7 +266,7 @@
+             <dependency>
+                 <groupId>eu.eu-emi.security</groupId>
+                 <artifactId>canl</artifactId>
+-                <version>2.5.0</version>
++                <version>2.5.1</version>
+             </dependency>
+             <dependency>
+                 <groupId>org.italiangrid</groupId>
