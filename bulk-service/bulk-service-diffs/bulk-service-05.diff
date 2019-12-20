@@ -1307,10 +1307,10 @@ index 0000000..462cf76
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java
 new file mode 100644
-index 0000000..3fe87c4
+index 0000000..3b9d2dd
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java
-@@ -0,0 +1,587 @@
+@@ -0,0 +1,588 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -1601,9 +1601,10 @@ index 0000000..3fe87c4
 +                                 (uidGidKey(requestSubject.get(e.getKey())));
 +
 +            return this.status.entrySet().stream()
-+                                         .filter(e -> status.contains(e.getValue()
-+                                                                       .getStatus()))
 +                                         .filter(isUsersRequest)
++                                         .filter(e -> status.isEmpty()
++                                                 ||   status.contains(e.getValue()
++                                                                       .getStatus()))
 +                                         .map(e -> requests.get(e.getKey()))
 +                                         .map(r -> r.getUrlPrefix()
 +                                                         + "/" + r.getId())

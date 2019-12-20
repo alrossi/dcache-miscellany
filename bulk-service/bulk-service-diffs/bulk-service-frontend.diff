@@ -1,9 +1,9 @@
 diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java
 new file mode 100644
-index 0000000000..7da8832b53
+index 0000000..f58b294
 --- /dev/null
 +++ b/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java
-@@ -0,0 +1,450 @@
+@@ -0,0 +1,412 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -82,12 +82,9 @@ index 0000000000..7da8832b53
 +import javax.security.auth.Subject;
 +import javax.servlet.http.HttpServletRequest;
 +import javax.ws.rs.BadRequestException;
-+import javax.ws.rs.ClientErrorException;
 +import javax.ws.rs.Consumes;
 +import javax.ws.rs.DELETE;
-+import javax.ws.rs.ForbiddenException;
 +import javax.ws.rs.GET;
-+import javax.ws.rs.InternalServerErrorException;
 +import javax.ws.rs.NotAuthorizedException;
 +import javax.ws.rs.PATCH;
 +import javax.ws.rs.POST;
@@ -109,19 +106,14 @@ index 0000000000..7da8832b53
 +import org.dcache.auth.attributes.Restrictions;
 +import org.dcache.restful.util.RequestUser;
 +import org.dcache.restful.util.bulk.BulkSerivceCommunicator;
-+import org.dcache.services.bulk.BulkPermissionDeniedException;
-+import org.dcache.services.bulk.BulkQuotaExceededException;
 +import org.dcache.services.bulk.BulkRequest;
 +import org.dcache.services.bulk.BulkRequestCancelMessage;
 +import org.dcache.services.bulk.BulkRequestClearMessage;
 +import org.dcache.services.bulk.BulkRequestListMessage;
 +import org.dcache.services.bulk.BulkRequestMessage;
-+import org.dcache.services.bulk.BulkRequestNotFoundException;
 +import org.dcache.services.bulk.BulkRequestStatus;
 +import org.dcache.services.bulk.BulkRequestStatus.Status;
 +import org.dcache.services.bulk.BulkRequestStatusMessage;
-+import org.dcache.services.bulk.BulkServiceException;
-+import org.dcache.services.bulk.BulkServiceMessage;
 +
 +/**
 + * <p>RESTful API to the BulkService.</p>
@@ -195,8 +187,6 @@ index 0000000000..7da8832b53
 +        message.setSubject(subject);
 +        message = service.send(message);
 +
-+        checkError(message);
-+
 +        return message.getRequests();
 +    }
 +
@@ -259,8 +249,6 @@ index 0000000000..7da8832b53
 +        message.setSubject(subject);
 +        message = service.send(message);
 +
-+        checkError(message);
-+
 +        return Response.status(Response.Status.CREATED)
 +                        .header("request-url", message.getRequestUrl())
 +                        .type(MediaType.APPLICATION_JSON)
@@ -302,9 +290,6 @@ index 0000000000..7da8832b53
 +                        = new BulkRequestStatusMessage(id, restriction);
 +        message.setSubject(subject);
 +        message = service.send(message);
-+
-+        checkError(message);
-+
 +        return message.getStatus();
 +    }
 +
@@ -365,9 +350,7 @@ index 0000000000..7da8832b53
 +        BulkRequestCancelMessage message
 +                        = new BulkRequestCancelMessage(id, restriction);
 +        message.setSubject(subject);
-+        message = service.send(message);
-+
-+        checkError(message);
++        service.send(message);
 +
 +        return Response.ok().build();
 +    }
@@ -410,30 +393,9 @@ index 0000000000..7da8832b53
 +        BulkRequestClearMessage message
 +                        = new BulkRequestClearMessage(id, restriction);
 +        message.setSubject(subject);
-+        message = service.send(message);
-+
-+        checkError(message);
++        service.send(message);
 +
 +        return Response.noContent().build();
-+    }
-+
-+    private void checkError(BulkServiceMessage message)
-+    {
-+        Throwable error = (Throwable) message.getErrorObject();
-+
-+        if (error != null) {
-+            if (error instanceof BulkPermissionDeniedException) {
-+                throw new ForbiddenException(error);
-+            } else if (error instanceof BulkQuotaExceededException) {
-+                throw new ClientErrorException(429, error);
-+            } else if (error instanceof BulkRequestNotFoundException) {
-+                throw new ClientErrorException(404, error);
-+            } else if (error instanceof BulkServiceException) {
-+                throw new BadRequestException(error);
-+            } else {
-+                throw new InternalServerErrorException(error);
-+            }
-+        }
 +    }
 +
 +    private Subject getSubject()
@@ -456,10 +418,10 @@ index 0000000000..7da8832b53
 +}
 diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkSerivceCommunicator.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkSerivceCommunicator.java
 new file mode 100644
-index 0000000000..4890d0da4c
+index 0000000..a4faea2
 --- /dev/null
 +++ b/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkSerivceCommunicator.java
-@@ -0,0 +1,98 @@
+@@ -0,0 +1,139 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -521,35 +483,53 @@ index 0000000000..4890d0da4c
 + */
 +package org.dcache.restful.util.bulk;
 +
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
 +import org.springframework.beans.factory.annotation.Required;
 +
 +import javax.ws.rs.BadRequestException;
++import javax.ws.rs.ClientErrorException;
++import javax.ws.rs.ForbiddenException;
++import javax.ws.rs.InternalServerErrorException;
++import javax.ws.rs.NotFoundException;
 +
-+import diskCacheV111.util.CacheException;
-+
-+import dmg.cells.nucleus.NoRouteToCellException;
++import java.util.concurrent.ExecutionException;
++import java.util.concurrent.Future;
 +
 +import org.dcache.cells.CellStub;
++import org.dcache.services.bulk.BulkPermissionDeniedException;
++import org.dcache.services.bulk.BulkQuotaExceededException;
++import org.dcache.services.bulk.BulkRequestNotFoundException;
++import org.dcache.services.bulk.BulkServiceException;
 +import org.dcache.services.bulk.BulkServiceMessage;
++
++import static javax.ws.rs.core.Response.Status.TOO_MANY_REQUESTS;
 +
 +/**
 + *  For injection convenience.
 + */
 +public class BulkSerivceCommunicator
 +{
-+    protected CellStub bulkService;
++    private static final Logger LOGGER
++                    = LoggerFactory.getLogger(BulkSerivceCommunicator.class);
++
++    protected            CellStub bulkService;
 +
 +    public <M extends BulkServiceMessage> M send(M message)
-+                    throws BadRequestException
++                    throws ClientErrorException, InternalServerErrorException
 +    {
-+        try {
-+            return bulkService.sendAndWait(message);
-+        } catch (CacheException |
-+                        InterruptedException |
-+                        NoRouteToCellException e) {
-+            throw new BadRequestException(e.getMessage(), e);
++        Future<M> future = bulkService.send(message);
 +
++        try {
++            message = future.get();
++            LOGGER.trace("BulkServiceMessage reply: {}.", message);
++        } catch (InterruptedException | ExecutionException e) {
++            throw new BadRequestException(e.getMessage(), e);
 +        }
++
++        checkError(message);
++
++        return message;
 +    }
 +
 +    @Required
@@ -557,9 +537,32 @@ index 0000000000..4890d0da4c
 +    {
 +        this.bulkService = bulkService;
 +    }
++
++    private void checkError(BulkServiceMessage message)
++    {
++        Throwable error = (Throwable) message.getErrorObject();
++
++        if (error == null) {
++            return;
++        }
++
++        LOGGER.trace("check error, received {}.", error.toString());
++
++        if (error instanceof BulkPermissionDeniedException) {
++            throw new ForbiddenException(error);
++        } else if (error instanceof BulkQuotaExceededException) {
++            throw new ClientErrorException(TOO_MANY_REQUESTS, error);
++        } else if (error instanceof BulkRequestNotFoundException) {
++            throw new NotFoundException(error);
++        } else if (error instanceof BulkServiceException) {
++            throw new BadRequestException(error);
++        } else {
++            throw new InternalServerErrorException(error);
++        }
++    }
 +}
 diff --git a/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml b/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml
-index dc2d1f3af3..b6fe2b93a6 100644
+index dc2d1f3..b6fe2b9 100644
 --- a/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml
 +++ b/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml
 @@ -234,6 +234,13 @@
@@ -596,7 +599,7 @@ index dc2d1f3af3..b6fe2b93a6 100644
      <bean class="org.dcache.restful.resources.doors.DoorsResources" scope="request"/>
      <bean class="org.dcache.restful.resources.identity.UserResource" scope="request"/>
 diff --git a/skel/share/defaults/frontend.properties b/skel/share/defaults/frontend.properties
-index a01fdd57b8..15b7fe8f57 100644
+index a01fdd5..15b7fe8 100644
 --- a/skel/share/defaults/frontend.properties
 +++ b/skel/share/defaults/frontend.properties
 @@ -134,6 +134,13 @@ frontend.service.pool-info.update-threads=10
@@ -614,7 +617,7 @@ index a01fdd57b8..15b7fe8f57 100644
  frontend.pool-monitor.topic = ${dcache.pool-monitor.topic}
  
 diff --git a/skel/share/services/frontend.batch b/skel/share/services/frontend.batch
-index cb370ec39f..9d36b5d2a3 100644
+index cb370ec..9d36b5d 100644
 --- a/skel/share/services/frontend.batch
 +++ b/skel/share/services/frontend.batch
 @@ -44,6 +44,9 @@ check -strong frontend.service.pool-info.timeout.unit
