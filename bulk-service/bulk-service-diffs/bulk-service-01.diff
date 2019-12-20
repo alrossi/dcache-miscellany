@@ -325,7 +325,7 @@ index 0000000..b2b8af5
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
 new file mode 100644
-index 0000000..6ad6ee1
+index 0000000..9399592
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
 @@ -0,0 +1,334 @@
@@ -604,7 +604,7 @@ index 0000000..6ad6ee1
 +
 +    public void setState(State state)
 +    {
-+        synchronized(state)
++        synchronized(this.state)
 +        {
 +            if (this.state == null) {
 +                this.state = state;
@@ -1368,7 +1368,7 @@ index 8c91346..4e36b55 100644
          <artifactId>dcache-chimera</artifactId>
          <version>${project.version}</version>
 diff --git a/pom.xml b/pom.xml
-index 7e08af8..57a95e8 100644
+index 99b87e9..bb9bebd 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1428,6 +1428,7 @@
