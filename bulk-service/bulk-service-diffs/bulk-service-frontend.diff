@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java
 new file mode 100644
-index 0000000..f58b294
+index 0000000..d338430
 --- /dev/null
 +++ b/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/bulk/BulkResources.java
 @@ -0,0 +1,412 @@
@@ -105,7 +105,7 @@ index 0000000..f58b294
 +import org.dcache.auth.attributes.Restriction;
 +import org.dcache.auth.attributes.Restrictions;
 +import org.dcache.restful.util.RequestUser;
-+import org.dcache.restful.util.bulk.BulkSerivceCommunicator;
++import org.dcache.restful.util.bulk.BulkServiceCommunicator;
 +import org.dcache.services.bulk.BulkRequest;
 +import org.dcache.services.bulk.BulkRequestCancelMessage;
 +import org.dcache.services.bulk.BulkRequestClearMessage;
@@ -129,7 +129,7 @@ index 0000000..f58b294
 +    private HttpServletRequest request;
 +
 +    @Inject
-+    private BulkSerivceCommunicator service;
++    private BulkServiceCommunicator service;
 +
 +    /**
 +     * @status A comma-separated list of non-repeating elements,
@@ -416,11 +416,11 @@ index 0000000..f58b294
 +        return RequestUser.getRestriction();
 +    }
 +}
-diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkSerivceCommunicator.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkSerivceCommunicator.java
+diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkServiceCommunicator.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkServiceCommunicator.java
 new file mode 100644
-index 0000000..a4faea2
+index 0000000..ca402bb
 --- /dev/null
-+++ b/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkSerivceCommunicator.java
++++ b/modules/dcache-frontend/src/main/java/org/dcache/restful/util/bulk/BulkServiceCommunicator.java
 @@ -0,0 +1,139 @@
 +/*
 +COPYRIGHT STATUS:
@@ -508,10 +508,10 @@ index 0000000..a4faea2
 +/**
 + *  For injection convenience.
 + */
-+public class BulkSerivceCommunicator
++public class BulkServiceCommunicator
 +{
 +    private static final Logger LOGGER
-+                    = LoggerFactory.getLogger(BulkSerivceCommunicator.class);
++                    = LoggerFactory.getLogger(BulkServiceCommunicator.class);
 +
 +    protected            CellStub bulkService;
 +
@@ -562,7 +562,7 @@ index 0000000..a4faea2
 +    }
 +}
 diff --git a/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml b/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml
-index dc2d1f3..b6fe2b9 100644
+index dc2d1f3..8ac2d23 100644
 --- a/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml
 +++ b/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml
 @@ -234,6 +234,13 @@
@@ -583,7 +583,7 @@ index dc2d1f3..b6fe2b9 100644
      <property name="executorService" ref="scheduling-service"/>
    </bean>
  
-+  <bean id="bulk-service-communicator" class="org.dcache.restful.util.bulk.BulkSerivceCommunicator">
++  <bean id="bulk-service-communicator" class="org.dcache.restful.util.bulk.BulkServiceCommunicator">
 +    <property name="bulkService" ref="bulk-service"/>
 +  </bean>
 +
