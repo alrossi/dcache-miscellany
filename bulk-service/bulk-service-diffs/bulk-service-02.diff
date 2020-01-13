@@ -1268,7 +1268,7 @@ index 0000000000..37da3f5131
 +import static org.dcache.services.bulk.job.MultipleTargetJob.TargetType.FILE;
 +import static org.dcache.services.bulk.job.TargetExpansionJob.ExpansionType.BREADTH_FIRST;
 +import static org.dcache.services.bulk.job.TargetExpansionJob.ExpansionType.DEPTH_FIRST;
-+import static org.mockito.Matchers.any;
++import static org.mockito.ArgumentMatchers.any;
 +import static org.mockito.Mockito.mock;
 +import static org.mockito.Mockito.times;
 +import static org.mockito.Mockito.verify;
