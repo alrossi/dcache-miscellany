@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-bulk/pom.xml b/modules/dcache-bulk/pom.xml
 new file mode 100644
-index 0000000..a278a7c
+index 0000000000000000000000000000000000000000..a278a7cf7ba9e286bcbdf22599e30f62f7ea7099
 --- /dev/null
 +++ b/modules/dcache-bulk/pom.xml
 @@ -0,0 +1,46 @@
@@ -52,7 +52,7 @@ index 0000000..a278a7c
 +</project>
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java
 new file mode 100644
-index 0000000..b2b8af5
+index 0000000000000000000000000000000000000000..b2b8af573cb0b62ee29886c78c1a01150ced97d9
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java
 @@ -0,0 +1,267 @@
@@ -325,10 +325,10 @@ index 0000000..b2b8af5
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
 new file mode 100644
-index 0000000..9399592
+index 0000000000000000000000000000000000000000..9ec719edcef3a7d50498c6ce70607105a4fbac15
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
-@@ -0,0 +1,334 @@
+@@ -0,0 +1,332 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -604,12 +604,10 @@ index 0000000..9399592
 +
 +    public void setState(State state)
 +    {
++        Preconditions.checkNotNull(state);
++
 +        synchronized(this.state)
 +        {
-+            if (this.state == null) {
-+                this.state = state;
-+            }
-+
 +            switch(this.state)
 +            {
 +                case CANCELLED:
@@ -665,7 +663,7 @@ index 0000000..9399592
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobKey.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobKey.java
 new file mode 100644
-index 0000000..772a964
+index 0000000000000000000000000000000000000000..772a964711ac2c62abaf818e42ea91975db5a3f8
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobKey.java
 @@ -0,0 +1,141 @@
@@ -812,7 +810,7 @@ index 0000000..772a964
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/queue/SignalAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/queue/SignalAware.java
 new file mode 100644
-index 0000000..a74c563
+index 0000000000000000000000000000000000000000..a74c56305af7f80b6f1f4d9c564ad2d03f725292
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/queue/SignalAware.java
 @@ -0,0 +1,74 @@
@@ -892,7 +890,7 @@ index 0000000..a74c563
 +}
 diff --git a/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandlerTest.java b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandlerTest.java
 new file mode 100644
-index 0000000..24dec99
+index 0000000000000000000000000000000000000000..24dec999d3211df1e505ee2e43149fda612017f5
 --- /dev/null
 +++ b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandlerTest.java
 @@ -0,0 +1,290 @@
@@ -1188,7 +1186,7 @@ index 0000000..24dec99
 +}
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkJobExecutionException.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkJobExecutionException.java
 new file mode 100644
-index 0000000..dd8d7cc
+index 0000000000000000000000000000000000000000..dd8d7cc9889cb005ca0dac60566170ceca26d88a
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkJobExecutionException.java
 @@ -0,0 +1,73 @@
@@ -1267,7 +1265,7 @@ index 0000000..dd8d7cc
 +}
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkServiceException.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkServiceException.java
 new file mode 100644
-index 0000000..58f945a
+index 0000000000000000000000000000000000000000..58f945acf7c6c23d1bf4a02619642619798a4304
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkServiceException.java
 @@ -0,0 +1,75 @@
@@ -1347,10 +1345,10 @@ index 0000000..58f945a
 +    }
 +}
 diff --git a/packages/pom.xml b/packages/pom.xml
-index 8c91346..4e36b55 100644
+index 8c91346d131e7331fd71c49470b73ad4c4b000a2..4e36b559dadd8a315a9950494a1c9bab41033cd8 100644
 --- a/packages/pom.xml
 +++ b/packages/pom.xml
-@@ -20,10 +20,15 @@
+@@ -20,9 +20,14 @@
      </dependency>
      <dependency>
          <groupId>org.dcache</groupId>
@@ -1358,20 +1356,19 @@ index 8c91346..4e36b55 100644
 +        <artifactId>dcache-bulk</artifactId>
          <version>${project.version}</version>
      </dependency>
-     <dependency>
++    <dependency>
 +      <groupId>org.dcache</groupId>
 +      <artifactId>dcache-core</artifactId>
 +      <version>${project.version}</version>
 +    </dependency>
-+    <dependency>
+     <dependency>
          <groupId>org.dcache</groupId>
          <artifactId>dcache-chimera</artifactId>
-         <version>${project.version}</version>
 diff --git a/pom.xml b/pom.xml
-index 99b87e9..bb9bebd 100644
+index 01318dc14e225d80d5cfccb2bcfbfd48ea9285c9..4e1f8a022e73ba81c421deb029bb9ffdf37a539e 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -1428,6 +1428,7 @@
+@@ -1411,6 +1411,7 @@
          <module>modules/dcache-vehicles</module>
          <module>modules/dcache-nearline-spi</module>
          <module>modules/dcache</module>
