@@ -1610,7 +1610,7 @@ index 0000000000..37da3f5131
 +        verify(submissionHandler, times(times))
 +                        .submitSingleTargetJob(any(String.class),
 +                                               any(BulkJobKey.class),
-+                                               any(FileAttributes.class),
++                                               any(),
 +                                               any(MultipleTargetJob.class));
 +    }
 +
