@@ -647,12 +647,12 @@ index 0000000000..c21779bd88
 +        String activity;
 +
 +        @Option(name = "expand",
-+                    valueSpec = "NONE|TARGET|ALL",
++                    valueSpec = "NONE|TARGETS|ALL",
 +                    usage = "NONE = do not expand directories; "
-+                                    + "TARGET = shallow expansion of "
++                                    + "TARGETS = shallow expansion of "
 +                                    + "directories (only take action on its "
 +                                    + "targets with no further expansion); "
-+                                    + "ALL = full recursion; default is NONE)")
++                                    + "ALL = full recursion")
 +        String expand = "NONE";
 +
 +        @Option(name = "clearOnFailure",
