@@ -218,8 +218,8 @@ index 0000000..d338430
 +                                              + "clearOnSuccess, clearOnFailure, "
 +                                              + "delayClear, expandDirectories "
 +                                              + "(NONE, TARGETS, ALL), and "
-+                                              + "any additional arguments "
-+                                              + "(name-value pairs) required.",
++ 					       + "arguments (map of name-value pairs)"
++					       + "if required.",
 +                                    required = true)
 +                           String requestPayload)
 +    {
