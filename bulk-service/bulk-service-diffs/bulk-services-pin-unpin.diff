@@ -1,9 +1,9 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJob.java
 new file mode 100644
-index 0000000..ad1ac3f
+index 0000000..864eec8
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJob.java
-@@ -0,0 +1,144 @@
+@@ -0,0 +1,116 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -69,19 +69,13 @@ index 0000000..ad1ac3f
 +import java.util.Map;
 +import java.util.concurrent.TimeUnit;
 +
-+import diskCacheV111.util.CacheException;
 +import diskCacheV111.vehicles.DCapProtocolInfo;
 +import diskCacheV111.vehicles.ProtocolInfo;
 +
-+import dmg.cells.nucleus.NoRouteToCellException;
-+
-+import org.dcache.cells.CellStub;
 +import org.dcache.pinmanager.PinManagerPinMessage;
-+import org.dcache.services.bulk.PinManagerAware;
 +import org.dcache.services.bulk.job.BulkJobKey;
-+import org.dcache.services.bulk.job.SingleTargetJob;
 +
-+public class PinJob extends SingleTargetJob implements PinManagerAware
++public class PinJob extends PinManagerJob
 +{
 +    static long getLifetime(Map<String, String> arguments)
 +    {
@@ -99,19 +93,11 @@ index 0000000..ad1ac3f
 +        return lifetime;
 +    }
 +
-+    private CellStub pinManager;
-+
 +    public PinJob(BulkJobKey key,
 +                     BulkJobKey parentKey,
 +                     String activity)
 +    {
 +        super(key, parentKey, activity);
-+    }
-+
-+    @Override
-+    public void setPinManager(CellStub pinManager)
-+    {
-+       this.pinManager = pinManager;
 +    }
 +
 +    @Override
@@ -130,22 +116,8 @@ index 0000000..ad1ac3f
 +                                                   protocolInfo,
 +                                                   null,
 +                                                   lifetime);
-+        message.setSubject(subject);
 +        message.setReplyWhenStarted(true);
-+
-+        try {
-+            message = pinManager.sendAndWait(message);
-+        } catch (NoRouteToCellException | InterruptedException | CacheException e) {
-+            setState(State.FAILED);
-+            setErrorObject(e);
-+        }
-+
-+        Throwable t = (Throwable) message.getErrorObject();
-+
-+        if (t != null) {
-+            setState(State.FAILED);
-+            setErrorObject(t);
-+        }
++        sendAndWait(message);
 +    }
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJobProvider.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJobProvider.java
@@ -259,12 +231,67 @@ index 0000000..d05b2ce
 +    }
 +}
 \ No newline at end of file
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinManagerJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinManagerJob.java
+new file mode 100644
+index 0000000..f89579b
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinManagerJob.java
+@@ -0,0 +1,49 @@
++package org.dcache.services.bulk.plugins.pinmanager;
++
++import diskCacheV111.util.CacheException;
++import diskCacheV111.vehicles.Message;
++
++import dmg.cells.nucleus.NoRouteToCellException;
++
++import org.dcache.cells.CellStub;
++import org.dcache.services.bulk.PinManagerAware;
++import org.dcache.services.bulk.job.BulkJobKey;
++import org.dcache.services.bulk.job.SingleTargetJob;
++
++abstract class PinManagerJob extends SingleTargetJob implements PinManagerAware
++{
++    private CellStub pinManager;
++
++    protected PinManagerJob(BulkJobKey key,
++                            BulkJobKey parentKey,
++                            String activity)
++    {
++        super(key, parentKey, activity);
++    }
++
++    @Override
++    public void setPinManager(CellStub pinManager)
++    {
++        this.pinManager = pinManager;
++    }
++
++    protected void sendAndWait(Message message)
++    {
++        message.setSubject(subject);
++
++        try {
++            message = pinManager.sendAndWait(message);
++        } catch (NoRouteToCellException | InterruptedException | CacheException e) {
++            setState(State.FAILED);
++            setErrorObject(e);
++            return;
++        }
++
++        Throwable t = (Throwable) message.getErrorObject();
++
++        if (t != null) {
++            setState(State.FAILED);
++            setErrorObject(t);
++        }
++    }
++}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/UnpinJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/UnpinJob.java
 new file mode 100644
-index 0000000..cb5b63e
+index 0000000..c1859d4
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/UnpinJob.java
-@@ -0,0 +1,110 @@
+@@ -0,0 +1,79 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -326,20 +353,11 @@ index 0000000..cb5b63e
 + */
 +package org.dcache.services.bulk.plugins.pinmanager;
 +
-+import diskCacheV111.util.CacheException;
-+
-+import dmg.cells.nucleus.NoRouteToCellException;
-+
-+import org.dcache.cells.CellStub;
 +import org.dcache.pinmanager.PinManagerUnpinMessage;
-+import org.dcache.services.bulk.PinManagerAware;
 +import org.dcache.services.bulk.job.BulkJobKey;
-+import org.dcache.services.bulk.job.SingleTargetJob;
 +
-+public class UnpinJob extends SingleTargetJob implements PinManagerAware
++public class UnpinJob extends PinManagerJob
 +{
-+    private CellStub pinManager;
-+
 +    public UnpinJob(BulkJobKey key,
 +                    BulkJobKey parentKey,
 +                    String activity)
@@ -348,31 +366,9 @@ index 0000000..cb5b63e
 +    }
 +
 +    @Override
-+    public void setPinManager(CellStub pinManager)
-+    {
-+       this.pinManager = pinManager;
-+    }
-+
-+    @Override
 +    protected void doRun()
 +    {
-+        PinManagerUnpinMessage message
-+                        = new PinManagerUnpinMessage(attributes.getPnfsId());
-+        message.setSubject(subject);
-+
-+        try {
-+            message = pinManager.sendAndWait(message);
-+        } catch (NoRouteToCellException | InterruptedException | CacheException e) {
-+            setState(State.FAILED);
-+            setErrorObject(e);
-+        }
-+
-+        Throwable t = (Throwable) message.getErrorObject();
-+
-+        if (t != null) {
-+            setState(State.FAILED);
-+            setErrorObject(t);
-+        }
++        sendAndWait(new PinManagerUnpinMessage(attributes.getPnfsId()));
 +    }
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/UnpinJobProvider.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/UnpinJobProvider.java
