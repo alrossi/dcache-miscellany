@@ -1,9 +1,9 @@
 diff --git a/modules/dcache-bulk/src/main/resources/org/dcache/services/bulk/bulk.xml b/modules/dcache-bulk/src/main/resources/org/dcache/services/bulk/bulk.xml
 new file mode 100644
-index 0000000..0e0a3b9
+index 0000000..0894832
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/resources/org/dcache/services/bulk/bulk.xml
-@@ -0,0 +1,140 @@
+@@ -0,0 +1,146 @@
 +<?xml version="1.0" encoding="UTF-8"?>
 +<beans xmlns="http://www.springframework.org/schema/beans"
 +       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -35,6 +35,11 @@ index 0000000..0e0a3b9
 +    <property name="destination" value="${bulk.service.poolmanager}"/>
 +    <property name="timeout" value="${bulk.service.poolmanager.timeout}"/>
 +    <property name="timeoutUnit" value="${bulk.service.poolmanager.timeout.unit}"/>
++  </bean>
++
++  <bean id="pool-monitor" class="org.dcache.poolmanager.RemotePoolMonitor">
++    <description>Maintains runtime information about all pools</description>
++    <property name="poolManagerStub" ref="pool-manager-stub"/>
 +  </bean>
 +
 +  <bean id="list-handler" class="org.dcache.util.list.ListDirectoryHandler">
@@ -124,6 +129,7 @@ index 0000000..0e0a3b9
 +    <property name="pnfsManager" ref="pnfs-manager-stub"/>
 +    <property name="pinManager" ref="pin-manager-stub"/>
 +    <property name="poolManager" ref="pool-manager-stub"/>
++    <property name="poolMonitor" ref="pool-monitor"/>
 +  </bean>
 +
 +  <bean id="bulk-service" class="org.dcache.services.bulk.BulkService">
@@ -210,7 +216,7 @@ index b2e791d..92df0fe 100644
 +dcache.paths.bulk=${dcache.home}/var/bulk
  dcache.paths.resilience=${dcache.home}/var/resilience
 diff --git a/packages/tar/src/main/assembly/tar.xml b/packages/tar/src/main/assembly/tar.xml
-index 00ce975..8884d0f 100644
+index e4e1d4c..588ac93 100644
 --- a/packages/tar/src/main/assembly/tar.xml
 +++ b/packages/tar/src/main/assembly/tar.xml
 @@ -85,6 +85,7 @@
@@ -370,6 +376,3 @@ index 0000000..ad7c13e
 +create org.dcache.cells.UniversalSpringCell ${bulk.cell.name} \
 +    "classpath:org/dcache/services/bulk/bulk.xml \
 +    -consume=${bulk.cell.consume}"
-diff --git a/skel/var/bulk/.empty-dir b/skel/var/bulk/.empty-dir
-new file mode 100644
-index 0000000..e69de29

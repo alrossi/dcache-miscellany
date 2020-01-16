@@ -1,8 +1,8 @@
-diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsManagerAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsManagerAware.java
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsHandlerAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsHandlerAware.java
 new file mode 100644
-index 0000000000..bd43503667
+index 0000000..1c2e07b
 --- /dev/null
-+++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsManagerAware.java
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsHandlerAware.java
 @@ -0,0 +1,71 @@
 +/*
 +COPYRIGHT STATUS:
@@ -67,17 +67,17 @@ index 0000000000..bd43503667
 +
 +import diskCacheV111.util.PnfsHandler;
 +
-+public interface PnfsManagerAware
++public interface PnfsHandlerAware
 +{
 +    /**
 +     *  If a single-target job implements this interface, the handler
 +     *  will inject the stub.
 +     */
-+    void setPnfsManager(PnfsHandler pnfsHandler);
++    void setPnfsHandler(PnfsHandler pnfsHandler);
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java
 new file mode 100644
-index 0000000000..f7071e6b98
+index 0000000..f7071e6
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java
 @@ -0,0 +1,138 @@
@@ -221,7 +221,7 @@ index 0000000000..f7071e6b98
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java
 new file mode 100644
-index 0000000000..80cc74755f
+index 0000000..fde527c
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java
 @@ -0,0 +1,228 @@
@@ -301,7 +301,7 @@ index 0000000000..80cc74755f
 +import org.dcache.services.bulk.BulkRequest;
 +import org.dcache.services.bulk.BulkRequest.Depth;
 +import org.dcache.services.bulk.BulkServiceException;
-+import org.dcache.services.bulk.PnfsManagerAware;
++import org.dcache.services.bulk.PnfsHandlerAware;
 +import org.dcache.vehicles.FileAttributes;
 +
 +/**
@@ -310,7 +310,7 @@ index 0000000000..80cc74755f
 + *  Immediate wrapper for a BulkRequest.
 + */
 +public class BulkRequestJob extends MultipleTargetJob
-+                            implements PnfsManagerAware
++                implements PnfsHandlerAware
 +{
 +    protected static final Set<FileAttribute> REQUIRED_ATTRIBUTES
 +                    = Collections.unmodifiableSet(EnumSet.of(FileAttribute.PNFSID,
@@ -330,7 +330,7 @@ index 0000000000..80cc74755f
 +    }
 +
 +    @Override
-+    public void setPnfsManager(PnfsHandler pnfsHandler)
++    public void setPnfsHandler(PnfsHandler pnfsHandler)
 +    {
 +        this.pnfsHandler = pnfsHandler;
 +    }
@@ -455,7 +455,7 @@ index 0000000000..80cc74755f
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java
 new file mode 100644
-index 0000000000..648d32a128
+index 0000000..648d32a
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java
 @@ -0,0 +1,166 @@
@@ -627,7 +627,7 @@ index 0000000000..648d32a128
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java
 new file mode 100644
-index 0000000000..ae769938fc
+index 0000000..ae76993
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java
 @@ -0,0 +1,96 @@
@@ -729,7 +729,7 @@ index 0000000000..ae769938fc
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
 new file mode 100644
-index 0000000000..8e006f349d
+index 0000000..8e006f3
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
 @@ -0,0 +1,427 @@
@@ -1162,7 +1162,7 @@ index 0000000000..8e006f349d
 +}
 diff --git a/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java
 new file mode 100644
-index 0000000000..37da3f5131
+index 0000000..200a638
 --- /dev/null
 +++ b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java
 @@ -0,0 +1,534 @@
@@ -1645,7 +1645,7 @@ index 0000000000..37da3f5131
 +    private void givenRequestJobOfType(TargetType targetType) throws Exception
 +    {
 +        requestJob = new BulkRequestJob(requestKey, request, targetType);
-+        requestJob.setPnfsManager(pnfsHandler);
++        requestJob.setPnfsHandler(pnfsHandler);
 +        requestJob.setCompletionHandler(completionHandler);
 +        requestJob.setSubmissionHandler(submissionHandler);
 +        requestJob.setRestriction(Restrictions.none());
@@ -1702,7 +1702,7 @@ index 0000000000..37da3f5131
 +}
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
 new file mode 100644
-index 0000000000..70d98215e5
+index 0000000..70d9821
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
 @@ -0,0 +1,188 @@
@@ -1894,16 +1894,3 @@ index 0000000000..70d98215e5
 +        this.urlPrefix = urlPrefix;
 +    }
 +}
-diff --git a/pom.xml b/pom.xml
-index 57a95e8527..bb9bebd58f 100644
---- a/pom.xml
-+++ b/pom.xml
-@@ -266,7 +266,7 @@
-             <dependency>
-                 <groupId>eu.eu-emi.security</groupId>
-                 <artifactId>canl</artifactId>
--                <version>2.5.0</version>
-+                <version>2.5.1</version>
-             </dependency>
-             <dependency>
-                 <groupId>org.italiangrid</groupId>

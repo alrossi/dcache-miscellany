@@ -152,12 +152,89 @@ index 0000000..3f9c2c6
 +     */
 +    void setPoolManager(CellStub poolManager);
 +}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PoolMonitorAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PoolMonitorAware.java
+new file mode 100644
+index 0000000..56a8006
+--- /dev/null
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PoolMonitorAware.java
+@@ -0,0 +1,71 @@
++/*
++COPYRIGHT STATUS:
++Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
++software are sponsored by the U.S. Department of Energy under Contract No.
++DE-AC02-76CH03000. Therefore, the U.S. Government retains a  world-wide
++non-exclusive, royalty-free license to publish or reproduce these documents
++and software for U.S. Government purposes.  All documents and software
++available from this server are protected under the U.S. and Foreign
++Copyright Laws, and FNAL reserves all rights.
++
++Distribution of the software available from this server is free of
++charge subject to the user following the terms of the Fermitools
++Software Legal Information.
++
++Redistribution and/or modification of the software shall be accompanied
++by the Fermitools Software Legal Information  (including the copyright
++notice).
++
++The user is asked to feed back problems, benefits, and/or suggestions
++about the software to the Fermilab Software Providers.
++
++Neither the name of Fermilab, the  URA, nor the names of the contributors
++may be used to endorse or promote products derived from this software
++without specific prior written permission.
++
++DISCLAIMER OF LIABILITY (BSD):
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED  WARRANTIES OF MERCHANTABILITY AND FITNESS
++FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL FERMILAB,
++OR THE URA, OR THE U.S. DEPARTMENT of ENERGY, OR CONTRIBUTORS BE LIABLE
++FOR  ANY  DIRECT, INDIRECT,  INCIDENTAL, SPECIAL, EXEMPLARY, OR
++CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
++OF SUBSTITUTE  GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
++BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY  OF
++LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  OF THE USE OF THIS
++SOFTWARE, EVEN IF ADVISED OF THE  POSSIBILITY OF SUCH DAMAGE.
++
++Liabilities of the Government:
++
++This software is provided by URA, independent from its Prime Contract
++with the U.S. Department of Energy. URA is acting independently from
++the Government and in its own private capacity and is not acting on
++behalf of the U.S. Government, nor as its contractor nor its agent.
++Correspondingly, it is understood and agreed that the U.S. Government
++has no connection to this software and in no manner whatsoever shall
++be liable for nor assume any responsibility or obligation for any claim,
++cost, or damages arising out of or resulting from the use of the software
++available from this server.
++
++Export Control:
++
++All documents and software available from this server are subject to U.S.
++export control laws.  Anyone downloading information from this server is
++obligated to secure any necessary Government licenses before exporting
++documents or software obtained from this server.
++ */
++package org.dcache.services.bulk;
++
++import org.dcache.poolmanager.PoolMonitor;
++
++public interface PoolMonitorAware
++{
++    /**
++     *  If a single-target job implements this interface, the handler
++     *  will inject the monitor.
++     */
++    void setPoolMonitor(PoolMonitor poolMonitor);
++}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkRequestHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkRequestHandler.java
 new file mode 100644
-index 0000000..2584e2e
+index 0000000..4beb6fd
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkRequestHandler.java
-@@ -0,0 +1,569 @@
+@@ -0,0 +1,582 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -234,6 +311,7 @@ index 0000000..2584e2e
 +
 +import org.dcache.auth.attributes.Restriction;
 +import org.dcache.cells.CellStub;
++import org.dcache.poolmanager.PoolMonitor;
 +import org.dcache.services.bulk.BulkPermissionDeniedException;
 +import org.dcache.services.bulk.BulkRequest;
 +import org.dcache.services.bulk.BulkRequestNotFoundException;
@@ -241,8 +319,9 @@ index 0000000..2584e2e
 +import org.dcache.services.bulk.BulkServiceException;
 +import org.dcache.services.bulk.BulkStorageException;
 +import org.dcache.services.bulk.PinManagerAware;
-+import org.dcache.services.bulk.PnfsManagerAware;
++import org.dcache.services.bulk.PnfsHandlerAware;
 +import org.dcache.services.bulk.PoolManagerAware;
++import org.dcache.services.bulk.PoolMonitorAware;
 +import org.dcache.services.bulk.job.BulkJob;
 +import org.dcache.services.bulk.job.BulkJobFactory;
 +import org.dcache.services.bulk.job.BulkJobKey;
@@ -282,9 +361,10 @@ index 0000000..2584e2e
 +    private BulkJobFactory        jobFactory;
 +    private BulkServiceStatistics statistics;
 +
-+    private CellStub pnfsManager;
-+    private CellStub pinManager;
-+    private CellStub poolManager;
++    private CellStub     pnfsManager;
++    private CellStub     pinManager;
++    private CellStub     poolManager;
++    private PoolMonitor  poolMonitor;
 +    private CellEndpoint endpoint;
 +
 +    /*
@@ -540,6 +620,12 @@ index 0000000..2584e2e
 +    }
 +
 +    @Required
++    public void setPoolMonitor(PoolMonitor poolMonitor)
++    {
++        this.poolMonitor = poolMonitor;
++    }
++
++    @Required
 +    public void setQueue(BulkServiceQueue queue)
 +    {
 +        this.queue = queue;
@@ -650,11 +736,11 @@ index 0000000..2584e2e
 +
 +    private void configureEndpoints(BulkJob job)
 +    {
-+        if (job instanceof PnfsManagerAware) {
++        if (job instanceof PnfsHandlerAware) {
 +            PnfsHandler pnfsHandler = new PnfsHandler(pnfsManager);
 +            pnfsHandler.setRestriction(job.getRestriction());
 +            pnfsHandler.setSubject(job.getSubject());
-+            ((PnfsManagerAware) job).setPnfsManager(pnfsHandler);
++            ((PnfsHandlerAware) job).setPnfsHandler(pnfsHandler);
 +        }
 +
 +        if (job instanceof PinManagerAware) {
@@ -663,6 +749,10 @@ index 0000000..2584e2e
 +
 +        if (job instanceof PoolManagerAware) {
 +            ((PoolManagerAware) job).setPoolManager(poolManager);
++        }
++
++        if (job instanceof PoolMonitorAware) {
++            ((PoolMonitorAware) job).setPoolMonitor(poolMonitor);
 +        }
 +
 +        if (job instanceof CellMessageSender) {
@@ -727,16 +817,3 @@ index 0000000..2584e2e
 +        queue.submit(job);
 +    }
 +}
-diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
-index dd18930..5399994 100644
---- a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
-+++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
-@@ -457,7 +457,7 @@ public class FileBulkRequestStore extends AbstractObjectFileStore<FileBulkReques
-                         = delegate.getRequest(requestId);
-         if (!optionalRequest.isPresent()) {
-             throw new BulkRequestStorageException("Request " + requestId
--                                                                  + " not found.");
-+                                                             + " not found.");
-         }
- 
-         BulkRequest request = optionalRequest.get();
