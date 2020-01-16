@@ -1007,7 +1007,7 @@ index 0000000..8e006f3
 +            return;
 +        }
 +
-+        LOGGER.trace("{}, expandDepthFirst() called for {}, entry {}, parent {}.",
++        LOGGER.trace("{}, handleChildTarget() called for {}, entry {}, parent {}.",
 +                     loggingPrefix(), target, entry.getName(), parentKey.getKey());
 +
 +        String childTarget = target + "/" + entry.getName();
@@ -1072,7 +1072,7 @@ index 0000000..8e006f3
 +                break;
 +            case SPECIAL:
 +            default:
-+                LOGGER.trace("{}, depth-first, cannot handle special file {}.",
++                LOGGER.trace("{}, handleChildTarget(), cannot handle special file {}.",
 +                             loggingPrefix(), childTarget);
 +                break;
 +        }
