@@ -1485,7 +1485,7 @@ index 0000000000..8b3cee2479
 +                                        request,
 +                                        TargetType.FILE);
 +        requestJob.setCompletionHandler(jobCompletionHandler);
-+        requestJob.setPnfsManager(mock(PnfsHandler.class));
++        requestJob.setPnfsHandler(mock(PnfsHandler.class));
 +        queue.submit(requestJob);
 +    }
 +
