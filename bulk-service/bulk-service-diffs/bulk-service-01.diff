@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-bulk/pom.xml b/modules/dcache-bulk/pom.xml
 new file mode 100644
-index 0000000000000000000000000000000000000000..a278a7cf7ba9e286bcbdf22599e30f62f7ea7099
+index 0000000000000000000000000000000000000000..61f53052e9d15bb1eb0f78b937e6a81c516b0e63
 --- /dev/null
 +++ b/modules/dcache-bulk/pom.xml
 @@ -0,0 +1,46 @@
@@ -10,7 +10,7 @@ index 0000000000000000000000000000000000000000..a278a7cf7ba9e286bcbdf22599e30f62
 +  <parent>
 +    <groupId>org.dcache</groupId>
 +    <artifactId>dcache-parent</artifactId>
-+    <version>6.1.0-SNAPSHOT</version>
++    <version>6.2.0-SNAPSHOT</version>
 +    <relativePath>../../pom.xml</relativePath>
 +  </parent>
 +
@@ -52,10 +52,10 @@ index 0000000000000000000000000000000000000000..a278a7cf7ba9e286bcbdf22599e30f62
 +</project>
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..b2b8af573cb0b62ee29886c78c1a01150ced97d9
+index 0000000000000000000000000000000000000000..039699ef204429c60e0c918177bc7aa88a47c464
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java
-@@ -0,0 +1,267 @@
+@@ -0,0 +1,272 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -156,6 +156,11 @@ index 0000000000000000000000000000000000000000..b2b8af573cb0b62ee29886c78c1a0115
 +     *  Request termination is when the table is empty.
 +     */
 +    private final Multimap<Long, Long> descendants;
++
++    /**
++     *  The queue implements this interface in order for it to be notified
++     *  that a job or task has completed.
++     */
 +    private final SignalAware          queue;
 +
 +    public BulkJobCompletionHandler(SignalAware queue)
@@ -325,10 +330,10 @@ index 0000000000000000000000000000000000000000..b2b8af573cb0b62ee29886c78c1a0115
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..9ec719edcef3a7d50498c6ce70607105a4fbac15
+index 0000000000000000000000000000000000000000..65343d4ae8095259b85f32e54aa9e10402aae4cf
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
-@@ -0,0 +1,332 @@
+@@ -0,0 +1,326 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -396,6 +401,7 @@ index 0000000000000000000000000000000000000000..9ec719edcef3a7d50498c6ce70607105
 +
 +import javax.security.auth.Subject;
 +
++import java.util.concurrent.CompletableFuture;
 +import java.util.concurrent.Future;
 +
 +import org.dcache.auth.attributes.Restriction;
@@ -423,15 +429,20 @@ index 0000000000000000000000000000000000000000..9ec719edcef3a7d50498c6ce70607105
 +    protected final BulkJobKey parentKey;
 +    protected final String     activity;
 +
++    /**
++     *  The 'target' specified by the bulk request.  This usually a path,
++     *  either a directory or a regular file.
++     */
 +    protected String         target;
++
 +    protected FileAttributes attributes;
 +    protected Subject        subject;
 +    protected Restriction    restriction;
 +    protected State          state = State.CREATED;
 +    protected Throwable      errorObject;
 +
-+
 +    protected BulkJobCompletionHandler completionHandler;
++    CompletableFuture f;
 +    protected Future                   future;
 +
 +    private   long           startTime;
@@ -443,33 +454,30 @@ index 0000000000000000000000000000000000000000..9ec719edcef3a7d50498c6ce70607105
 +        this.activity = activity;
 +    }
 +
-+    public boolean cancel()
++    public synchronized boolean cancel()
 +    {
-+        synchronized (state)
++        switch (state)
 +        {
-+            switch(state)
-+            {
-+                case CREATED:
-+                case INITIALIZED:
-+                case STARTED:
-+                    state = State.CANCELLED;
-+                    if (future != null) {
-+                        future.cancel(true);
-+                    }
++            case CREATED:
++            case INITIALIZED:
++            case STARTED:
++                state = State.CANCELLED;
++                if (future != null) {
++                    future.cancel(true);
++                }
 +
-+                    if (errorObject == null) {
-+                        errorObject = new BulkJobExecutionException(key.toString()
-+                                                                    + ":" + state);
-+                    }
++                if (errorObject == null) {
++                    errorObject = new BulkJobExecutionException(key.toString()
++                                                                + ":" + state);
++                }
 +
-+                    completionHandler.jobCancelled(this);
-+                    return true;
-+                default:
-+                    /*
-+                     * Already terminated.
-+                     */
-+                    return false;
-+            }
++                completionHandler.jobCancelled(this);
++                return true;
++            default:
++                /*
++                 * Already terminated.
++                 */
++                return false;
 +        }
 +    }
 +
@@ -508,12 +516,9 @@ index 0000000000000000000000000000000000000000..9ec719edcef3a7d50498c6ce70607105
 +        return startTime;
 +    }
 +
-+    public State getState()
++    public synchronized State getState()
 +    {
-+        synchronized (state)
-+        {
-+            return state;
-+        }
++        return state;
 +    }
 +
 +    public Subject getSubject()
@@ -535,25 +540,22 @@ index 0000000000000000000000000000000000000000..9ec719edcef3a7d50498c6ce70607105
 +
 +        doInitialize();
 +
-+        synchronized (state)
++        synchronized (this)
 +        {
 +            state = State.INITIALIZED;
 +        }
 +    }
 +
-+    public boolean isTerminated()
++    public synchronized boolean isTerminated()
 +    {
-+        synchronized (state)
++        switch (state)
 +        {
-+            switch (state)
-+            {
-+                case FAILED:
-+                case CANCELLED:
-+                case COMPLETED:
-+                    return true;
-+                default:
-+                    return false;
-+            }
++            case FAILED:
++            case CANCELLED:
++            case COMPLETED:
++                return true;
++            default:
++                return false;
 +        }
 +    }
 +
@@ -561,7 +563,7 @@ index 0000000000000000000000000000000000000000..9ec719edcef3a7d50498c6ce70607105
 +    {
 +        LOGGER.trace("{}, run() called ...", key);
 +
-+        synchronized (state)
++        synchronized (this)
 +        {
 +            state = State.STARTED;
 +            startTime = System.currentTimeMillis();
@@ -569,7 +571,7 @@ index 0000000000000000000000000000000000000000..9ec719edcef3a7d50498c6ce70607105
 +
 +        doRun();
 +
-+        synchronized (state)
++        synchronized (this)
 +        {
 +            state = State.COMPLETED;
 +        }
@@ -602,43 +604,40 @@ index 0000000000000000000000000000000000000000..9ec719edcef3a7d50498c6ce70607105
 +        this.restriction = restriction;
 +    }
 +
-+    public void setState(State state)
++    public synchronized void setState(State state)
 +    {
 +        Preconditions.checkNotNull(state);
 +
-+        synchronized(this.state)
++        switch (this.state)
 +        {
-+            switch(this.state)
-+            {
-+                case CANCELLED:
-+                case COMPLETED:
-+                case FAILED:
-+                    break;
-+                case STARTED:
-+                    switch(state)
-+                    {
-+                        case CANCELLED:
-+                        case COMPLETED:
-+                        case FAILED:
-+                            this.state = state;
-+                            break;
-+                    }
-+                    break;
-+                case INITIALIZED:
-+                    switch(state)
-+                    {
-+                        case CANCELLED:
-+                        case COMPLETED:
-+                        case FAILED:
-+                        case STARTED:
-+                            this.state = state;
-+                            break;
-+                    }
-+                    break;
-+                case CREATED:
-+                default:
-+                    this.state = state;
-+            }
++            case CANCELLED:
++            case COMPLETED:
++            case FAILED:
++                break;
++            case STARTED:
++                switch (state)
++                {
++                    case CANCELLED:
++                    case COMPLETED:
++                    case FAILED:
++                        this.state = state;
++                        break;
++                }
++                break;
++            case INITIALIZED:
++                switch (state)
++                {
++                    case CANCELLED:
++                    case COMPLETED:
++                    case FAILED:
++                    case STARTED:
++                        this.state = state;
++                        break;
++                }
++                break;
++            case CREATED:
++            default:
++                this.state = state;
 +        }
 +    }
 +
@@ -663,10 +662,10 @@ index 0000000000000000000000000000000000000000..9ec719edcef3a7d50498c6ce70607105
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobKey.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobKey.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..772a964711ac2c62abaf818e42ea91975db5a3f8
+index 0000000000000000000000000000000000000000..326a679b0f1d6bf6cbfac69d58dad94a1c67e549
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobKey.java
-@@ -0,0 +1,141 @@
+@@ -0,0 +1,137 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -751,7 +750,7 @@ index 0000000000000000000000000000000000000000..772a964711ac2c62abaf818e42ea9197
 +        try {
 +            String error = "Cannot construct key without request id.";
 +            return new BulkJobKey(Preconditions.checkNotNull(requestId, error),
-+                                  null);
++                                  ID_GENERATOR.getAndIncrement());
 +        } catch (IllegalArgumentException e) {
 +            throw new BulkServiceException("newKey", e);
 +        }
@@ -781,11 +780,7 @@ index 0000000000000000000000000000000000000000..772a964711ac2c62abaf818e42ea9197
 +    private BulkJobKey(String requestId, Long jobId)
 +    {
 +        this.requestId = requestId;
-+        if (jobId != null) {
-+            this.jobId = jobId;
-+        } else {
-+            this.jobId = ID_GENERATOR.getAndIncrement();
-+        }
++        this.jobId = jobId;
 +    }
 +
 +    public String getRequestId()
@@ -810,10 +805,10 @@ index 0000000000000000000000000000000000000000..772a964711ac2c62abaf818e42ea9197
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/queue/SignalAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/queue/SignalAware.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..a74c56305af7f80b6f1f4d9c564ad2d03f725292
+index 0000000000000000000000000000000000000000..a8e588cb773eecf2e8f502acdbd35894678a30bc
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/queue/SignalAware.java
-@@ -0,0 +1,74 @@
+@@ -0,0 +1,86 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -875,6 +870,15 @@ index 0000000000000000000000000000000000000000..a74c56305af7f80b6f1f4d9c564ad2d0
 + */
 +package org.dcache.services.bulk.queue;
 +
++/**
++ *  The purpose of this interface is to make explicit the handling of signals
++ *  that are received while doing work outside of a synchronization block,
++ *  and thus not subject to the usual Java thread notification queue semantics.
++ *
++ *  (The most common way of implementing this is to use an internal
++ *  atomic counter, and then when work has completed, check the count for
++ *  a value > 0, zero it out and take appropriate action.)
++ */
 +public interface SignalAware
 +{
 +    /**
@@ -883,6 +887,9 @@ index 0000000000000000000000000000000000000000..a74c56305af7f80b6f1f4d9c564ad2d0
 +    void signal();
 +
 +    /**
++     * Exposes access to the current count of unprocessed signals.
++     * Largely for testing purposes.
++     *
 +     * @return the number of signals received by the queue but
 +     *         currently unprocessed.
 +     */
@@ -1345,10 +1352,10 @@ index 0000000000000000000000000000000000000000..58f945acf7c6c23d1bf4a02619642619
 +    }
 +}
 diff --git a/packages/pom.xml b/packages/pom.xml
-index 8c91346d131e7331fd71c49470b73ad4c4b000a2..4e36b559dadd8a315a9950494a1c9bab41033cd8 100644
+index 2ff3cfdf7a7f617afe73723257c847076b0c3923..d41a555379d21abc8913a10a04111432b254fc87 100644
 --- a/packages/pom.xml
 +++ b/packages/pom.xml
-@@ -20,9 +20,14 @@
+@@ -20,10 +20,15 @@
      </dependency>
      <dependency>
          <groupId>org.dcache</groupId>
@@ -1356,19 +1363,20 @@ index 8c91346d131e7331fd71c49470b73ad4c4b000a2..4e36b559dadd8a315a9950494a1c9bab
 +        <artifactId>dcache-bulk</artifactId>
          <version>${project.version}</version>
      </dependency>
-+    <dependency>
+     <dependency>
 +      <groupId>org.dcache</groupId>
 +      <artifactId>dcache-core</artifactId>
 +      <version>${project.version}</version>
 +    </dependency>
-     <dependency>
++    <dependency>
          <groupId>org.dcache</groupId>
          <artifactId>dcache-chimera</artifactId>
+         <version>${project.version}</version>
 diff --git a/pom.xml b/pom.xml
-index 01318dc14e225d80d5cfccb2bcfbfd48ea9285c9..4e1f8a022e73ba81c421deb029bb9ffdf37a539e 100644
+index 1b0fa1c7a9f2f4403b2c365bade737aef3c8fdb3..b4d4c0c7401feb602a0e43ca3fb923e92e14c33d 100644
 --- a/pom.xml
 +++ b/pom.xml
-@@ -1411,6 +1411,7 @@
+@@ -1421,6 +1421,7 @@
          <module>modules/dcache-vehicles</module>
          <module>modules/dcache-nearline-spi</module>
          <module>modules/dcache</module>
