@@ -77,10 +77,10 @@ index 0000000..1c2e07b
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java
 new file mode 100644
-index 0000000..f7071e6
+index 0000000..4c0d1b0
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java
-@@ -0,0 +1,138 @@
+@@ -0,0 +1,147 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -214,6 +214,15 @@ index 0000000..f7071e6
 +                               MultipleTargetJob parent)
 +                    throws BulkServiceException;
 +
++    /**
++     * Submits a job which manages multiple targets resulting from
++     * a target (i.e., directory) expansion.
++     *
++     * @param target directory
++     * @param attributes of the directory
++     * @param parent the generating job.
++     * @throws BulkServiceException
++     */
 +    void submitTargetExpansionJob(String target,
 +                                  FileAttributes attributes,
 +                                  MultipleTargetJob parent)
@@ -729,7 +738,7 @@ index 0000000..ae76993
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
 new file mode 100644
-index 0000000..8e006f3
+index 0000000..9ab429f
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
 @@ -0,0 +1,427 @@
