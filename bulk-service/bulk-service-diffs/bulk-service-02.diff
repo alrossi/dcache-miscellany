@@ -1,8 +1,8 @@
-diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsHandlerAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsHandlerAware.java
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/NamespaceHandlerAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/NamespaceHandlerAware.java
 new file mode 100644
-index 0000000..1c2e07b
+index 0000000000000000000000000000000000000000..96c2f656807ea1511564bff98bed7110453638f2
 --- /dev/null
-+++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/PnfsHandlerAware.java
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/NamespaceHandlerAware.java
 @@ -0,0 +1,71 @@
 +/*
 +COPYRIGHT STATUS:
@@ -67,17 +67,17 @@ index 0000000..1c2e07b
 +
 +import diskCacheV111.util.PnfsHandler;
 +
-+public interface PnfsHandlerAware
++public interface NamespaceHandlerAware
 +{
 +    /**
 +     *  If a single-target job implements this interface, the handler
 +     *  will inject the stub.
 +     */
-+    void setPnfsHandler(PnfsHandler pnfsHandler);
++    void setNamespaceHandler(PnfsHandler pnfsHandler);
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java
 new file mode 100644
-index 0000000..4c0d1b0
+index 0000000000000000000000000000000000000000..4c0d1b0e65a3be753b74bbe494965778e0231291
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkSubmissionHandler.java
 @@ -0,0 +1,147 @@
@@ -228,12 +228,28 @@ index 0000000..4c0d1b0
 +                                  MultipleTargetJob parent)
 +                    throws BulkServiceException;
 +}
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
+index 65343d4ae8095259b85f32e54aa9e10402aae4cf..0cc530ba39436267453deb64f6d887ab63e8523b 100644
+--- a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
+@@ -315,6 +315,11 @@ public abstract class BulkJob implements Runnable
+         this.target = target;
+     }
+ 
++    protected boolean isInErrorState()
++    {
++        return errorObject != null;
++    }
++
+     protected abstract void doRun();
+ 
+     protected abstract void postCompletion();
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java
 new file mode 100644
-index 0000000..fde527c
+index 0000000000000000000000000000000000000000..2ca2121577964282fd0d0d5392d419ab6073622c
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java
-@@ -0,0 +1,228 @@
+@@ -0,0 +1,232 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -310,7 +326,7 @@ index 0000000..fde527c
 +import org.dcache.services.bulk.BulkRequest;
 +import org.dcache.services.bulk.BulkRequest.Depth;
 +import org.dcache.services.bulk.BulkServiceException;
-+import org.dcache.services.bulk.PnfsHandlerAware;
++import org.dcache.services.bulk.NamespaceHandlerAware;
 +import org.dcache.vehicles.FileAttributes;
 +
 +/**
@@ -319,7 +335,7 @@ index 0000000..fde527c
 + *  Immediate wrapper for a BulkRequest.
 + */
 +public class BulkRequestJob extends MultipleTargetJob
-+                implements PnfsHandlerAware
++                implements NamespaceHandlerAware
 +{
 +    protected static final Set<FileAttribute> REQUIRED_ATTRIBUTES
 +                    = Collections.unmodifiableSet(EnumSet.of(FileAttribute.PNFSID,
@@ -339,7 +355,7 @@ index 0000000..fde527c
 +    }
 +
 +    @Override
-+    public void setPnfsHandler(PnfsHandler pnfsHandler)
++    public void setNamespaceHandler(PnfsHandler pnfsHandler)
 +    {
 +        this.pnfsHandler = pnfsHandler;
 +    }
@@ -388,7 +404,11 @@ index 0000000..fde527c
 +                }
 +            }
 +
-+            if (errorObject != null) {
++            /*
++             *  Fail-fast in case the last iteration produced an error,
++             *  or the job has been cancelled.
++             */
++            if (isInErrorState() || isTerminated()) {
 +                break;
 +            }
 +        }
@@ -464,10 +484,10 @@ index 0000000..fde527c
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java
 new file mode 100644
-index 0000000..648d32a
+index 0000000000000000000000000000000000000000..4c914d1c9d937a9731338082e547a1f5b62bcf49
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java
-@@ -0,0 +1,166 @@
+@@ -0,0 +1,174 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -604,7 +624,11 @@ index 0000000..648d32a
 +                                            FileAttributes attributes)
 +                    throws BulkServiceException
 +    {
-+        if (errorObject != null) {
++        /*
++         *  Fail-fast in case the last iteration produced an error,
++         *  or the job has been cancelled.
++         */
++        if (isInErrorState() || isTerminated()) {
 +            return;
 +        }
 +
@@ -621,7 +645,11 @@ index 0000000..648d32a
 +                                         FileAttributes attributes)
 +                    throws BulkServiceException
 +    {
-+        if (errorObject != null) {
++        /*
++         *  Fail-fast in case the last iteration produced an error,
++         *  or the job has been cancelled.
++         */
++        if (isInErrorState() || isTerminated()) {
 +            return;
 +        }
 +
@@ -636,7 +664,7 @@ index 0000000..648d32a
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java
 new file mode 100644
-index 0000000..ae76993
+index 0000000000000000000000000000000000000000..ae769938fc7b2eb23765afd98218205febee0412
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/SingleTargetJob.java
 @@ -0,0 +1,96 @@
@@ -738,10 +766,10 @@ index 0000000..ae76993
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
 new file mode 100644
-index 0000000..9ab429f
+index 0000000000000000000000000000000000000000..279e1365a189fc43a173b1ba843273d0b40c8772
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
-@@ -0,0 +1,427 @@
+@@ -0,0 +1,435 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -911,7 +939,11 @@ index 0000000..9ab429f
 +
 +    private void expand(String target, BulkJobKey parentKey)
 +    {
-+        if (state == State.CANCELLED || state == State.FAILED) {
++        /*
++         *  Fail-fast in case the last recursion produced an error,
++         *  or the job has been cancelled.
++         */
++        if (isInErrorState() || isTerminated()) {
 +            LOGGER.debug("{}, expansion job for {} {}; returning ...",
 +                         loggingPrefix(), target, state.name());
 +            return;
@@ -919,9 +951,7 @@ index 0000000..9ab429f
 +
 +        LOGGER.trace("{}, expand() called for {}.", loggingPrefix(), target);
 +
-+        switch (expansionType)
-+        {
-+            case BREADTH_FIRST:
++        if (expansionType == ExpansionType.BREADTH_FIRST) {
 +                /*
 +                 *  In breadth-first it should not matter that directories
 +                 *  are processed as targets before their children.
@@ -929,9 +959,6 @@ index 0000000..9ab429f
 +                checkForDirectoryTarget(target,
 +                                        key,
 +                                        attributes);
-+                break;
-+            default:
-+                break;
 +        }
 +
 +        try {
@@ -946,9 +973,7 @@ index 0000000..9ab429f
 +                }
 +            }
 +
-+            switch (expansionType)
-+            {
-+                case DEPTH_FIRST:
++            if (expansionType == ExpansionType.DEPTH_FIRST) {
 +                    /*
 +                     *  Choosing depth-first implies the need to preserve
 +                     *  that order in the visiting of the nodes.  Since
@@ -975,7 +1000,6 @@ index 0000000..9ab429f
 +                    checkForDirectoryTarget(target,
 +                                            key,
 +                                            attributes);
-+                    break;
 +            }
 +        } catch (InterruptedException e) {
 +            State state = getState();
@@ -1010,7 +1034,11 @@ index 0000000..9ab429f
 +                                   DirectoryEntry entry)
 +                    throws BulkServiceException
 +    {
-+        if (state == State.CANCELLED || state == State.FAILED) {
++        /*
++         *  Fail-fast in case the last recursion produced an error,
++         *  or the job has been cancelled.
++         */
++        if (isInErrorState() || isTerminated()) {
 +            LOGGER.debug("{}, expansion job for {} {}; returning ...",
 +                         loggingPrefix(), target, state.name());
 +            return;
@@ -1108,7 +1136,11 @@ index 0000000..9ab429f
 +                                         BulkJobKey parentKey,
 +                                         FileAttributes attributes)
 +    {
-+        if (state == State.CANCELLED || state == State.FAILED) {
++        /*
++         *  Fail-fast in case the last recursion produced an error,
++         *  or the job has been cancelled.
++         */
++        if (isInErrorState() || isTerminated()) {
 +            LOGGER.debug("{}, expansion job for {} {}; returning ...",
 +                         loggingPrefix(), target, state.name());
 +            return;
@@ -1138,7 +1170,11 @@ index 0000000..9ab429f
 +                                    BulkJobKey parentKey,
 +                                    FileAttributes attributes)
 +    {
-+        if (state == State.CANCELLED || state == State.FAILED) {
++        /*
++         *  Fail-fast in case the last recursion produced an error,
++         *  or the job has been cancelled.
++         */
++        if (isInErrorState() || isTerminated()) {
 +            LOGGER.debug("{}, expansion job for {} {}; returning ...",
 +                         loggingPrefix(), target, state.name());
 +            return;
@@ -1171,10 +1207,10 @@ index 0000000..9ab429f
 +}
 diff --git a/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java
 new file mode 100644
-index 0000000..200a638
+index 0000000000000000000000000000000000000000..90b35853e52a186117f6bd325646e8849aa2da8c
 --- /dev/null
 +++ b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/job/BulkMultipleTargetJobTest.java
-@@ -0,0 +1,534 @@
+@@ -0,0 +1,530 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -1236,7 +1272,6 @@ index 0000000..200a638
 + */
 +package org.dcache.services.bulk.job;
 +
-+import com.google.common.base.Strings;
 +import com.google.common.collect.HashMultimap;
 +import com.google.common.collect.Multimap;
 +import org.junit.Before;
@@ -1245,7 +1280,6 @@ index 0000000..200a638
 +import java.io.File;
 +import java.util.HashMap;
 +import java.util.Map;
-+import java.util.Random;
 +import java.util.Set;
 +import java.util.UUID;
 +
@@ -1255,6 +1289,7 @@ index 0000000..200a638
 +
 +import org.dcache.auth.attributes.Restrictions;
 +import org.dcache.cells.CellStub;
++import org.dcache.chimera.InodeId;
 +import org.dcache.namespace.FileAttribute;
 +import org.dcache.namespace.FileType;
 +import org.dcache.services.bulk.BulkRequest;
@@ -1284,12 +1319,9 @@ index 0000000..200a638
 +
 +public class BulkMultipleTargetJobTest implements SignalAware
 +{
-+    private static Random random = new Random(System.currentTimeMillis());
-+
 +    private static PnfsId nextPnfsId()
 +    {
-+        String next = String.format("%x", Math.abs(random.nextInt()));
-+        return new PnfsId(Strings.padStart(next, 36, '0'));
++        return new PnfsId(InodeId.newID(0));
 +    }
 +
 +    class TestPnfsHandler extends PnfsHandler
@@ -1654,7 +1686,7 @@ index 0000000..200a638
 +    private void givenRequestJobOfType(TargetType targetType) throws Exception
 +    {
 +        requestJob = new BulkRequestJob(requestKey, request, targetType);
-+        requestJob.setPnfsHandler(pnfsHandler);
++        requestJob.setNamespaceHandler(pnfsHandler);
 +        requestJob.setCompletionHandler(completionHandler);
 +        requestJob.setSubmissionHandler(submissionHandler);
 +        requestJob.setRestriction(Restrictions.none());
@@ -1711,7 +1743,7 @@ index 0000000..200a638
 +}
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
 new file mode 100644
-index 0000000..70d9821
+index 0000000000000000000000000000000000000000..70d98215e59f3dcc8e497889baf7f9aaff9fee0d
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
 @@ -0,0 +1,188 @@
