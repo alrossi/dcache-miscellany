@@ -228,28 +228,12 @@ index 0000000000000000000000000000000000000000..4c0d1b0e65a3be753b74bbe494965778
 +                                  MultipleTargetJob parent)
 +                    throws BulkServiceException;
 +}
-diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
-index 65343d4ae8095259b85f32e54aa9e10402aae4cf..0cc530ba39436267453deb64f6d887ab63e8523b 100644
---- a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
-+++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJob.java
-@@ -315,6 +315,11 @@ public abstract class BulkJob implements Runnable
-         this.target = target;
-     }
- 
-+    protected boolean isInErrorState()
-+    {
-+        return errorObject != null;
-+    }
-+
-     protected abstract void doRun();
- 
-     protected abstract void postCompletion();
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..2ca2121577964282fd0d0d5392d419ab6073622c
+index 0000000000000000000000000000000000000000..e81ab82e3f1c6db05755c19480b34b9ca9af2efc
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkRequestJob.java
-@@ -0,0 +1,232 @@
+@@ -0,0 +1,231 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -405,10 +389,9 @@ index 0000000000000000000000000000000000000000..2ca2121577964282fd0d0d5392d419ab
 +            }
 +
 +            /*
-+             *  Fail-fast in case the last iteration produced an error,
-+             *  or the job has been cancelled.
++             *  Fail-fast in case the job has been cancelled.
 +             */
-+            if (isInErrorState() || isTerminated()) {
++            if (isTerminated()) {
 +                break;
 +            }
 +        }
@@ -484,10 +467,10 @@ index 0000000000000000000000000000000000000000..2ca2121577964282fd0d0d5392d419ab
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..4c914d1c9d937a9731338082e547a1f5b62bcf49
+index 0000000000000000000000000000000000000000..547c24ce30bda65a75008a4851eaefc884a05b09
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/MultipleTargetJob.java
-@@ -0,0 +1,174 @@
+@@ -0,0 +1,172 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -625,10 +608,9 @@ index 0000000000000000000000000000000000000000..4c914d1c9d937a9731338082e547a1f5
 +                    throws BulkServiceException
 +    {
 +        /*
-+         *  Fail-fast in case the last iteration produced an error,
-+         *  or the job has been cancelled.
++         *  Fail-fast in case the job has been cancelled.
 +         */
-+        if (isInErrorState() || isTerminated()) {
++        if (isTerminated()) {
 +            return;
 +        }
 +
@@ -646,10 +628,9 @@ index 0000000000000000000000000000000000000000..4c914d1c9d937a9731338082e547a1f5
 +                    throws BulkServiceException
 +    {
 +        /*
-+         *  Fail-fast in case the last iteration produced an error,
-+         *  or the job has been cancelled.
++         *  Fail-fast in case the job has been cancelled.
 +         */
-+        if (isInErrorState() || isTerminated()) {
++        if (isTerminated()) {
 +            return;
 +        }
 +
@@ -766,10 +747,10 @@ index 0000000000000000000000000000000000000000..ae769938fc7b2eb23765afd98218205f
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..279e1365a189fc43a173b1ba843273d0b40c8772
+index 0000000000000000000000000000000000000000..409cbc7b39bd9a930ff94be07333cae75c6016e1
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/TargetExpansionJob.java
-@@ -0,0 +1,435 @@
+@@ -0,0 +1,424 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -902,8 +883,8 @@ index 0000000000000000000000000000000000000000..279e1365a189fc43a173b1ba843273d0
 +     *  a new job.
 +     *
 +     *  In depth-first expansion, the "root" expansion job is responsible
-+     *  for all expansion of subdirectories (via recursion).  This is
-+     *  avoids memory-unfriendly chain of job dependencies (breadth-first
++     *  for all expansion of subdirectories (via recursion).  This
++     *  avoids a memory-unfriendly chain of job dependencies (breadth-first
 +     *  expansions have no such chained dependencies).
 +     */
 +    @Override
@@ -926,7 +907,12 @@ index 0000000000000000000000000000000000000000..279e1365a189fc43a173b1ba843273d0
 +                return;
 +        }
 +
-+        expand(target, key);
++        try {
++            expand(target, key);
++        } catch (CacheException | BulkServiceException e) {
++            errorObject = e;
++            completionHandler.jobFailed(this);
++        }
 +
 +        LOGGER.trace("{}, doRun(), key {}, target {} exiting ...",
 +                     loggingPrefix(), key, target);
@@ -938,12 +924,12 @@ index 0000000000000000000000000000000000000000..279e1365a189fc43a173b1ba843273d0
 +    }
 +
 +    private void expand(String target, BulkJobKey parentKey)
++                    throws CacheException, BulkServiceException
 +    {
 +        /*
-+         *  Fail-fast in case the last recursion produced an error,
-+         *  or the job has been cancelled.
++         *  Fail-fast in case the job has been cancelled.
 +         */
-+        if (isInErrorState() || isTerminated()) {
++        if (isTerminated()) {
 +            LOGGER.debug("{}, expansion job for {} {}; returning ...",
 +                         loggingPrefix(), target, state.name());
 +            return;
@@ -952,13 +938,11 @@ index 0000000000000000000000000000000000000000..279e1365a189fc43a173b1ba843273d0
 +        LOGGER.trace("{}, expand() called for {}.", loggingPrefix(), target);
 +
 +        if (expansionType == ExpansionType.BREADTH_FIRST) {
-+                /*
-+                 *  In breadth-first it should not matter that directories
-+                 *  are processed as targets before their children.
-+                 */
-+                checkForDirectoryTarget(target,
-+                                        key,
-+                                        attributes);
++            /*
++             *  In breadth-first it should not matter that directories
++             *  are processed as targets before their children.
++             */
++            checkForDirectoryTarget(target, key, attributes);
 +        }
 +
 +        try {
@@ -966,7 +950,7 @@ index 0000000000000000000000000000000000000000..279e1365a189fc43a173b1ba843273d0
 +
 +            for (DirectoryEntry entry : stream) {
 +                handleChildTarget(target, parentKey, entry);
-+                if (state == State.CANCELLED || state == State.FAILED) {
++                if (isTerminated()) {
 +                    LOGGER.debug("{}, expansion job for {} {}; returning ...",
 +                                 loggingPrefix(), target, state.name());
 +                    return;
@@ -974,32 +958,32 @@ index 0000000000000000000000000000000000000000..279e1365a189fc43a173b1ba843273d0
 +            }
 +
 +            if (expansionType == ExpansionType.DEPTH_FIRST) {
-+                    /*
-+                     *  Choosing depth-first implies the need to preserve
-+                     *  that order in the visiting of the nodes.  Since
-+                     *  submission and execution are asynchronous, it is thus
-+                     *  necessary to wait after a directory expansion until
-+                     *  all its children have completed. This guarantees these
-+                     *  directories will always be processed only after all
-+                     *  their descendants have been (necessary for, say,
-+                     *  deletion).
-+                     */
-+                    LOGGER.debug("{}, {}, waiting for children of "
-+                                                 + "{} to terminate.",
-+                                 loggingPrefix(),
-+                                 expansionType.name(),
-+                                 parentKey.getJobId());
++                /*
++                 *  Choosing depth-first implies the need to preserve
++                 *  that order in the visiting of the nodes.  Since
++                 *  submission and execution are asynchronous, it is thus
++                 *  necessary to wait after a directory expansion until
++                 *  all its children have completed. This guarantees these
++                 *  directories will always be processed only after all
++                 *  their descendants have been (necessary for, say,
++                 *  deletion).
++                 */
++                LOGGER.debug("{}, {}, waiting for children of "
++                                             + "{} to terminate.",
++                             loggingPrefix(),
++                             expansionType.name(),
++                             parentKey.getJobId());
 +
-+                    completionHandler.waitForChildren(parentKey.getJobId());
++                completionHandler.waitForChildren(parentKey.getJobId());
 +
-+                    /*
-+                     *  In depth-first it may indeed be necessary to process
-+                     *  directories as targets only after all their children
-+                     *  have terminated, so we do this here.
-+                     */
-+                    checkForDirectoryTarget(target,
-+                                            key,
-+                                            attributes);
++                /*
++                 *  In depth-first it may indeed be necessary to process
++                 *  directories as targets only after all their children
++                 *  have terminated, so we do this here.
++                 */
++                checkForDirectoryTarget(target,
++                                        key,
++                                        attributes);
 +            }
 +        } catch (InterruptedException e) {
 +            State state = getState();
@@ -1012,9 +996,6 @@ index 0000000000000000000000000000000000000000..279e1365a189fc43a173b1ba843273d0
 +                setState(State.CANCELLED);
 +                completionHandler.jobInterrupted(this);
 +            }
-+        } catch (CacheException | BulkServiceException e) {
-+            errorObject = e;
-+            completionHandler.jobFailed(this);
 +        }
 +
 +        LOGGER.trace("{}, expand() {}, exiting ...", loggingPrefix(), target);
@@ -1032,13 +1013,12 @@ index 0000000000000000000000000000000000000000..279e1365a189fc43a173b1ba843273d0
 +    private void handleChildTarget(String target,
 +                                   BulkJobKey parentKey,
 +                                   DirectoryEntry entry)
-+                    throws BulkServiceException
++                    throws CacheException, BulkServiceException
 +    {
 +        /*
-+         *  Fail-fast in case the last recursion produced an error,
-+         *  or the job has been cancelled.
++         *  Fail-fast in case the job has been cancelled.
 +         */
-+        if (isInErrorState() || isTerminated()) {
++        if (isTerminated()) {
 +            LOGGER.debug("{}, expansion job for {} {}; returning ...",
 +                         loggingPrefix(), target, state.name());
 +            return;
@@ -1135,68 +1115,58 @@ index 0000000000000000000000000000000000000000..279e1365a189fc43a173b1ba843273d0
 +    private void checkForDirectoryTarget(String target,
 +                                         BulkJobKey parentKey,
 +                                         FileAttributes attributes)
++                    throws BulkServiceException
 +    {
 +        /*
-+         *  Fail-fast in case the last recursion produced an error,
-+         *  or the job has been cancelled.
++         *  Fail-fast in case the job has been cancelled.
 +         */
-+        if (isInErrorState() || isTerminated()) {
++        if (isTerminated()) {
 +            LOGGER.debug("{}, expansion job for {} {}; returning ...",
 +                         loggingPrefix(), target, state.name());
 +            return;
 +        }
 +
-+        try {
-+            switch (targetType)
-+            {
-+                case BOTH:
-+                case DIR:
-+                    LOGGER.debug("{} {}, directory {} included as target.",
-+                                 loggingPrefix(), expansionType.name(), target);
-+                    submitSingleTargetJob(target, parentKey, attributes);
-+                    break;
-+                default:
-+                    LOGGER.debug("{} {}, directory {} not included as target, "
-+                                                 + "skipping.",
-+                                 loggingPrefix(), expansionType.name(), target);
-+            }
-+        } catch (BulkServiceException e) {
-+            errorObject = e;
-+            completionHandler.jobFailed(this);
++        switch (targetType)
++        {
++            case BOTH:
++            case DIR:
++                LOGGER.debug("{} {}, directory {} included as target.",
++                             loggingPrefix(), expansionType.name(), target);
++                submitSingleTargetJob(target, parentKey, attributes);
++                break;
++            default:
++                LOGGER.debug("{} {}, directory {} not included as target, "
++                                             + "skipping.",
++                             loggingPrefix(), expansionType.name(), target);
 +        }
 +    }
 +
 +    private void checkForFileTarget(String target,
 +                                    BulkJobKey parentKey,
 +                                    FileAttributes attributes)
++                    throws BulkServiceException
 +    {
 +        /*
-+         *  Fail-fast in case the last recursion produced an error,
-+         *  or the job has been cancelled.
++         *  Fail-fast in case the job has been cancelled.
 +         */
-+        if (isInErrorState() || isTerminated()) {
++        if (isTerminated()) {
 +            LOGGER.debug("{}, expansion job for {} {}; returning ...",
 +                         loggingPrefix(), target, state.name());
 +            return;
 +        }
 +
-+        try {
-+            switch (targetType)
-+            {
-+                case BOTH:
-+                case FILE:
-+                    LOGGER.debug("{} {}, file {} included as target.",
-+                                 loggingPrefix(), expansionType.name(), target);
-+                    submitSingleTargetJob(target, parentKey, attributes);
-+                    break;
-+                default:
-+                    LOGGER.debug("{} {}, file {} not included as target, "
-+                                                 + "skipping.",
-+                                 loggingPrefix(), expansionType.name(), target);
-+            }
-+        } catch (BulkServiceException e) {
-+            errorObject = e;
-+            completionHandler.jobFailed(this);
++        switch (targetType)
++        {
++            case BOTH:
++            case FILE:
++                LOGGER.debug("{} {}, file {} included as target.",
++                             loggingPrefix(), expansionType.name(), target);
++                submitSingleTargetJob(target, parentKey, attributes);
++                break;
++            default:
++                LOGGER.debug("{} {}, file {} not included as target, "
++                                             + "skipping.",
++                             loggingPrefix(), expansionType.name(), target);
 +        }
 +    }
 +
