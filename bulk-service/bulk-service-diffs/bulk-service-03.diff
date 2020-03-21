@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobFactory.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobFactory.java
 new file mode 100644
-index 0000000000..795df6f9a1
+index 0000000000000000000000000000000000000000..795df6f9a13acd31a64444157bca2c0b68e3060a
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobFactory.java
 @@ -0,0 +1,152 @@
@@ -158,10 +158,10 @@ index 0000000000..795df6f9a1
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobProvider.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobProvider.java
 new file mode 100644
-index 0000000000..abea6d296e
+index 0000000000000000000000000000000000000000..14f0bd8bc880a5b792620c3d75d47ecf9556a25d
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobProvider.java
-@@ -0,0 +1,130 @@
+@@ -0,0 +1,152 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -237,6 +237,19 @@ index 0000000000..abea6d296e
 + */
 +public abstract class BulkJobProvider<J extends SingleTargetJob>
 +{
++    protected final String activity;
++    protected final TargetType targetType;
++    protected final ExpansionType expansionType;
++
++    protected BulkJobProvider(String activity,
++                              TargetType targetType,
++                              ExpansionType expansionType)
++    {
++        this.activity = activity;
++        this.targetType = targetType;
++        this.expansionType = expansionType;
++    }
++
 +    /**
 +     * Shared creation routine for all job types for creating the top-level
 +     * request job.
@@ -250,7 +263,7 @@ index 0000000000..abea6d296e
 +    {
 +        return new BulkRequestJob(BulkJobKey.newKey(request.getId()),
 +                                  request,
-+                                  getTargetType());
++                                  targetType);
 +    }
 +
 +    /**
@@ -269,8 +282,23 @@ index 0000000000..abea6d296e
 +        return new TargetExpansionJob(BulkJobKey.newKey(request.getId()),
 +                                                        parentKey,
 +                                                        request,
-+                                                        getTargetType(),
-+                                                        getExpansionAlgorithm());
++                                                        targetType,
++                                                        expansionType);
++    }
++
++    public String getActivity()
++    {
++        return activity;
++    }
++
++    public ExpansionType getExpansionAlgorithm()
++    {
++        return expansionType;
++    }
++
++    public TargetType getTargetType()
++    {
++        return targetType;
 +    }
 +
 +    /**
@@ -284,17 +312,11 @@ index 0000000000..abea6d296e
 +    public abstract J createJob(BulkJobKey key, BulkJobKey parentKey)
 +                    throws BulkServiceException;
 +
-+    public abstract String getActivity();
-+
-+    public abstract ExpansionType getExpansionAlgorithm();
-+
 +    public abstract Class<J> getJobClass();
-+
-+    public abstract TargetType getTargetType();
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/BFirstWalkJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/BFirstWalkJob.java
 new file mode 100644
-index 0000000000..eaf4f49da6
+index 0000000000000000000000000000000000000000..69040f4b2712e851fae6cce8bfa777ca1441d271
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/BFirstWalkJob.java
 @@ -0,0 +1,121 @@
@@ -380,7 +402,7 @@ index 0000000000..eaf4f49da6
 +        if (arguments == null) {
 +            return null;
 +        }
-+        
++
 +        String delay = arguments.get("delay");
 +        String unit = arguments.get("delay-unit");
 +
@@ -421,10 +443,10 @@ index 0000000000..eaf4f49da6
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/BFirstWalkJobProvider.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/BFirstWalkJobProvider.java
 new file mode 100644
-index 0000000000..43047bd640
+index 0000000000000000000000000000000000000000..1852fb2f37922825167300696505ac80a8766ce3
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/BFirstWalkJobProvider.java
-@@ -0,0 +1,107 @@
+@@ -0,0 +1,89 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -488,7 +510,6 @@ index 0000000000..43047bd640
 +
 +import org.dcache.services.bulk.job.BulkJobKey;
 +import org.dcache.services.bulk.job.BulkJobProvider;
-+import org.dcache.services.bulk.job.MultipleTargetJob.TargetType;
 +import org.dcache.services.bulk.job.TargetExpansionJob.ExpansionType;
 +
 +import static org.dcache.services.bulk.job.MultipleTargetJob.TargetType.BOTH;
@@ -498,9 +519,10 @@ index 0000000000..43047bd640
 + */
 +public class BFirstWalkJobProvider extends BulkJobProvider<BFirstWalkJob>
 +{
-+    private final String activity = "BREADTH-FIRST-WALK";
-+    private final TargetType targetType = BOTH;
-+    private final ExpansionType expansionType = ExpansionType.BREADTH_FIRST;
++    public BFirstWalkJobProvider()
++    {
++        super("BREADTH-FIRST-WALK", BOTH, ExpansionType.BREADTH_FIRST);
++    }
 +
 +    @Override
 +    public BFirstWalkJob createJob(BulkJobKey key, BulkJobKey parentKey)
@@ -509,32 +531,14 @@ index 0000000000..43047bd640
 +    }
 +
 +    @Override
-+    public String getActivity()
-+    {
-+        return activity;
-+    }
-+
-+    @Override
-+    public ExpansionType getExpansionAlgorithm()
-+    {
-+        return expansionType;
-+    }
-+
-+    @Override
 +    public Class<BFirstWalkJob> getJobClass()
 +    {
 +        return BFirstWalkJob.class;
 +    }
-+
-+    @Override
-+    public TargetType getTargetType()
-+    {
-+        return targetType;
-+    }
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/DFirstWalkJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/DFirstWalkJob.java
 new file mode 100644
-index 0000000000..9a493f6137
+index 0000000000000000000000000000000000000000..9a493f6137b85602ba5ae209a3a1c492ada8ae54
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/DFirstWalkJob.java
 @@ -0,0 +1,102 @@
@@ -642,10 +646,10 @@ index 0000000000..9a493f6137
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/DFirstWalkJobProvider.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/DFirstWalkJobProvider.java
 new file mode 100644
-index 0000000000..f837bfcd89
+index 0000000000000000000000000000000000000000..ef521cd8d157eb0011bdb293f51735edf72025b3
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/DFirstWalkJobProvider.java
-@@ -0,0 +1,107 @@
+@@ -0,0 +1,89 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -709,7 +713,6 @@ index 0000000000..f837bfcd89
 +
 +import org.dcache.services.bulk.job.BulkJobKey;
 +import org.dcache.services.bulk.job.BulkJobProvider;
-+import org.dcache.services.bulk.job.MultipleTargetJob.TargetType;
 +import org.dcache.services.bulk.job.TargetExpansionJob.ExpansionType;
 +
 +import static org.dcache.services.bulk.job.MultipleTargetJob.TargetType.BOTH;
@@ -719,9 +722,10 @@ index 0000000000..f837bfcd89
 + */
 +public class DFirstWalkJobProvider extends BulkJobProvider<DFirstWalkJob>
 +{
-+    private final String activity = "DEPTH-FIRST-WALK";
-+    private final TargetType targetType = BOTH;
-+    private final ExpansionType expansionType = ExpansionType.DEPTH_FIRST;
++    public DFirstWalkJobProvider()
++    {
++        super("DEPTH-FIRST-WALK", BOTH, ExpansionType.DEPTH_FIRST);
++    }
 +
 +    @Override
 +    public DFirstWalkJob createJob(BulkJobKey key, BulkJobKey parentKey)
@@ -730,47 +734,16 @@ index 0000000000..f837bfcd89
 +    }
 +
 +    @Override
-+    public String getActivity()
-+    {
-+        return activity;
-+    }
-+
-+    @Override
-+    public ExpansionType getExpansionAlgorithm()
-+    {
-+        return expansionType;
-+    }
-+
-+    @Override
 +    public Class<DFirstWalkJob> getJobClass()
 +    {
 +        return DFirstWalkJob.class;
 +    }
-+
-+    @Override
-+    public TargetType getTargetType()
-+    {
-+        return targetType;
-+    }
 +}
 diff --git a/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider b/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
 new file mode 100644
-index 0000000000..b18f7a1306
+index 0000000000000000000000000000000000000000..b18f7a1306c316a7502af7ebfb9aed7c1e367acc
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
 @@ -0,0 +1,2 @@
 +org.dcache.services.bulk.plugins.BFirstWalkJobProvider
 +org.dcache.services.bulk.plugins.DFirstWalkJobProvider
-diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
-index 47053e175b..24363e669e 100644
---- a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
-+++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkRequest.java
-@@ -83,7 +83,7 @@ public class BulkRequest implements Serializable
-     private Boolean                   clearOnSuccess;
-     private Boolean                   clearOnFailure;
-     private Integer                   delayClear;
--    private Map<String, String>       arguments;
-+    private Map<String, String> arguments;
-     private Depth                     expandDirectories;
- 
-     public String getActivity()
