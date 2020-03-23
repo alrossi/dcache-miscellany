@@ -199,3 +199,12 @@ index 0000000000..4fa3a48485
 +        return DeleteFileJob.class;
 +    }
 +}
+diff --git a/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider b/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
+index b18f7a1306..29abe0e070 100644
+--- a/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
++++ b/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
+@@ -1,2 +1,3 @@
+ org.dcache.services.bulk.plugins.BFirstWalkJobProvider
+ org.dcache.services.bulk.plugins.DFirstWalkJobProvider
++org.dcache.services.bulk.plugins.delete.DeleteFileJobProvider
+\ No newline at end of file
