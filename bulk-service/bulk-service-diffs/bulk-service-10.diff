@@ -376,3 +376,6 @@ index 0000000000..ad7c13e2a7
 +create org.dcache.cells.UniversalSpringCell ${bulk.cell.name} \
 +    "classpath:org/dcache/services/bulk/bulk.xml \
 +    -consume=${bulk.cell.consume}"
+diff --git a/skel/var/bulk/.empty-dir b/skel/var/bulk/.empty-dir
+new file mode 100644
+index 0000000000..e69de29bb2
