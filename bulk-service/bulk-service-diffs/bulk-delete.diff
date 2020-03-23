@@ -107,7 +107,7 @@ index 0000000000..995937a26f
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/delete/DeleteFileJobProvider.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/delete/DeleteFileJobProvider.java
 new file mode 100644
-index 0000000000..4fa3a48485
+index 0000000000..8c2ec9859e
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/delete/DeleteFileJobProvider.java
 @@ -0,0 +1,88 @@
@@ -181,7 +181,7 @@ index 0000000000..4fa3a48485
 +
 +public class DeleteFileJobProvider extends BulkJobProvider<DeleteFileJob>
 +{
-+    protected DeleteFileJobProvider()
++    public DeleteFileJobProvider()
 +    {
 +        super("DELETE", FILE, ExpansionType.DEPTH_FIRST);
 +    }
