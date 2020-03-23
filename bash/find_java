@@ -1,0 +1,4 @@
+#/bin/bash
+
+find modules -type f -name "*.java" | xargs grep $@
+

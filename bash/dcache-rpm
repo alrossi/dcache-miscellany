@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ls /home/arossi/work/dcache/packages/fhs/target/rpmbuild/RPMS/noarch
+

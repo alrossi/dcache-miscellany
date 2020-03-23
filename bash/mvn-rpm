@@ -1,0 +1,4 @@
+#!/bin/bash 
+
+rm -f /home/arossi/Work/dcache-server/packages/fhs/target/rpmbuild/RPMS/noarch/*
+mvn clean package -am -pl packages/fhs -P rpm $@

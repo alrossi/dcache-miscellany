@@ -1,0 +1,17 @@
+#!/bin/sh
+
+CURR=`pwd`
+cd /Library/Java/JavaVirtualMachines
+
+SDKS=(`ls -t | grep $1`)
+VERSION=${SDKS[0]}
+
+echo ${VERSION}
+
+rm -f current
+ln -s ${VERSION} current
+
+cd $CURR
+
+java -version
+

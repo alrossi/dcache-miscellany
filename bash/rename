@@ -1,0 +1,12 @@
+#!/bin/sh
+
+cd $1
+
+FILES=(`find . -name "*.jp*g"`)
+N=`echo ${FILES[@]} | wc -w`
+
+for i in `seq 0 ${N}`
+do
+	echo mv "${FILES[(${i})]}" NC_0${i}.jpg
+        mv "${FILES[(${i})]}" NC_0${i}.jpg
+done
