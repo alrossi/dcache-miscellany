@@ -1049,7 +1049,7 @@ index 0000000000..d83f811e33
 +}
 diff --git a/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/queue/BulkServiceQueueTest.java b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/queue/BulkServiceQueueTest.java
 new file mode 100644
-index 0000000000..8b3cee2479
+index 0000000000..5a2a7bd965
 --- /dev/null
 +++ b/modules/dcache-bulk/src/test/java/org/dcache/services/bulk/queue/BulkServiceQueueTest.java
 @@ -0,0 +1,451 @@
@@ -1485,7 +1485,7 @@ index 0000000000..8b3cee2479
 +                                        request,
 +                                        TargetType.FILE);
 +        requestJob.setCompletionHandler(jobCompletionHandler);
-+        requestJob.setPnfsHandler(mock(PnfsHandler.class));
++        requestJob.setNamespaceHandler(mock(PnfsHandler.class));
 +        queue.submit(requestJob);
 +    }
 +

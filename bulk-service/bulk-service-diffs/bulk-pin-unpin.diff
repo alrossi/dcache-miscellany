@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJob.java
 new file mode 100644
-index 0000000..864eec8
+index 0000000000..864eec80af
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJob.java
 @@ -0,0 +1,116 @@
@@ -122,10 +122,10 @@ index 0000000..864eec8
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJobProvider.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJobProvider.java
 new file mode 100644
-index 0000000..d05b2ce
+index 0000000000..ad80cffc07
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJobProvider.java
-@@ -0,0 +1,104 @@
+@@ -0,0 +1,85 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -189,16 +189,15 @@ index 0000000..d05b2ce
 +
 +import org.dcache.services.bulk.job.BulkJobKey;
 +import org.dcache.services.bulk.job.BulkJobProvider;
-+import org.dcache.services.bulk.job.MultipleTargetJob.TargetType;
 +import org.dcache.services.bulk.job.TargetExpansionJob.ExpansionType;
 +
 +import static org.dcache.services.bulk.job.MultipleTargetJob.TargetType.FILE;
 +
 +public class PinJobProvider extends BulkJobProvider<PinJob>
 +{
-+    private final String activity = "PIN";
-+    private final TargetType targetType = FILE;
-+    private final ExpansionType expansionType = ExpansionType.DEPTH_FIRST;
++    public PinJobProvider() {
++        super("PIN", FILE, ExpansionType.DEPTH_FIRST);
++    }
 +
 +    @Override
 +    public PinJob createJob(BulkJobKey key, BulkJobKey parentKey)
@@ -207,33 +206,15 @@ index 0000000..d05b2ce
 +    }
 +
 +    @Override
-+    public String getActivity()
-+    {
-+        return activity;
-+    }
-+
-+    @Override
-+    public ExpansionType getExpansionAlgorithm()
-+    {
-+        return expansionType;
-+    }
-+
-+    @Override
 +    public Class<PinJob> getJobClass()
 +    {
 +        return PinJob.class;
-+    }
-+
-+    @Override
-+    public TargetType getTargetType()
-+    {
-+        return targetType;
 +    }
 +}
 \ No newline at end of file
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinManagerJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinManagerJob.java
 new file mode 100644
-index 0000000..f89579b
+index 0000000000..f89579b03e
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinManagerJob.java
 @@ -0,0 +1,49 @@
@@ -288,7 +269,7 @@ index 0000000..f89579b
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/UnpinJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/UnpinJob.java
 new file mode 100644
-index 0000000..c1859d4
+index 0000000000..c1859d4dcc
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/UnpinJob.java
 @@ -0,0 +1,79 @@
@@ -373,10 +354,10 @@ index 0000000..c1859d4
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/UnpinJobProvider.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/UnpinJobProvider.java
 new file mode 100644
-index 0000000..3f3d73a
+index 0000000000..9950b07db0
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/UnpinJobProvider.java
-@@ -0,0 +1,104 @@
+@@ -0,0 +1,85 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -440,16 +421,15 @@ index 0000000..3f3d73a
 +
 +import org.dcache.services.bulk.job.BulkJobKey;
 +import org.dcache.services.bulk.job.BulkJobProvider;
-+import org.dcache.services.bulk.job.MultipleTargetJob.TargetType;
 +import org.dcache.services.bulk.job.TargetExpansionJob.ExpansionType;
 +
 +import static org.dcache.services.bulk.job.MultipleTargetJob.TargetType.FILE;
 +
 +public class UnpinJobProvider extends BulkJobProvider<UnpinJob>
 +{
-+    private final String activity = "UNPIN";
-+    private final TargetType targetType = FILE;
-+    private final ExpansionType expansionType = ExpansionType.DEPTH_FIRST;
++    public UnpinJobProvider() {
++        super("UNPIN", FILE, ExpansionType.DEPTH_FIRST);
++    }
 +
 +    @Override
 +    public UnpinJob createJob(BulkJobKey key, BulkJobKey parentKey)
@@ -458,32 +438,14 @@ index 0000000..3f3d73a
 +    }
 +
 +    @Override
-+    public String getActivity()
-+    {
-+        return activity;
-+    }
-+
-+    @Override
-+    public ExpansionType getExpansionAlgorithm()
-+    {
-+        return expansionType;
-+    }
-+
-+    @Override
 +    public Class<UnpinJob> getJobClass()
 +    {
 +        return UnpinJob.class;
 +    }
-+
-+    @Override
-+    public TargetType getTargetType()
-+    {
-+        return targetType;
-+    }
 +}
 \ No newline at end of file
 diff --git a/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider b/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
-index b18f7a1..5a51c6b 100644
+index b18f7a1306..5a51c6b71d 100644
 --- a/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
 +++ b/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
 @@ -1,2 +1,4 @@

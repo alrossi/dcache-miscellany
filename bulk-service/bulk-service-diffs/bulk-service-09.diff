@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/admin/BulkServiceCommands.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/admin/BulkServiceCommands.java
 new file mode 100644
-index 0000000000..c21779bd88
+index 0000000000..2a1a75dcb9
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/admin/BulkServiceCommands.java
 @@ -0,0 +1,1017 @@

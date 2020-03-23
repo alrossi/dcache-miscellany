@@ -1,22 +1,9 @@
-diff --git a/modules/dcache-bulk/pom.xml b/modules/dcache-bulk/pom.xml
-index a278a7c..61f5305 100644
---- a/modules/dcache-bulk/pom.xml
-+++ b/modules/dcache-bulk/pom.xml
-@@ -4,7 +4,7 @@
-   <parent>
-     <groupId>org.dcache</groupId>
-     <artifactId>dcache-parent</artifactId>
--    <version>6.1.0-SNAPSHOT</version>
-+    <version>6.2.0-SNAPSHOT</version>
-     <relativePath>../../pom.xml</relativePath>
-   </parent>
- 
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJob.java
 new file mode 100644
-index 0000000..c436f37
+index 0000000000..52e451f164
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJob.java
-@@ -0,0 +1,158 @@
+@@ -0,0 +1,153 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -79,7 +66,6 @@ index 0000000..c436f37
 +package org.dcache.services.bulk.plugins.qos;
 +
 +import java.net.URISyntaxException;
-+import java.util.EnumSet;
 +
 +import diskCacheV111.util.CacheException;
 +import diskCacheV111.util.PnfsHandler;
@@ -87,11 +73,10 @@ index 0000000..c436f37
 +import dmg.cells.nucleus.NoRouteToCellException;
 +
 +import org.dcache.cells.CellStub;
-+import org.dcache.namespace.FileAttribute;
 +import org.dcache.poolmanager.PoolMonitor;
 +import org.dcache.qos.QoSTransitionEngine;
++import org.dcache.services.bulk.NamespaceHandlerAware;
 +import org.dcache.services.bulk.PinManagerAware;
-+import org.dcache.services.bulk.PnfsHandlerAware;
 +import org.dcache.services.bulk.PoolManagerAware;
 +import org.dcache.services.bulk.PoolMonitorAware;
 +import org.dcache.services.bulk.job.BulkJobKey;
@@ -101,7 +86,7 @@ index 0000000..c436f37
 +/**
 + *  Transition as single file from its current QoS to a new one.
 + */
-+public class UpdateQoSJob extends SingleTargetJob implements PnfsHandlerAware,
++public class UpdateQoSJob extends SingleTargetJob implements NamespaceHandlerAware,
 +                                                             PinManagerAware,
 +                                                             PoolManagerAware,
 +                                                             PoolMonitorAware
@@ -125,7 +110,7 @@ index 0000000..c436f37
 +    }
 +
 +    @Override
-+    public void setPnfsHandler(PnfsHandler pnfsHandler)
++    public void setNamespaceHandler(PnfsHandler pnfsHandler)
 +    {
 +        this.pnfsHandler = pnfsHandler;
 +    }
@@ -156,14 +141,11 @@ index 0000000..c436f37
 +        LOGGER.debug("updating to {} {}.", targetQos, path);
 +
 +        try {
-+            attributes = pnfsHandler.getFileAttributes(path,
-+                                                       EnumSet.allOf(FileAttribute.class));
 +            new QoSTransitionEngine(poolManager,
 +                                    poolMonitor,
 +                                    pnfsHandler,
 +                                    pinManager)
 +                            .adjustQoS(path,
-+                                       attributes,
 +                                       targetQos,
 +                                       NetworkUtils.getCanonicalHostName());
 +        } catch (URISyntaxException |
@@ -177,10 +159,10 @@ index 0000000..c436f37
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJobProvider.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJobProvider.java
 new file mode 100644
-index 0000000..d0a6028
+index 0000000000..6d5cb00ed9
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJobProvider.java
-@@ -0,0 +1,107 @@
+@@ -0,0 +1,89 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -244,7 +226,6 @@ index 0000000..d0a6028
 +
 +import org.dcache.services.bulk.job.BulkJobKey;
 +import org.dcache.services.bulk.job.BulkJobProvider;
-+import org.dcache.services.bulk.job.MultipleTargetJob.TargetType;
 +import org.dcache.services.bulk.job.TargetExpansionJob.ExpansionType;
 +
 +import static org.dcache.services.bulk.job.MultipleTargetJob.TargetType.FILE;
@@ -254,9 +235,10 @@ index 0000000..d0a6028
 + */
 +public class UpdateQoSJobProvider extends BulkJobProvider<UpdateQoSJob>
 +{
-+    private final String        activity      = "UPDATE_QOS";
-+    private final TargetType    targetType    = FILE;
-+    private final ExpansionType expansionType = ExpansionType.BREADTH_FIRST;
++    public UpdateQoSJobProvider()
++    {
++        super("UPDATE_QOS", FILE, ExpansionType.BREADTH_FIRST);
++    }
 +
 +    @Override
 +    public UpdateQoSJob createJob(BulkJobKey key, BulkJobKey parentKey)
@@ -265,31 +247,13 @@ index 0000000..d0a6028
 +    }
 +
 +    @Override
-+    public String getActivity()
-+    {
-+        return activity;
-+    }
-+
-+    @Override
-+    public ExpansionType getExpansionAlgorithm()
-+    {
-+        return expansionType;
-+    }
-+
-+    @Override
 +    public Class<UpdateQoSJob> getJobClass()
 +    {
 +        return UpdateQoSJob.class;
 +    }
-+
-+    @Override
-+    public TargetType getTargetType()
-+    {
-+        return targetType;
-+    }
 +}
 diff --git a/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider b/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
-index b18f7a1..8106823 100644
+index b18f7a1306..810682385d 100644
 --- a/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
 +++ b/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
 @@ -1,2 +1,3 @@
