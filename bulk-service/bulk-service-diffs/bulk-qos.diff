@@ -1,9 +1,9 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJob.java
 new file mode 100644
-index 0000000000..52e451f164
+index 0000000000..348dd62ca9
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJob.java
-@@ -0,0 +1,153 @@
+@@ -0,0 +1,154 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -144,7 +144,8 @@ index 0000000000..52e451f164
 +            new QoSTransitionEngine(poolManager,
 +                                    poolMonitor,
 +                                    pnfsHandler,
-+                                    pinManager)
++                                    pinManager,
++                                    true)
 +                            .adjustQoS(path,
 +                                       targetQos,
 +                                       NetworkUtils.getCanonicalHostName());
