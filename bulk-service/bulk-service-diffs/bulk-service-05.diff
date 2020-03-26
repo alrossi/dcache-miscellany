@@ -1,9 +1,9 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStore.java
 new file mode 100644
-index 0000000000..bab43ceda5
+index 0000000000..4335611c63
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStore.java
-@@ -0,0 +1,300 @@
+@@ -0,0 +1,307 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -223,6 +223,13 @@ index 0000000000..bab43ceda5
 +     * @return true if request is accessible by user
 +     */
 +    boolean isRequestSubject(Subject subject, String requestId);
++
++    /**
++     * For internal use.
++     *
++     * @return stream of ids.
++     */
++    List<String> listIds();
 +
 +    /**
 +     * Load the store into memory.
@@ -562,7 +569,7 @@ index 0000000000..7dbbda3b24
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
 new file mode 100644
-index 0000000000..462cf76b40
+index 0000000000..e131665582
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/file/FileBulkRequestStore.java
 @@ -0,0 +1,578 @@
@@ -1087,7 +1094,7 @@ index 0000000000..462cf76b40
 +        }
 +    }
 +
-+    protected List<String> listIds()
++    public List<String> listIds()
 +    {
 +        LOGGER.trace("listIds called.");
 +
