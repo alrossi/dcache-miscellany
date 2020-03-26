@@ -1,9 +1,9 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/admin/BulkServiceCommands.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/admin/BulkServiceCommands.java
 new file mode 100644
-index 0000000000..aabe3dc3f6
+index 0000000000..64e5b3a79a
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/admin/BulkServiceCommands.java
-@@ -0,0 +1,1017 @@
+@@ -0,0 +1,1055 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -76,7 +76,6 @@ index 0000000000..aabe3dc3f6
 +import java.util.ArrayList;
 +import java.util.Arrays;
 +import java.util.Comparator;
-+import java.util.ConcurrentModificationException;
 +import java.util.HashMap;
 +import java.util.List;
 +import java.util.Map;
@@ -402,6 +401,76 @@ index 0000000000..aabe3dc3f6
 +        }
 +    }
 +
++    @Command(name = "request cancel",
++                    hint = "cancel one or more requests.",
++                    description = "Recursively cancels all jobs that have "
++                                    + "not yet completed or run; signals "
++                                    + "the queue to remove the cancelled "
++                                    + "job.  Use a comma-delimited list "
++                                    + "or '*' for all requests.")
++    class RequestCancel implements Callable<String>
++    {
++        @Argument(usage = "The request id.")
++        String requestId;
++
++        public String call() throws Exception
++        {
++            StringBuilder errors = new StringBuilder();
++            List<String> ids = listIds(requestId);
++            for (String id: ids) {
++                try {
++                    handler.requestCancelled(id);
++                } catch (BulkServiceException e) {
++                    errors.append(id)
++                          .append(": ")
++                          .append(e.toString())
++                          .append("\n");
++                }
++            }
++
++            if (errors.length() > 0) {
++                return "The following requests could not be cancelled:\n"
++                                + errors;
++            }
++            return "Queue instructed to cancel request " + requestId;
++        }
++    }
++
++    @Command(name = "request clear",
++                    hint = "clear one or more requests.",
++                    description = "Removes request data from store; this "
++                                    + "includes backup on disk. "
++                                    + "Use a comma-delimited list "
++                                    + "or '*' for all requests.")
++    class RequestClear implements Callable<String>
++    {
++        @Argument(usage = "The request id.")
++        String requestId;
++
++        public String call() throws Exception
++        {
++            StringBuilder errors = new StringBuilder();
++            List<String> ids = listIds(requestId);
++            for (String id: ids) {
++                try {
++                    handler.clearRequest(Subjects.ROOT, id);
++                } catch (BulkServiceException e) {
++                    errors.append(id)
++                          .append(": ")
++                          .append(e.toString())
++                          .append("\n");
++                }
++            }
++
++            if (errors.length() > 0) {
++                return "The following requests could not be cleared:\n"
++                                + errors;
++            }
++
++            return "Cleared " + requestId;
++        }
++    }
++
 +    @Command(name = "request ls",
 +                    hint = "list the current requests in the store",
 +                    description = "Optional filters can be applied. Output "
@@ -566,46 +635,6 @@ index 0000000000..aabe3dc3f6
 +                                         "OWNER", "STATUS", "ID") + "\n"
 +                                    + requests;
 +            }
-+        }
-+    }
-+
-+    @Command(name = "request cancel",
-+                    hint = "cancel a single request.",
-+                    description = "Recursively cancels all jobs that have "
-+                                    + "not yet completed or run; signals "
-+                                    + "the queue to remove the cancelled "
-+                                    + "job.")
-+    class RequestCancel implements Callable<String>
-+    {
-+        @Argument(usage = "The request id.")
-+        String requestId;
-+
-+        public String call() throws Exception
-+        {
-+            try
-+            {
-+                handler.requestCancelled(requestId);
-+                return "Queue instructed to cancel request " + requestId;
-+            } catch (ConcurrentModificationException e) {
-+                e.printStackTrace();
-+                return e.toString() + ": see stack trace.";
-+            }
-+        }
-+    }
-+
-+    @Command(name = "request clear",
-+                    hint = "clear a single request.",
-+                    description = "Removes request data from store; this "
-+                                    + "includes backup on disk.")
-+    class RequestClear implements Callable<String>
-+    {
-+        @Argument(usage = "The request id.")
-+        String requestId;
-+
-+        public String call() throws Exception
-+        {
-+            handler.clearRequest(Subjects.ROOT, requestId);
-+            return "Cleared " + requestId;
 +        }
 +    }
 +
@@ -1019,5 +1048,14 @@ index 0000000000..aabe3dc3f6
 +                           .and(matchesActivity)
 +                           .and(matchesType)
 +                           .and(matchesState);
++    }
++
++    private List<String> listIds(String input)
++    {
++        if (input.contains("*")) {
++            return service.getRequestStore().listIds();
++        }
++
++        return Arrays.asList(input.split("[,]"));
 +    }
 +}
