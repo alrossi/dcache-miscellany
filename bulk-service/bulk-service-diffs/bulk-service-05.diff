@@ -1,3 +1,41 @@
+diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java
+index 039699ef20..8929a69b0d 100644
+--- a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java
++++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkJobCompletionHandler.java
+@@ -71,6 +71,7 @@ import javax.annotation.concurrent.GuardedBy;
+ import java.util.concurrent.TimeUnit;
+ 
+ import org.dcache.services.bulk.job.BulkJob;
++import org.dcache.services.bulk.job.BulkJobKey;
+ import org.dcache.services.bulk.queue.SignalAware;
+ 
+ /**
+@@ -252,17 +253,14 @@ public class BulkJobCompletionHandler
+ 
+         synchronized (descendants)
+         {
+-            LOGGER.trace("removing job {} from parent {}",
+-                         job.getKey(),
+-                         job.getParentKey().getJobId());
+-            Long parentId = job.getParentKey().getJobId();
+-            Long childId = job.getKey().getJobId();
+-
+-            descendants.remove(parentId, childId);
+-
+-            LOGGER.trace("parent {} now has children {}",
+-                         parentId,
+-                         descendants.get(parentId));
++            BulkJobKey parentKey = job.getParentKey();
++            if (parentKey != null) {
++                Long parentId = parentKey.getJobId();
++                Long childId = job.getKey().getJobId();
++                descendants.remove(parentId, childId);
++                LOGGER.trace("removed {} from parent {}",
++                             childId, parentId);
++            }
+ 
+             descendants.notifyAll();
+         }
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkRequestStore.java
 new file mode 100644
 index 0000000000..4335611c63
@@ -1153,10 +1191,10 @@ index 0000000000..e131665582
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java
 new file mode 100644
-index 0000000000..61c00525d2
+index 0000000000..8104457d0f
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkRequestStore.java
-@@ -0,0 +1,596 @@
+@@ -0,0 +1,602 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -1342,7 +1380,10 @@ index 0000000000..61c00525d2
 +    {
 +        write.lock();
 +        try {
-+            status.get(requestId).targetAdded();
++            BulkRequestStatus bulkRequestStatus = status.get(requestId);
++            if (bulkRequestStatus != null) {
++                bulkRequestStatus.targetAdded();
++            }
 +        } finally {
 +            write.unlock();
 +        }
@@ -1662,26 +1703,29 @@ index 0000000000..61c00525d2
 +            }
 +
 +            BulkRequestStatus current = getNonNullStatus(requestId);
++            Status storedStatus = current.getStatus();
 +
-+            switch (current.getStatus())
-+            {
-+                case COMPLETED:
-+                case CANCELLED:
-+                    break;
-+                case STARTED:
-+                    switch (status) {
-+                        case COMPLETED:
-+                        case CANCELLED:
-+                            current.setStatus(status);
-+                            break;
-+                    }
-+                    break;
-+                case QUEUED:
-+                default:
-+                    current.setStatus(status);
-+                    break;
++            if (storedStatus == null) {
++                current.setStatus(status);
++            } else {
++                switch (current.getStatus()) {
++                    case COMPLETED:
++                    case CANCELLED:
++                        break;
++                    case STARTED:
++                        switch (status) {
++                            case COMPLETED:
++                            case CANCELLED:
++                                current.setStatus(status);
++                                break;
++                        }
++                        break;
++                    case QUEUED:
++                    default:
++                        current.setStatus(status);
++                        break;
++                }
 +            }
-+
 +        } finally {
 +            write.unlock();
 +        }

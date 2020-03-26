@@ -1,9 +1,9 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkJobStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkJobStore.java
 new file mode 100644
-index 0000000..49b283b
+index 0000000000..ca754a0c9f
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/BulkJobStore.java
-@@ -0,0 +1,142 @@
+@@ -0,0 +1,128 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -65,6 +65,7 @@ index 0000000..49b283b
 + */
 +package org.dcache.services.bulk.store;
 +
++import java.util.Collection;
 +import java.util.List;
 +import java.util.Optional;
 +import java.util.function.Predicate;
@@ -77,13 +78,6 @@ index 0000000..49b283b
 +
 +public interface BulkJobStore
 +{
-+    /**
-+     * @param filter on the jobs to cancel.
-+     * @throws BulkJobStorageException
-+     */
-+    void cancelAll(Predicate<BulkJob> filter)
-+        throws BulkJobStorageException;
-+
 +    /**
 +     * @param requestId of the jobs to cancel.
 +     * @throws BulkJobStorageException
@@ -100,19 +94,11 @@ index 0000000..49b283b
 +    /**
 +     * @param filter on the job.
 +     * @param limit  max jobs to return (can be <code>null</code>).
-+     * @return a list of jobs in the store which match
++     * @return a collection of jobs in the store which match
 +     * the filter.
 +     * @throws BulkJobStorageException
 +     */
-+    List<BulkJob> find(Predicate<BulkJob> filter, Long limit)
-+                    throws BulkJobStorageException;
-+
-+    /**
-+     * @param requestId of the jobs.
-+     * @return all jobs of a request, or empty list.
-+     * @throws BulkJobStorageException
-+     */
-+    List<BulkJob> find(String requestId)
++    Collection<BulkJob> find(Predicate<BulkJob> filter, Long limit)
 +                    throws BulkJobStorageException;
 +
 +    /**
@@ -123,7 +109,7 @@ index 0000000..49b283b
 +    Optional<BulkJob> getJob(BulkJobKey key) throws BulkJobStorageException;
 +
 +    /**
-+     * @return list of all keys in the store.
++     * @return sorted list of all keys in the store.
 +     */
 +    List<BulkJobKey> keys() throws BulkJobStorageException;
 +
@@ -148,10 +134,10 @@ index 0000000..49b283b
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkJobStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkJobStore.java
 new file mode 100644
-index 0000000..4bc9254
+index 0000000000..426be268c4
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryBulkJobStore.java
-@@ -0,0 +1,196 @@
+@@ -0,0 +1,186 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -213,6 +199,8 @@ index 0000000..4bc9254
 + */
 +package org.dcache.services.bulk.store.memory;
 +
++import java.util.Collection;
++import java.util.Comparator;
 +import java.util.HashMap;
 +import java.util.List;
 +import java.util.Map;
@@ -233,28 +221,23 @@ index 0000000..4bc9254
 +{
 +    private final Map<String, BulkJob>     jobs    = new HashMap<>();
 +
-+    public void cancelAll(Predicate<BulkJob> filter)
-+                    throws BulkJobStorageException
-+    {
-+        /*
-+         *  Avoid concurrent modification on the stream.
-+         */
-+        List<BulkJob> toCancel = find(filter, Long.MAX_VALUE);
-+
-+        write.lock();
-+        try {
-+            toCancel.stream().forEach(BulkJob::cancel);
-+        } finally {
-+            write.unlock();
-+        }
-+    }
-+
 +    public void cancelAll(String requestId)
-+                    throws BulkJobStorageException
 +    {
 +        Predicate<BulkJob> filter = job -> job.getKey().getRequestId()
 +                                              .equals(requestId);
-+        cancelAll(filter);
++        write.lock();
++        try {
++            /*
++             *  Avoid concurrent modification on the stream.
++             */
++            jobs.values()
++                .stream()
++                .filter(filter)
++                .collect(Collectors.toList())
++                .stream().forEach(BulkJob::cancel);
++        } finally {
++            write.unlock();
++        }
 +    }
 +
 +    public void delete(BulkJobKey key)
@@ -268,7 +251,7 @@ index 0000000..4bc9254
 +    }
 +
 +    @Override
-+    public List<BulkJob> find(Predicate<BulkJob> filter, Long limit)
++    public Collection<BulkJob> find(Predicate<BulkJob> filter, Long limit)
 +    {
 +        if (limit == null) {
 +            limit = Long.MAX_VALUE;
@@ -283,14 +266,6 @@ index 0000000..4bc9254
 +        } finally {
 +            read.unlock();
 +        }
-+    }
-+
-+    @Override
-+    public List<BulkJob> find(String requestId)
-+    {
-+        Predicate<BulkJob> filter = job -> job.getKey().getRequestId()
-+                                              .equals(requestId);
-+        return find(filter, null);
 +    }
 +
 +    @Override
@@ -312,6 +287,7 @@ index 0000000..4bc9254
 +            return jobs.values()
 +                       .stream()
 +                       .map(BulkJob::getKey)
++                       .sorted(Comparator.comparing(BulkJobKey::getKey))
 +                       .collect(Collectors.toList());
 +        } finally {
 +            read.unlock();
@@ -350,7 +326,7 @@ index 0000000..4bc9254
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryStore.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryStore.java
 new file mode 100644
-index 0000000..a636694
+index 0000000000..a636694fe9
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/store/memory/InMemoryStore.java
 @@ -0,0 +1,99 @@
@@ -455,7 +431,7 @@ index 0000000..a636694
 +}
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkJobStorageException.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkJobStorageException.java
 new file mode 100644
-index 0000000..81004f1
+index 0000000000..81004f1700
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkJobStorageException.java
 @@ -0,0 +1,75 @@
@@ -536,7 +512,7 @@ index 0000000..81004f1
 +}
 diff --git a/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkStorageException.java b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkStorageException.java
 new file mode 100644
-index 0000000..b434a61
+index 0000000000..b434a61704
 --- /dev/null
 +++ b/modules/dcache-vehicles/src/main/java/org/dcache/services/bulk/BulkStorageException.java
 @@ -0,0 +1,75 @@

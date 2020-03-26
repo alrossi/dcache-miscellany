@@ -231,10 +231,10 @@ index 0000000000..56a8006c79
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkRequestHandler.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkRequestHandler.java
 new file mode 100644
-index 0000000000..34956b5bed
+index 0000000000..25012d23cf
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/handlers/BulkRequestHandler.java
-@@ -0,0 +1,582 @@
+@@ -0,0 +1,619 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -315,6 +315,7 @@ index 0000000000..34956b5bed
 +import org.dcache.services.bulk.BulkPermissionDeniedException;
 +import org.dcache.services.bulk.BulkRequest;
 +import org.dcache.services.bulk.BulkRequestNotFoundException;
++import org.dcache.services.bulk.BulkRequestStatus;
 +import org.dcache.services.bulk.BulkRequestStatus.Status;
 +import org.dcache.services.bulk.BulkServiceException;
 +import org.dcache.services.bulk.BulkStorageException;
@@ -373,7 +374,7 @@ index 0000000000..34956b5bed
 +     *  Essentially a premature failure.
 +     */
 +    @Override
-+    public void abortRequestTarget(String requestId,
++    public synchronized void abortRequestTarget(String requestId,
 +                                   String target,
 +                                   Throwable exception)
 +                    throws BulkServiceException
@@ -395,7 +396,7 @@ index 0000000000..34956b5bed
 +     *  Calls update on the requestStore.
 +     */
 +    @Override
-+    public void cancelRequest(Subject subject, String requestId)
++    public synchronized void cancelRequest(Subject subject, String requestId)
 +                    throws BulkServiceException
 +    {
 +        LOGGER.trace("clearRequest {}, {}.", subject, requestId);
@@ -404,11 +405,13 @@ index 0000000000..34956b5bed
 +            throw new BulkPermissionDeniedException(requestId);
 +        }
 +
-+        if (!requestStore.getRequest(requestId).isPresent()) {
++        if (isRequestAlreadyCleared(requestId)) {
 +            throw new BulkRequestNotFoundException(requestId);
 +        }
 +
-+        requestCancelled(requestId);
++        if (isRequestActive(requestId)) {
++            requestCancelled(requestId);
++        }
 +    }
 +
 +    /*
@@ -418,7 +421,7 @@ index 0000000000..34956b5bed
 +     *  Calls update on the requestStore.
 +     */
 +    @Override
-+    public void clearRequest(Subject subject, String requestId)
++    public synchronized void clearRequest(Subject subject, String requestId)
 +                    throws BulkServiceException
 +    {
 +        LOGGER.trace("clearRequest {}, {}.", subject, requestId);
@@ -427,11 +430,13 @@ index 0000000000..34956b5bed
 +            throw new BulkPermissionDeniedException(requestId);
 +        }
 +
-+        if (!requestStore.getRequest(requestId).isPresent()) {
++        if (isRequestAlreadyCleared(requestId)) {
 +            throw new BulkRequestNotFoundException(requestId);
 +        }
 +
-+        requestCancelled(requestId);
++        if (isRequestActive(requestId)) {
++            requestCancelled(requestId);
++        }
 +
 +        LOGGER.trace("clearRequest {}, calling clear on request store",
 +                     requestId);
@@ -447,13 +452,14 @@ index 0000000000..34956b5bed
 +     *  Upon job termination, the queue should call request completed (below).
 +     */
 +    @Override
-+    public void requestCancelled(String requestId) throws BulkServiceException
++    public synchronized void requestCancelled(String requestId)
++                    throws BulkServiceException
 +    {
 +        LOGGER.trace("requestCancelled: {}.", requestId);
++        requestStore.update(requestId, Status.CANCELLED);
 +
 +        cancelAllJobs(requestId);
 +
-+        requestStore.update(requestId, Status.CANCELLED);
 +        statistics.incrementRequestsCancelled();
 +    }
 +
@@ -463,7 +469,8 @@ index 0000000000..34956b5bed
 +     *  Updates the status of the request.
 +     */
 +    @Override
-+    public void requestCompleted(String requestId) throws BulkServiceException
++    public synchronized void requestCompleted(String requestId)
++                    throws BulkServiceException
 +    {
 +        LOGGER.trace("requestCompleted {}, calling update to COMPLETED "
 +                                     + "on request store",
@@ -485,7 +492,8 @@ index 0000000000..34956b5bed
 +     *  Updates the status of the request.
 +     */
 +    @Override
-+    public void requestTargetCancelled(BulkJob job) throws BulkServiceException
++    public synchronized void requestTargetCancelled(BulkJob job)
++                    throws BulkServiceException
 +    {
 +        BulkJobKey key = job.getKey();
 +        LOGGER.trace("requestTargetCancelled: {}, calling delete on job "
@@ -518,7 +526,8 @@ index 0000000000..34956b5bed
 +     *  Updates the status of the request.
 +     */
 +    @Override
-+    public void requestTargetFailed(BulkJob job) throws BulkServiceException
++    public synchronized void requestTargetFailed(BulkJob job)
++                    throws BulkServiceException
 +    {
 +        BulkJobKey key = job.getKey();
 +        LOGGER.trace("requestTargetFailed: {}, calling delete on job "
@@ -552,7 +561,8 @@ index 0000000000..34956b5bed
 +     *  Updates the status of the request.
 +     */
 +    @Override
-+    public void requestTargetCompleted(BulkJob job) throws BulkServiceException
++    public synchronized void requestTargetCompleted(BulkJob job)
++                    throws BulkServiceException
 +    {
 +        BulkJobKey key = job.getKey();
 +        LOGGER.trace("requestTargetCompleted: {}, calling delete on job "
@@ -648,7 +658,8 @@ index 0000000000..34956b5bed
 +     *  listener, and submits the job to the queue.
 +     */
 +    @Override
-+    public void submitRequest(BulkRequest request) throws BulkServiceException
++    public synchronized void submitRequest(BulkRequest request)
++                    throws BulkServiceException
 +    {
 +        LOGGER.trace("submitRequest {}.", request.getId());
 +
@@ -681,10 +692,10 @@ index 0000000000..34956b5bed
 +    }
 +
 +    @Override
-+    public void submitSingleTargetJob(String target,
-+                                      BulkJobKey parentKey,
-+                                      FileAttributes attributes,
-+                                      MultipleTargetJob parent)
++    public synchronized void submitSingleTargetJob(String target,
++                                                   BulkJobKey parentKey,
++                                                   FileAttributes attributes,
++                                                   MultipleTargetJob parent)
 +                    throws BulkServiceException
 +    {
 +        SingleTargetJob job = jobFactory.createSingleTargetJob(parentKey,
@@ -701,9 +712,9 @@ index 0000000000..34956b5bed
 +    }
 +
 +    @Override
-+    public void submitTargetExpansionJob(String target,
-+                                         FileAttributes attributes,
-+                                         MultipleTargetJob parent)
++    public synchronized void submitTargetExpansionJob(String target,
++                                                      FileAttributes attributes,
++                                                      MultipleTargetJob parent)
 +                    throws BulkServiceException
 +    {
 +        /*
@@ -796,6 +807,25 @@ index 0000000000..34956b5bed
 +        return false;
 +    }
 +
++    private boolean isRequestActive(String requestId)
++                    throws BulkStorageException
++    {
++        if (isRequestAlreadyCleared(requestId)) {
++            return false;
++        }
++
++        BulkRequestStatus requestStatus
++                        = requestStore.getStatus(requestId).orElse(null);
++        if (requestStatus != null) {
++            Status status = requestStatus.getStatus();
++            if (status == Status.COMPLETED || status == Status.CANCELLED) {
++                return false;
++            }
++        }
++
++        return true;
++    }
++
 +    /*
 +     *  Stores the job.
 +     *
@@ -803,6 +833,13 @@ index 0000000000..34956b5bed
 +     */
 +    private void submit(BulkJob job) throws BulkStorageException {
 +        BulkJobKey key = job.getKey();
++
++        if (!isRequestActive(key.getRequestId())) {
++            LOGGER.trace("submit: {}, not storing/subjitting job; "
++                                         + "request no longer active",
++                         key.getKey());
++            return;
++        }
 +
 +        LOGGER.trace("submit: {}, storing job.", key.getKey());
 +        jobStore.store(job);
