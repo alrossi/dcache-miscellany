@@ -238,7 +238,7 @@ index 0000000000..6d5cb00ed9
 +{
 +    public UpdateQoSJobProvider()
 +    {
-+        super("UPDATE_QOS", FILE, ExpansionType.BREADTH_FIRST);
++        super("UPDATE-QOS", FILE, ExpansionType.BREADTH_FIRST);
 +    }
 +
 +    @Override
