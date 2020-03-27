@@ -350,7 +350,8 @@ index 0000000000..25012d23cf
 +public class BulkRequestHandler implements
 +                                BulkSubmissionHandler,
 +                                BulkRequestCompletionHandler,
-+                                CellMessageSender
++                                CellMessageSender,
++                                CellMessageReceiver
 +{
 +    private static final Logger LOGGER
 +                    = LoggerFactory.getLogger(BulkRequestHandler.class);
