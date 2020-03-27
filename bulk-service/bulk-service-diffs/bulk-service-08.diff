@@ -71,8 +71,11 @@ index 0000000000..355794569c
 +
 +import javax.security.auth.Subject;
 +
++import java.util.ArrayList;
++import java.util.Collections;
 +import java.util.List;
 +import java.util.Optional;
++import java.util.Set;
 +import java.util.UUID;
 +import java.util.concurrent.ExecutorService;
 +
@@ -193,10 +196,12 @@ index 0000000000..355794569c
 +        MessageReply<Message> reply = new MessageReply<>();
 +        incomingExecutorService.execute(() -> {
 +            try {
-+                List<String> requests
++                 Set<String> requests
 +                    = requestStore.getRequestUrls(message.getSubject(),
 +                                                  message.getStatus());
-+                message.setRequests(requests);
++                 List<String> sorted = new ArrayList<>(requests);
++                 Collections.sort(sorted);
++                 message.setRequests(sorted);
 +                reply.reply(message);
 +            } catch (BulkServiceException e) {
 +                LOGGER.error("messageArrived(BulkRequestListMessage) {}: {}",

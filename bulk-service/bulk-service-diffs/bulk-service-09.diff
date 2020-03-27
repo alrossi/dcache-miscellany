@@ -1,9 +1,9 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/admin/BulkServiceCommands.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/admin/BulkServiceCommands.java
 new file mode 100644
-index 0000000000..64e5b3a79a
+index 0000000000..51867870aa
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/admin/BulkServiceCommands.java
-@@ -0,0 +1,1055 @@
+@@ -0,0 +1,1056 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -604,6 +604,7 @@ index 0000000000..64e5b3a79a
 +            String requests = store.find(Optional.of(rFilter),
 +                                         Optional.of(sFilter),
 +                                         limit)
++                                   .stream()
 +                                   .map(request -> formatRequest(request,
 +                                                                 store,
 +                                                                 option))
@@ -1053,7 +1054,7 @@ index 0000000000..64e5b3a79a
 +    private List<String> listIds(String input)
 +    {
 +        if (input.contains("*")) {
-+            return service.getRequestStore().listIds();
++            return new ArrayList<>(service.getRequestStore().ids());
 +        }
 +
 +        return Arrays.asList(input.split("[,]"));
