@@ -243,6 +243,7 @@ index 0000000000..3fef83b371
 +bulk.cell.name=${dcache.service.bulk}
 +
 +bulk.cell.consume=${bulk.cell.name}
++bulk.cell.subscribe=${bulk.pool-monitor.topic}
 +
 +#  ---- Main bulk area
 +#
@@ -318,6 +319,9 @@ index 0000000000..3fef83b371
 +#
 +bulk.service.poolmanager.timeout=1
 +(one-of?MILLISECONDS|SECONDS|MINUTES|HOURS|DAYS)bulk.service.poolmanager.timeout.unit=MINUTES
++
++# Topic on which to expect pool monitor updates
++bulk.pool-monitor.topic = ${dcache.pool-monitor.topic}
 diff --git a/skel/share/defaults/dcache.properties b/skel/share/defaults/dcache.properties
 index 34c2bf4923..5b3fcdcd4f 100644
 --- a/skel/share/defaults/dcache.properties
@@ -354,6 +358,7 @@ index 0000000000..ad7c13e2a7
 +
 +check -strong bulk.cell.name
 +check -strong bulk.cell.consume
++check -strong bulk.cell.subscribe
 +check -strong bulk.dir
 +check -strong bulk.limits.max-running-jobs
 +check -strong bulk.limits.max-running-requests
@@ -362,6 +367,7 @@ index 0000000000..ad7c13e2a7
 +check -strong bulk.limits.max-requests-per-user
 +check -strong bulk.limits.message-handler-threads
 +check -strong bulk.limits.request-store-clear-threads
++check -strong bulk.pool-monitor.topic
 +check -strong bulk.store.request-store-dir
 +check -strong bulk.service.pnfsmanager
 +check -strong bulk.service.pnfsmanager.timeout
