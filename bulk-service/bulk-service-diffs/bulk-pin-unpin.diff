@@ -1,9 +1,9 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJob.java
 new file mode 100644
-index 0000000000..864eec80af
+index 0000000000..9ca85f1397
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/pinmanager/PinJob.java
-@@ -0,0 +1,116 @@
+@@ -0,0 +1,115 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -444,7 +444,7 @@ index 0000000000..9950b07db0
 +}
 \ No newline at end of file
 diff --git a/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider b/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
-index b18f7a1306..5a51c6b71d 100644
+index b18f7a1306..48c19d176e 100644
 --- a/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
 +++ b/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
 @@ -1,2 +1,4 @@
@@ -452,4 +452,3 @@ index b18f7a1306..5a51c6b71d 100644
  org.dcache.services.bulk.plugins.DFirstWalkJobProvider
 +org.dcache.services.bulk.plugins.pinmanager.PinJobProvider
 +org.dcache.services.bulk.plugins.pinmanager.UnpinJobProvider
-\ No newline at end of file
