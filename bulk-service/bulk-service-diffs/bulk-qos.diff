@@ -1,9 +1,9 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJob.java
 new file mode 100644
-index 0000000000..348dd62ca9
+index 0000000000..625e0948a0
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJob.java
-@@ -0,0 +1,154 @@
+@@ -0,0 +1,163 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -91,16 +91,27 @@ index 0000000000..348dd62ca9
 +                                                             PoolManagerAware,
 +                                                             PoolMonitorAware
 +{
-+    private CellStub    pinManager;
-+    private CellStub    poolManager;
-+    private PnfsHandler pnfsHandler;
-+    private PoolMonitor poolMonitor;
++    private CellStub            pinManager;
++    private CellStub            poolManager;
++    private PnfsHandler         pnfsHandler;
++    private PoolMonitor         poolMonitor;
++    private QoSTransitionEngine engine;
 +
 +    public UpdateQoSJob(BulkJobKey key,
 +                        BulkJobKey parentKey,
 +                        String activity)
 +    {
 +        super(key, parentKey, activity);
++    }
++
++    @Override
++    public boolean cancel()
++    {
++        if (engine != null) {
++            engine.cancel();
++        }
++
++        return super.cancel();
 +    }
 +
 +    @Override
@@ -141,14 +152,12 @@ index 0000000000..348dd62ca9
 +        LOGGER.debug("updating to {} {}.", targetQos, path);
 +
 +        try {
-+            new QoSTransitionEngine(poolManager,
-+                                    poolMonitor,
-+                                    pnfsHandler,
-+                                    pinManager,
-+                                    true)
-+                            .adjustQoS(path,
-+                                       targetQos,
-+                                       NetworkUtils.getCanonicalHostName());
++            engine = new QoSTransitionEngine(poolManager,
++                                             poolMonitor,
++                                             pnfsHandler,
++                                             pinManager,
++                                            true);
++            engine.adjustQoS(path, targetQos, NetworkUtils.getCanonicalHostName());
 +        } catch (URISyntaxException |
 +                        CacheException |
 +                        InterruptedException |
@@ -160,7 +169,7 @@ index 0000000000..348dd62ca9
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJobProvider.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJobProvider.java
 new file mode 100644
-index 0000000000..6d5cb00ed9
+index 0000000000..3b2300f278
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qos/UpdateQoSJobProvider.java
 @@ -0,0 +1,89 @@
