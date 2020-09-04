@@ -2,7 +2,7 @@
 
 VERSION=$1
 
-rm -f /usr/java/default
-ln -s /usr/java/$VERSION /usr/java/default
+rm -f /opt/java/default
+ln -s /opt/java/$VERSION /opt/java/default
 
 java -version
