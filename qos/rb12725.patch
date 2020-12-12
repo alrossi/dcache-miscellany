@@ -1,0 +1,224 @@
+diff --git a/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/namespace/FileResources.java b/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/namespace/FileResources.java
+index c1a01c31b4f8e16a5139aea31f4d4904db5c4604..66bc4a4fd218ddd76279ff20fb0cb33af6e2389c 100644
+--- a/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/namespace/FileResources.java
++++ b/modules/dcache-frontend/src/main/java/org/dcache/restful/resources/namespace/FileResources.java
+@@ -1,6 +1,15 @@
+ package org.dcache.restful.resources.namespace;
+ 
+ import com.google.common.collect.Range;
++import diskCacheV111.util.AttributeExistsCacheException;
++import diskCacheV111.util.CacheException;
++import diskCacheV111.util.FileNotFoundCacheException;
++import diskCacheV111.util.FsPath;
++import diskCacheV111.util.NoAttributeCacheException;
++import diskCacheV111.util.PermissionDeniedCacheException;
++import diskCacheV111.util.PnfsHandler;
++import diskCacheV111.vehicles.PnfsWriteExtendedAttributesMessage.Mode;
++import dmg.cells.nucleus.NoRouteToCellException;
+ import io.swagger.annotations.Api;
+ import io.swagger.annotations.ApiOperation;
+ import io.swagger.annotations.ApiParam;
+@@ -9,16 +18,15 @@ import io.swagger.annotations.ApiResponses;
+ import io.swagger.annotations.Authorization;
+ import io.swagger.annotations.Example;
+ import io.swagger.annotations.ExampleProperty;
+-import org.json.JSONArray;
+-import org.json.JSONException;
+-import org.json.JSONObject;
+-import org.slf4j.Logger;
+-import org.slf4j.LoggerFactory;
+-import org.springframework.stereotype.Component;
+-
++import java.nio.charset.StandardCharsets;
++import java.util.ArrayList;
++import java.util.Arrays;
++import java.util.HashMap;
++import java.util.List;
++import java.util.Map;
++import java.util.Set;
+ import javax.inject.Inject;
+ import javax.inject.Named;
+-import javax.naming.directory.NoSuchAttributeException;
+ import javax.servlet.http.HttpServletRequest;
+ import javax.ws.rs.BadRequestException;
+ import javax.ws.rs.Consumes;
+@@ -38,35 +46,14 @@ import javax.ws.rs.WebApplicationException;
+ import javax.ws.rs.core.Context;
+ import javax.ws.rs.core.MediaType;
+ import javax.ws.rs.core.Response;
+-
+-import java.net.URISyntaxException;
+-import java.nio.charset.StandardCharsets;
+-import java.util.ArrayList;
+-import java.util.Arrays;
+-import java.util.Collections;
+-import java.util.HashMap;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Set;
+-
+-import diskCacheV111.util.AttributeExistsCacheException;
+-import diskCacheV111.util.CacheException;
+-import diskCacheV111.util.FileNotFoundCacheException;
+-import diskCacheV111.util.FsPath;
+-import diskCacheV111.util.NoAttributeCacheException;
+-import diskCacheV111.util.PermissionDeniedCacheException;
+-import diskCacheV111.util.PnfsHandler;
+-import diskCacheV111.vehicles.PnfsWriteExtendedAttributesMessage;
+-import diskCacheV111.vehicles.PnfsWriteExtendedAttributesMessage.Mode;
+-
+-import dmg.cells.nucleus.NoRouteToCellException;
+-
+ import org.dcache.cells.CellStub;
+ import org.dcache.http.PathMapper;
+ import org.dcache.namespace.FileAttribute;
+ import org.dcache.namespace.FileType;
+ import org.dcache.poolmanager.PoolMonitor;
+-import org.dcache.qos.QoSTransitionEngine;
++import org.dcache.qos.QoSException;
++import org.dcache.qos.data.FileQoSRequirements;
++import org.dcache.qos.remote.clients.RemoteQoSRequirementsClient;
+ import org.dcache.restful.providers.JsonFileAttributes;
+ import org.dcache.restful.util.HandlerBuilders;
+ import org.dcache.restful.util.HttpServletRequests;
+@@ -76,6 +63,12 @@ import org.dcache.util.list.DirectoryEntry;
+ import org.dcache.util.list.DirectoryStream;
+ import org.dcache.util.list.ListDirectoryHandler;
+ import org.dcache.vehicles.FileAttributes;
++import org.json.JSONArray;
++import org.json.JSONException;
++import org.json.JSONObject;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++import org.springframework.stereotype.Component;
+ 
+ import static org.dcache.restful.providers.SuccessfulResponse.successfulResponse;
+ 
+@@ -109,6 +102,10 @@ public class FileResources {
+     @Named("pool-manager-stub")
+     private CellStub poolmanager;
+ 
++    @Inject
++    @Named("qos-engine")
++    private CellStub qosEngine;
++
+     @Inject
+     @Named("pinManagerStub")
+     private CellStub pinmanager;
+@@ -370,12 +367,17 @@ public class FileResources {
+                     break;
+                 case "qos":
+                     String targetQos = reqPayload.getString("target");
+-                    new QoSTransitionEngine(poolmanager,
+-                                            poolMonitor,
+-                                            pnfsHandler,
+-                                            pinmanager)
+-                                    .adjustQoS(path,
+-                                               targetQos, request.getRemoteHost());
++                    /*
++                     *  fire and forget, does not wait for transition to complete
++                     */
++                    FileAttributes attr
++                        = pnfsHandler.getFileAttributes(path.toString(),
++                            NamespaceUtils.getRequestedAttributes(false, false,
++                                                                     true, false));
++                    FileQoSRequirements requirements = getBasicRequirements(targetQos, attr);
++                    RemoteQoSRequirementsClient client = new RemoteQoSRequirementsClient();
++                    client.setRequirementsService(qosEngine);
++                    client.fileQoSRequirementsModified(requirements);
+                     break;
+                 case "rm-xattr":
+                     Object namesArgument = reqPayload.get("names");
+@@ -424,11 +426,9 @@ public class FileResources {
+             throw new WebApplicationException(Response.status(409, "No such attribute")
+                     .build());
+         } catch (UnsupportedOperationException |
+-                        URISyntaxException |
+                         JSONException |
+                         CacheException |
+-                        InterruptedException |
+-                        NoRouteToCellException e) {
++                        IllegalArgumentException e) {
+             throw new BadRequestException(e.getMessage(), e);
+         }
+         return successfulResponse(Response.Status.CREATED);
+@@ -479,4 +479,22 @@ public class FileResources {
+         }
+         return successfulResponse(Response.Status.OK);
+     }
++
++    private FileQoSRequirements getBasicRequirements(String targetQos, FileAttributes attributes) {
++        FileQoSRequirements requirements = new FileQoSRequirements(attributes.getPnfsId(), attributes);
++
++        if (targetQos == null) {
++            throw new IllegalArgumentException("no target qos given.");
++        }
++
++        if (targetQos.contains("disk")) {
++            requirements.setRequiredDisk(1);
++        }
++
++        if (targetQos.contains("tape")) {
++            requirements.setRequiredTape(1);
++        }
++
++        return requirements;
++    }
+ }
+diff --git a/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml b/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml
+index 5f60fcbb2c4db92370cfadecc84b0936d2132123..8843bfd701c5feef0fde4be6d6701a9ade6c2a19 100644
+--- a/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml
++++ b/modules/dcache-frontend/src/main/resources/org/dcache/frontend/frontend.xml
+@@ -236,6 +236,13 @@
+     <property name="destination" value="${frontend.service.pinmanager}"/>
+   </bean>
+ 
++  <bean id="qos-engine" class="org.dcache.cells.CellStub">
++    <description>QoS Engine cell stub</description>
++    <property name="timeout" value="${frontend.service.qos.timeout}"/>
++    <property name="timeoutUnit" value="${frontend.service.qos.timeout.unit}"/>
++    <property name="destination" value="${frontend.service.qos}"/>
++  </bean>
++
+   <bean id="bulk-service" class="org.dcache.cells.CellStub">
+     <description>Bulk request service cell stub</description>
+     <property name="timeout" value="${frontend.service.bulk-service.timeout}"/>
+diff --git a/skel/share/defaults/frontend.properties b/skel/share/defaults/frontend.properties
+index d7e8a76c63c888c167c39fe099399bac39cb0629..91fb93071be70c1c81a7cfae02b478bae43c8288 100644
+--- a/skel/share/defaults/frontend.properties
++++ b/skel/share/defaults/frontend.properties
+@@ -54,6 +54,9 @@ frontend.service.poolmanager=${dcache.service.poolmanager}
+ # Cell address for spacemanager service
+ frontend.service.spacemanager=${dcache.service.spacemanager}
+ 
++# Cell address of qos service
++frontend.service.qos=${dcache.service.qos-engine}
++
+ # Cell address of gplazma service
+ frontend.service.gplazma=${dcache.service.gplazma}
+ 
+@@ -80,6 +83,10 @@ frontend.service.poolmanager.timeout = 300000
+ frontend.service.spacemanager.timeout = 300000
+ (one-of?MILLISECONDS|SECONDS|MINUTES|HOURS|DAYS)frontend.service.spacemanager.timeout.unit=MILLISECONDS
+ 
++# Timeout for qos engine requests
++frontend.service.qos.timeout=1
++(one-of?MILLISECONDS|SECONDS|MINUTES|HOURS|DAYS)frontend.service.qos.timeout.unit=MINUTES
++
+ # Timeout for billing requests
+ # These properties can also be set interactively through the admin door
+ frontend.service.billing.timeout = 5
+diff --git a/skel/share/services/frontend.batch b/skel/share/services/frontend.batch
+index cb370ec39f4b1f57fb1f15354d853931263c0bc9..a0735f2c08717c320dc3fac0d8c23b256782145e 100644
+--- a/skel/share/services/frontend.batch
++++ b/skel/share/services/frontend.batch
+@@ -20,6 +20,9 @@ check -strong frontend.service.poolmanager.timeout.unit
+ check -strong frontend.service.spacemanager
+ check -strong frontend.service.spacemanager.timeout
+ check -strong frontend.service.spacemanager.timeout.unit
++check -strong frontend.service.qos
++check -strong frontend.service.qos.timeout
++check -strong frontend.service.qos.timeout.unit
+ check -strong frontend.service.billing
+ check -strong frontend.service.billing.timeout
+ check -strong frontend.service.billing.timeout.unit
