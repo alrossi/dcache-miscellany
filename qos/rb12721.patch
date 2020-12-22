@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/local/clients/LocalQoSVerificationClient.java b/modules/dcache-qos/src/main/java/org/dcache/qos/local/clients/LocalQoSVerificationClient.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..aff1ef4ceb3689d60eec3dd3068430c9e68d59bc
+index 0000000000..aff1ef4ceb
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/local/clients/LocalQoSVerificationClient.java
 @@ -0,0 +1,108 @@
@@ -114,7 +114,7 @@ index 0000000000000000000000000000000000000000..aff1ef4ceb3689d60eec3dd3068430c9
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/remote/receivers/QoSVerificationReceiver.java b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/receivers/QoSVerificationReceiver.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..fadb373b61dbfe1512d1948050cdf14550733dfe
+index 0000000000..fadb373b61
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/receivers/QoSVerificationReceiver.java
 @@ -0,0 +1,162 @@
@@ -283,7 +283,7 @@ index 0000000000000000000000000000000000000000..fadb373b61dbfe1512d1948050cdf145
 \ No newline at end of file
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/admin/QoSVerifierAdmin.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/admin/QoSVerifierAdmin.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..a91dea30df25803c7b07ff23e8030be847416f2f
+index 0000000000..41192ed1c2
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/admin/QoSVerifierAdmin.java
 @@ -0,0 +1,645 @@
@@ -688,7 +688,7 @@ index 0000000000000000000000000000000000000000..a91dea30df25803c7b07ff23e8030be8
 +
 +    @Override
 +    protected String doCall() throws Exception {
-+      return runFileChecks(history.getErrorPnfsids());
++      return runFileChecks(history.getAndClearErrorPnfsids());
 +    }
 +  }
 +
@@ -934,7 +934,7 @@ index 0000000000000000000000000000000000000000..a91dea30df25803c7b07ff23e8030be8
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSCancelFilter.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSCancelFilter.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..10d9159d218f3709681f5a48ab852ff78af30e9c
+index 0000000000..10d9159d21
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSCancelFilter.java
 @@ -0,0 +1,79 @@
@@ -1019,7 +1019,7 @@ index 0000000000000000000000000000000000000000..10d9159d218f3709681f5a48ab852ff7
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSFilter.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSFilter.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..4ed5a68316f3214879dc6c4a33a3f6babe72b1dc
+index 0000000000..4ed5a68316
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSFilter.java
 @@ -0,0 +1,211 @@
@@ -1236,10 +1236,10 @@ index 0000000000000000000000000000000000000000..4ed5a68316f3214879dc6c4a33a3f6ba
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSLocations.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSLocations.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..d7c2767e3c606ecc915308ffb0bcdf7ebdee1401
+index 0000000000..b487c81a8a
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSLocations.java
-@@ -0,0 +1,361 @@
+@@ -0,0 +1,351 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -1447,8 +1447,6 @@ index 0000000000000000000000000000000000000000..d7c2767e3c606ecc915308ffb0bcdf7e
 +
 +  private final PnfsId pnfsId;
 +
-+  private String requiredPoolGroup;
-+
 +  /*
 +   *  Locations as reported in the namespace.
 +   */
@@ -1592,18 +1590,10 @@ index 0000000000000000000000000000000000000000..d7c2767e3c606ecc915308ffb0bcdf7e
 +  public void setReplicaStatus(Collection<ReplicaStatusMessage> replicaStatus) {
 +    this.replicaStatus = replicaStatus;
 +  }
-+
-+  public String getRequiredPoolGroup() {
-+    return requiredPoolGroup;
-+  }
-+
-+  public void setRequiredPoolGroup(String requiredPoolGroup) {
-+    this.requiredPoolGroup = requiredPoolGroup;
-+  }
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSMatcher.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSMatcher.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..f34c132d6e52e6f8006ea1000bbe3b5535fe74ff
+index 0000000000..f34c132d6e
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSMatcher.java
 @@ -0,0 +1,86 @@
@@ -1695,7 +1685,7 @@ index 0000000000000000000000000000000000000000..f34c132d6e52e6f8006ea1000bbe3b55
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSOpCheckpointRecord.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSOpCheckpointRecord.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..4843fdde6873501dcd94976b591282bb8b5428d8
+index 0000000000..4843fdde68
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSOpCheckpointRecord.java
 @@ -0,0 +1,124 @@
@@ -1825,7 +1815,7 @@ index 0000000000000000000000000000000000000000..4843fdde6873501dcd94976b591282bb
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSOperation.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSOperation.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..8b18e6c80fa268e4b2656751ca3aff9d1c71b176
+index 0000000000..8b18e6c80f
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSOperation.java
 @@ -0,0 +1,500 @@
@@ -2331,7 +2321,7 @@ index 0000000000000000000000000000000000000000..8b18e6c80fa268e4b2656751ca3aff9d
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSOperationMap.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSOperationMap.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..901b351893718023bd114bd55c7f2ffb47878767
+index 0000000000..8cd5347cc6
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/FileQoSOperationMap.java
 @@ -0,0 +1,1094 @@
@@ -3415,7 +3405,7 @@ index 0000000000000000000000000000000000000000..901b351893718023bd114bd55c7f2ffb
 +            }
 +        }
 +
-+        history.add(operation.toHistoryString(), failed);
++        history.add(operation.getPnfsId(), operation.toHistoryString(), failed);
 +    }
 +
 +    private void removeIfStaging(PnfsId pnfsId) {
@@ -3432,7 +3422,7 @@ index 0000000000000000000000000000000000000000..901b351893718023bd114bd55c7f2ffb
 \ No newline at end of file
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PoolInfoDiff.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PoolInfoDiff.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..9d355b484ef74a6762f7477ee32ff7913f0a662c
+index 0000000000..9d355b484e
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PoolInfoDiff.java
 @@ -0,0 +1,249 @@
@@ -3687,7 +3677,7 @@ index 0000000000000000000000000000000000000000..9d355b484ef74a6762f7477ee32ff791
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PoolInfoFilter.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PoolInfoFilter.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..fe7aa35f702e5b32009aa7269a47797b796cb517
+index 0000000000..fe7aa35f70
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PoolInfoFilter.java
 @@ -0,0 +1,140 @@
@@ -3833,7 +3823,7 @@ index 0000000000000000000000000000000000000000..fe7aa35f702e5b32009aa7269a47797b
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PoolInfoMap.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PoolInfoMap.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..fb14f1de4e0b351c16548a098d26dc180c9e4768
+index 0000000000..fb14f1de4e
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PoolInfoMap.java
 @@ -0,0 +1,1242 @@
@@ -5082,7 +5072,7 @@ index 0000000000000000000000000000000000000000..fb14f1de4e0b351c16548a098d26dc18
 \ No newline at end of file
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PoolInformation.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PoolInformation.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..ab540e9f5586446c787552643d0baf594a22e539
+index 0000000000..ab540e9f55
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PoolInformation.java
 @@ -0,0 +1,190 @@
@@ -5278,7 +5268,7 @@ index 0000000000000000000000000000000000000000..ab540e9f5586446c787552643d0baf59
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PrimaryGroupMarker.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PrimaryGroupMarker.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c34bc55473f5826bb9643faeece996cd37947c6b
+index 0000000000..c34bc55473
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/PrimaryGroupMarker.java
 @@ -0,0 +1,75 @@
@@ -5359,7 +5349,7 @@ index 0000000000000000000000000000000000000000..c34bc55473f5826bb9643faeece996cd
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/QoSOperation.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/QoSOperation.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..4862481258546d9e19093171b3f7a3bf873e7644
+index 0000000000..4862481258
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/QoSOperation.java
 @@ -0,0 +1,84 @@
@@ -5449,7 +5439,7 @@ index 0000000000000000000000000000000000000000..4862481258546d9e19093171b3f7a3bf
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/StorageUnitConstraints.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/StorageUnitConstraints.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..3d61e8f642530208eae2952f4fbf6c2da9bd1893
+index 0000000000..3d61e8f642
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/data/StorageUnitConstraints.java
 @@ -0,0 +1,128 @@
@@ -5583,7 +5573,7 @@ index 0000000000000000000000000000000000000000..3d61e8f642530208eae2952f4fbf6c2d
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/CheckpointHandler.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/CheckpointHandler.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..5cd2f24afe2b75147c7939e6f5818e70be665db1
+index 0000000000..5cd2f24afe
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/CheckpointHandler.java
 @@ -0,0 +1,170 @@
@@ -5759,10 +5749,10 @@ index 0000000000000000000000000000000000000000..5cd2f24afe2b75147c7939e6f5818e70
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/FileQoSOperationHandler.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/FileQoSOperationHandler.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..2c2b7cab43f5a2267bfb1071fdf56d264694acab
+index 0000000000..7eb2624a9d
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/FileQoSOperationHandler.java
-@@ -0,0 +1,797 @@
+@@ -0,0 +1,800 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -6154,7 +6144,10 @@ index 0000000000000000000000000000000000000000..2c2b7cab43f5a2267bfb1071fdf56d26
 +    data.setSize(requirements.getAttributes().getSize());
 +
 +    /*
-+     *  Determine if action needs to be taken (counts).
++     *  Determine if action needs to be taken.
++     *
++     *  Verification can be skipped under a few special conditions, but most of the
++     *  time this will be true.
 +     */
 +    if (!statusVerifier.isActionable(data, requirements)) {
 +      handleVerificationNop(data, false);
@@ -6562,10 +6555,10 @@ index 0000000000000000000000000000000000000000..2c2b7cab43f5a2267bfb1071fdf56d26
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/FileQoSStatusVerifier.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/FileQoSStatusVerifier.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..d7c7a5dc2be55cd1b0bd88a434f1a4da03272e76
+index 0000000000..36c54e1d4d
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/FileQoSStatusVerifier.java
-@@ -0,0 +1,893 @@
+@@ -0,0 +1,849 @@
 +/*
 +COPYRIGHT STATUS:
 +Dec 1st 2001, Fermi National Accelerator Laboratory (FNAL) documents and
@@ -6692,8 +6685,6 @@ index 0000000000000000000000000000000000000000..d7c7a5dc2be55cd1b0bd88a434f1a4da
 +            poolGroupIndex = poolInfoMap.getEffectivePoolGroup(poolIndex);
 +            poolGroup = poolInfoMap.getGroup(poolGroupIndex);
 +            update.setEffectivePoolGroup(poolGroup);
-+        } else {
-+            poolGroupIndex = poolInfoMap.getGroupIndex(poolGroup);
 +        }
 +
 +        /*
@@ -6724,62 +6715,20 @@ index 0000000000000000000000000000000000000000..d7c7a5dc2be55cd1b0bd88a434f1a4da
 +        }
 +
 +        /*
-+         *  Ignore preliminary checks for forced scans which do not define a storage unit.
-+         *  These are scans triggered periodically or by an admin command, and not by
-+         *  change in pool state.
++         *  The original version of resilience from which this method has been adapted also
++         *  did a preliminary triage based on replica counts.  This was for the sake of
++         *  further efficiency.
++         *
++         *  It seems desirable, however, to allow all messages not disqualified by the
++         *  storage unit change constraint above to be passed into the verifier.  This
++         *  closes the cracks in possible inconsistencies provoked by external operations
++         *  like migration copy or move, which may select a pool for copying, ignoring the
++         *  QoS constraints.  If, for instance, a copy + delete of a location forces a replica
++         *  onto a pool causing an unwanted distribution (like on the same host of another replica),
++         *  anything less than a full verification at this point would risk considering
++         *  the requirements (i.e., number of replicas) already met and not add an operation
++         *  to the map (which it should, since the replicas need to be redistributed).
 +         */
-+        if (update.isForced()) {
-+            return true;
-+        }
-+
-+        FileQoSLocations qoSLocations;
-+        try {
-+            qoSLocations = classifyLocations(requirements, poolGroupIndex);
-+            qoSLocations.setRequiredPoolGroup(poolGroup);
-+        } catch (InterruptedException e) {
-+            LOGGER.warn("isActionable {}, thread was interrupted.", pnfsId);
-+            return false;
-+        }
-+
-+        int tt = qoSLocations.getCurrentTapeLocations().size();
-+        int tr = requirements.getRequiredTape();
-+
-+        if (tr > 0 && tr != tt) {
-+            LOGGER.debug("{}, isActionable, tape requirement not yet met ({} != {})", pnfsId, tr, tt);
-+            return true;
-+        }
-+
-+        /*
-+         *  Preliminary determination of viable replicas: does not include non-readable,
-+         *  non-sticky. For the purposes of triage, we consider excluded
-+         *  as part of the "available" replica count.
-+         */
-+        int dd = 0;
-+        int broken = 0;
-+        if (!qoSLocations.getCurrentDiskLocations().isEmpty()) {
-+            Set<String> precious = qoSLocations.getPrecious();
-+            if (!precious.isEmpty()) {
-+                LOGGER.debug("{}, isActionable, tape requirement is met ({} = {}), "
-+                    + "but there are still {} precious files...", pnfsId, tr, tt, precious);
-+                return true;
-+            }
-+            dd = qoSLocations.getPersistent().size() + qoSLocations.getExcluded().size();
-+            broken = qoSLocations.getBroken().size();
-+        }
-+
-+        int dr = requirements.getRequiredDisk();
-+        int count = dr - dd;
-+
-+        LOGGER.debug("{}, isActionable, needs {} replicas, {} valid, {} broken; difference = {}.",
-+                        pnfsId, dr, dd, broken, count);
-+
-+        if (count == 0) {
-+            if (broken == 0) {
-+                LOGGER.debug("{}, isActionable, requirements are already met.", pnfsId);
-+                return false;
-+            }
-+        }
-+
 +        return true;
 +    }
 +
@@ -7461,7 +7410,7 @@ index 0000000000000000000000000000000000000000..d7c7a5dc2be55cd1b0bd88a434f1a4da
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/PoolGroupAndTagsQoSVerifier.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/PoolGroupAndTagsQoSVerifier.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..1ce35be2dfe97186782f943060c35d994f906c3c
+index 0000000000..1ce35be2df
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/PoolGroupAndTagsQoSVerifier.java
 @@ -0,0 +1,89 @@
@@ -7556,7 +7505,7 @@ index 0000000000000000000000000000000000000000..1ce35be2dfe97186782f943060c35d99
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/PoolInfoChangeHandler.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/PoolInfoChangeHandler.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..e0c0c21d8af1490bd42fc6b7d9d01ee9c5a5550e
+index 0000000000..e0c0c21d8a
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/handlers/PoolInfoChangeHandler.java
 @@ -0,0 +1,122 @@
@@ -7684,7 +7633,7 @@ index 0000000000000000000000000000000000000000..e0c0c21d8af1490bd42fc6b7d9d01ee9
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/AbstractLocationExtractor.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/AbstractLocationExtractor.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..41baa12de84ed9830d1ae4fb74f28296a08c6e51
+index 0000000000..41baa12de8
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/AbstractLocationExtractor.java
 @@ -0,0 +1,162 @@
@@ -7852,7 +7801,7 @@ index 0000000000000000000000000000000000000000..41baa12de84ed9830d1ae4fb74f28296
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/ConstraintDiscriminator.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/ConstraintDiscriminator.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..38bdd352d2d9983129121409bf745f163582f90c
+index 0000000000..38bdd352d2
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/ConstraintDiscriminator.java
 @@ -0,0 +1,99 @@
@@ -7957,7 +7906,7 @@ index 0000000000000000000000000000000000000000..38bdd352d2d9983129121409bf745f16
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/EvictingLocationExtractor.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/EvictingLocationExtractor.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c644231dc4d34212934282ce89479afe11ccd1ac
+index 0000000000..c644231dc4
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/EvictingLocationExtractor.java
 @@ -0,0 +1,75 @@
@@ -8038,7 +7987,7 @@ index 0000000000000000000000000000000000000000..c644231dc4d34212934282ce89479afe
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/LocationSelectionException.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/LocationSelectionException.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..cff720ffc8af8af4877e69baebc34f2c2a874cb7
+index 0000000000..cff720ffc8
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/LocationSelectionException.java
 @@ -0,0 +1,71 @@
@@ -8115,7 +8064,7 @@ index 0000000000000000000000000000000000000000..cff720ffc8af8af4877e69baebc34f2c
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/LocationSelector.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/LocationSelector.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..6496f33b4c14e698c1868e141128327777522aae
+index 0000000000..6496f33b4c
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/LocationSelector.java
 @@ -0,0 +1,124 @@
@@ -8245,7 +8194,7 @@ index 0000000000000000000000000000000000000000..6496f33b4c14e698c1868e1411283277
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/PoolInfoLocationSelector.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/PoolInfoLocationSelector.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..21ead537aa7211dfcc4e7f5b8db35d54b4c7e062
+index 0000000000..21ead537aa
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/PoolInfoLocationSelector.java
 @@ -0,0 +1,303 @@
@@ -8554,7 +8503,7 @@ index 0000000000000000000000000000000000000000..21ead537aa7211dfcc4e7f5b8db35d54
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/PoolTagBasedLocationExtractor.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/PoolTagBasedLocationExtractor.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..a0790ae035f0884cfcda9a9e80fee0a509331090
+index 0000000000..a0790ae035
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/PoolTagBasedLocationExtractor.java
 @@ -0,0 +1,194 @@
@@ -8754,7 +8703,7 @@ index 0000000000000000000000000000000000000000..a0790ae035f0884cfcda9a9e80fee0a5
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/QoSVerificationTask.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/QoSVerificationTask.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..5a1639db4d3470097dab44d57490a38dee4d561f
+index 0000000000..5a1639db4d
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/QoSVerificationTask.java
 @@ -0,0 +1,109 @@
@@ -8869,7 +8818,7 @@ index 0000000000000000000000000000000000000000..5a1639db4d3470097dab44d57490a38d
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/QoSVerifierCounters.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/QoSVerifierCounters.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..f80722a979b6fadb034613c2c620d764e9c1c95c
+index 0000000000..f80722a979
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/QoSVerifierCounters.java
 @@ -0,0 +1,316 @@
@@ -9191,7 +9140,7 @@ index 0000000000000000000000000000000000000000..f80722a979b6fadb034613c2c620d764
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/RandomSelectionStrategy.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/RandomSelectionStrategy.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..61fd5cf2219ea14fdf711236f5107a119e250430
+index 0000000000..61fd5cf221
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/RandomSelectionStrategy.java
 @@ -0,0 +1,86 @@
@@ -9283,7 +9232,7 @@ index 0000000000000000000000000000000000000000..61fd5cf2219ea14fdf711236f5107a11
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/VerifierMapInitializer.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/VerifierMapInitializer.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..a3e6e1caaac411e92bb9f8dfc025b441caa4bf6b
+index 0000000000..a3e6e1caaa
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/verifier/util/VerifierMapInitializer.java
 @@ -0,0 +1,150 @@

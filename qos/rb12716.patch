@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/data/PoolQoSStatus.java b/modules/dcache-qos/src/main/java/org/dcache/qos/data/PoolQoSStatus.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..f674c288e0b976fac80db0e6305ffdb63271a77c
+index 0000000000..f674c288e0
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/data/PoolQoSStatus.java
 @@ -0,0 +1,129 @@
@@ -135,7 +135,7 @@ index 0000000000000000000000000000000000000000..f674c288e0b976fac80db0e6305ffdb6
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/listeners/QoSActionCompletedListener.java b/modules/dcache-qos/src/main/java/org/dcache/qos/listeners/QoSActionCompletedListener.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..ab015183189af47ce2ccfb6b9e0ca6c6b305733f
+index 0000000000..ab01518318
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/listeners/QoSActionCompletedListener.java
 @@ -0,0 +1,76 @@
@@ -217,7 +217,7 @@ index 0000000000000000000000000000000000000000..ab015183189af47ce2ccfb6b9e0ca6c6
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/listeners/QoSAdjustmentListener.java b/modules/dcache-qos/src/main/java/org/dcache/qos/listeners/QoSAdjustmentListener.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..ac7456e992d5755cd0eaddc19d6ef2b9ac1b0eab
+index 0000000000..ac7456e992
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/listeners/QoSAdjustmentListener.java
 @@ -0,0 +1,80 @@
@@ -303,7 +303,7 @@ index 0000000000000000000000000000000000000000..ac7456e992d5755cd0eaddc19d6ef2b9
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/listeners/QoSPoolScanResponseListener.java b/modules/dcache-qos/src/main/java/org/dcache/qos/listeners/QoSPoolScanResponseListener.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..baee88236c696e7ef9e5935b953003f0704c1f75
+index 0000000000..baee88236c
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/listeners/QoSPoolScanResponseListener.java
 @@ -0,0 +1,74 @@
@@ -383,7 +383,7 @@ index 0000000000000000000000000000000000000000..baee88236c696e7ef9e5935b953003f0
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/listeners/QoSVerificationListener.java b/modules/dcache-qos/src/main/java/org/dcache/qos/listeners/QoSVerificationListener.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..1f4696fce4f284c95affcbeb3c37ee4816033684
+index 0000000000..1f4696fce4
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/listeners/QoSVerificationListener.java
 @@ -0,0 +1,114 @@
@@ -503,7 +503,7 @@ index 0000000000000000000000000000000000000000..1f4696fce4f284c95affcbeb3c37ee48
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/remote/clients/RemoteQoSActionCompletedClient.java b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/clients/RemoteQoSActionCompletedClient.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..593e5e3ee9bdaa6e5fcf20b99e809da937a8f9d5
+index 0000000000..593e5e3ee9
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/clients/RemoteQoSActionCompletedClient.java
 @@ -0,0 +1,83 @@
@@ -592,7 +592,7 @@ index 0000000000000000000000000000000000000000..593e5e3ee9bdaa6e5fcf20b99e809da9
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/remote/clients/RemoteQoSAdjustmentClient.java b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/clients/RemoteQoSAdjustmentClient.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..45e935a345743d17159480661a3731673b7b6537
+index 0000000000..45e935a345
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/clients/RemoteQoSAdjustmentClient.java
 @@ -0,0 +1,89 @@
@@ -687,7 +687,7 @@ index 0000000000000000000000000000000000000000..45e935a345743d17159480661a373167
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/remote/clients/RemoteQoSScannerClient.java b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/clients/RemoteQoSScannerClient.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..fdf0fc72185a7c7e5a3ec28b8b25652b37b9aef5
+index 0000000000..fdf0fc7218
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/clients/RemoteQoSScannerClient.java
 @@ -0,0 +1,80 @@
@@ -773,7 +773,7 @@ index 0000000000000000000000000000000000000000..fdf0fc72185a7c7e5a3ec28b8b25652b
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/remote/clients/RemoteQoSVerificationClient.java b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/clients/RemoteQoSVerificationClient.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..ffc6cffd23be32b3f9b64bfb56a9d18cb849b9ec
+index 0000000000..ffc6cffd23
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/clients/RemoteQoSVerificationClient.java
 @@ -0,0 +1,114 @@

@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-qos/src/main/resources/org/dcache/qos/qos-adjuster.xml b/modules/dcache-qos/src/main/resources/org/dcache/qos/qos-adjuster.xml
 new file mode 100644
-index 0000000000000000000000000000000000000000..d675331b62cf99ce2d12da101c1934932e2dcba9
+index 0000000000..d675331b62
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/resources/org/dcache/qos/qos-adjuster.xml
 @@ -0,0 +1,120 @@
@@ -126,7 +126,7 @@ index 0000000000000000000000000000000000000000..d675331b62cf99ce2d12da101c193493
 +</beans>
 diff --git a/modules/dcache-qos/src/main/resources/org/dcache/qos/qos-engine.xml b/modules/dcache-qos/src/main/resources/org/dcache/qos/qos-engine.xml
 new file mode 100644
-index 0000000000000000000000000000000000000000..9cd8486a19afa26746712f593cdf330a46f560f6
+index 0000000000..9cd8486a19
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/resources/org/dcache/qos/qos-engine.xml
 @@ -0,0 +1,94 @@
@@ -227,7 +227,7 @@ index 0000000000000000000000000000000000000000..9cd8486a19afa26746712f593cdf330a
 \ No newline at end of file
 diff --git a/modules/dcache-qos/src/main/resources/org/dcache/qos/qos-scanner.xml b/modules/dcache-qos/src/main/resources/org/dcache/qos/qos-scanner.xml
 new file mode 100644
-index 0000000000000000000000000000000000000000..c247d76ecefea67766297c0d43f37a0fbdc27ac4
+index 0000000000..c247d76ece
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/resources/org/dcache/qos/qos-scanner.xml
 @@ -0,0 +1,230 @@
@@ -463,7 +463,7 @@ index 0000000000000000000000000000000000000000..c247d76ecefea67766297c0d43f37a0f
 +</beans>
 diff --git a/modules/dcache-qos/src/main/resources/org/dcache/qos/qos-verifier.xml b/modules/dcache-qos/src/main/resources/org/dcache/qos/qos-verifier.xml
 new file mode 100644
-index 0000000000000000000000000000000000000000..b1aa60c9ff3b1cfc891d7fb4b6a773003020fef8
+index 0000000000..b1aa60c9ff
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/resources/org/dcache/qos/qos-verifier.xml
 @@ -0,0 +1,195 @@
@@ -664,7 +664,7 @@ index 0000000000000000000000000000000000000000..b1aa60c9ff3b1cfc891d7fb4b6a77300
 +</beans>
 diff --git a/modules/dcache-qos/src/main/resources/org/dcache/qos/qos.xml b/modules/dcache-qos/src/main/resources/org/dcache/qos/qos.xml
 new file mode 100644
-index 0000000000000000000000000000000000000000..9d17fcbf00f91611a2e90b486e8761a06794a6c6
+index 0000000000..9d17fcbf00
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/resources/org/dcache/qos/qos.xml
 @@ -0,0 +1,477 @@
@@ -1146,7 +1146,7 @@ index 0000000000000000000000000000000000000000..9d17fcbf00f91611a2e90b486e8761a0
 +    </bean>
 +</beans>
 diff --git a/modules/dcache/src/main/resources/org/dcache/pool/classic/pool.xml b/modules/dcache/src/main/resources/org/dcache/pool/classic/pool.xml
-index 5472efbd31d4287c7a7331616cc45b882d756f6a..12cae4bcdf6cd99d9c3144115ac5f8bf4188f1fe 100644
+index 5472efbd31..12cae4bcdf 100644
 --- a/modules/dcache/src/main/resources/org/dcache/pool/classic/pool.xml
 +++ b/modules/dcache/src/main/resources/org/dcache/pool/classic/pool.xml
 @@ -528,6 +528,28 @@

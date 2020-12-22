@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/local/clients/LocalQoSAdjustmentClient.java b/modules/dcache-qos/src/main/java/org/dcache/qos/local/clients/LocalQoSAdjustmentClient.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..88aceef89042f0211d2d2ba775d6ccd8b3db96a6
+index 0000000000..88aceef890
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/local/clients/LocalQoSAdjustmentClient.java
 @@ -0,0 +1,88 @@
@@ -94,7 +94,7 @@ index 0000000000000000000000000000000000000000..88aceef89042f0211d2d2ba775d6ccd8
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/remote/receivers/QoSAdjustmentReceiver.java b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/receivers/QoSAdjustmentReceiver.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c2b26b3c29381302df0744983c10b78af66a661e
+index 0000000000..c2b26b3c29
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/receivers/QoSAdjustmentReceiver.java
 @@ -0,0 +1,109 @@
@@ -209,7 +209,7 @@ index 0000000000000000000000000000000000000000..c2b26b3c29381302df0744983c10b78a
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/CopyAdjuster.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/CopyAdjuster.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..128234034b8b00ed00d154e6254b999124353150
+index 0000000000..128234034b
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/CopyAdjuster.java
 @@ -0,0 +1,155 @@
@@ -370,7 +370,7 @@ index 0000000000000000000000000000000000000000..128234034b8b00ed00d154e6254b9991
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/FlushAdjuster.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/FlushAdjuster.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..daa1f46d5088bff2534dfb1fb6b15ffa73d43d31
+index 0000000000..daa1f46d50
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/FlushAdjuster.java
 @@ -0,0 +1,90 @@
@@ -466,7 +466,7 @@ index 0000000000000000000000000000000000000000..daa1f46d5088bff2534dfb1fb6b15ffa
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/QoSAdjuster.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/QoSAdjuster.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..cf6186b2fe6aadc7ff5a0c7796e725f3dca97044
+index 0000000000..cf6186b2fe
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/QoSAdjuster.java
 @@ -0,0 +1,106 @@
@@ -578,7 +578,7 @@ index 0000000000000000000000000000000000000000..cf6186b2fe6aadc7ff5a0c7796e725f3
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/QoSAdjusterFactory.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/QoSAdjusterFactory.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..a40082aea54a551898239d2f5f4fe2cda9c2d9a3
+index 0000000000..a40082aea5
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/QoSAdjusterFactory.java
 @@ -0,0 +1,152 @@
@@ -736,7 +736,7 @@ index 0000000000000000000000000000000000000000..a40082aea54a551898239d2f5f4fe2cd
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/ReplicaStateAdjuster.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/ReplicaStateAdjuster.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c158aa1395c6c3b2245429f015482868b9105d59
+index 0000000000..c158aa1395
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/ReplicaStateAdjuster.java
 @@ -0,0 +1,178 @@
@@ -920,7 +920,7 @@ index 0000000000000000000000000000000000000000..c158aa1395c6c3b2245429f015482868
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/StagingAdjuster.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/StagingAdjuster.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..4e34c0e28db5e2644593013cc9958f6d7088c0a2
+index 0000000000..4e34c0e28d
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/adjusters/StagingAdjuster.java
 @@ -0,0 +1,203 @@
@@ -1129,7 +1129,7 @@ index 0000000000000000000000000000000000000000..4e34c0e28db5e2644593013cc9958f6d
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/admin/QoSAdjusterAdmin.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/admin/QoSAdjusterAdmin.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..8fe03cd6a745e1e5140ad72698ffaa69e9cd45a8
+index 0000000000..8fe03cd6a7
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/admin/QoSAdjusterAdmin.java
 @@ -0,0 +1,484 @@
@@ -1619,7 +1619,7 @@ index 0000000000000000000000000000000000000000..8fe03cd6a745e1e5140ad72698ffaa69
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/data/QoSAdjusterTaskMap.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/data/QoSAdjusterTaskMap.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..6502825cbac8ed5397a4b66aa8b9a72b18b2bc95
+index 0000000000..085fabbaba
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/data/QoSAdjusterTaskMap.java
 @@ -0,0 +1,513 @@
@@ -2126,7 +2126,7 @@ index 0000000000000000000000000000000000000000..6502825cbac8ed5397a4b66aa8b9a72b
 +        } else {
 +            LOGGER.debug("TaskMap handleTerminatedTask, removing {}", task.getPnfsId());
 +            index.remove(task.getPnfsId().toString());
-+            history.add(task.toHistoryString(), task.getException() != null);
++            history.add(task.getPnfsId(), task.toHistoryString(), task.getException() != null);
 +            counters.recordTask(task);
 +            taskHandler.notifyAdjustmentCompleted(task);
 +        }
@@ -2139,7 +2139,7 @@ index 0000000000000000000000000000000000000000..6502825cbac8ed5397a4b66aa8b9a72b
 \ No newline at end of file
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/handlers/QoSAdjustTaskCompletionHandler.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/handlers/QoSAdjustTaskCompletionHandler.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..b903d907d8adc213d2e2ed70c93497ae342a3c2f
+index 0000000000..b903d907d8
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/handlers/QoSAdjustTaskCompletionHandler.java
 @@ -0,0 +1,143 @@
@@ -2288,7 +2288,7 @@ index 0000000000000000000000000000000000000000..b903d907d8adc213d2e2ed70c93497ae
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/handlers/QoSAdjusterTaskHandler.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/handlers/QoSAdjusterTaskHandler.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..6a1b570370ae3cce9df90c2950d6b68576d0c0b0
+index 0000000000..6a1b570370
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/handlers/QoSAdjusterTaskHandler.java
 @@ -0,0 +1,152 @@
@@ -2446,7 +2446,7 @@ index 0000000000000000000000000000000000000000..6a1b570370ae3cce9df90c2950d6b685
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/util/DegenerateSelectionStrategy.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/util/DegenerateSelectionStrategy.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..72ebffc726c0b71dc8848fb1b732be6d65fd9dda
+index 0000000000..72ebffc726
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/util/DegenerateSelectionStrategy.java
 @@ -0,0 +1,84 @@
@@ -2536,7 +2536,7 @@ index 0000000000000000000000000000000000000000..72ebffc726c0b71dc8848fb1b732be6d
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/util/QoSAdjusterCounters.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/util/QoSAdjusterCounters.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..3b5dda075d92730f97cf4cef267c584fdf58e2de
+index 0000000000..3b5dda075d
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/util/QoSAdjusterCounters.java
 @@ -0,0 +1,295 @@
@@ -2837,7 +2837,7 @@ index 0000000000000000000000000000000000000000..3b5dda075d92730f97cf4cef267c584f
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/util/QoSAdjusterTask.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/util/QoSAdjusterTask.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..cc5c9be122984cc8515d55ebfb471c4140992789
+index 0000000000..cc5c9be122
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/util/QoSAdjusterTask.java
 @@ -0,0 +1,298 @@
@@ -3141,7 +3141,7 @@ index 0000000000000000000000000000000000000000..cc5c9be122984cc8515d55ebfb471c41
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/util/StaticSinglePoolList.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/util/StaticSinglePoolList.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..2bc6819bc955fdb4300500ca407d87bcd6783096
+index 0000000000..2bc6819bc9
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/adjuster/util/StaticSinglePoolList.java
 @@ -0,0 +1,107 @@

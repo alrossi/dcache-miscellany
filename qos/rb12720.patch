@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/local/clients/LocalQoSScannerClient.java b/modules/dcache-qos/src/main/java/org/dcache/qos/local/clients/LocalQoSScannerClient.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..48537661b20c5b7633d7e7b46ad91ffa45b0f7e0
+index 0000000000..48537661b2
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/local/clients/LocalQoSScannerClient.java
 @@ -0,0 +1,86 @@
@@ -92,7 +92,7 @@ index 0000000000000000000000000000000000000000..48537661b20c5b7633d7e7b46ad91ffa
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/remote/receivers/QoSScannerReceiver.java b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/receivers/QoSScannerReceiver.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..9ec722e010d8183198d9f817756b06ff07b82685
+index 0000000000..9ec722e010
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/receivers/QoSScannerReceiver.java
 @@ -0,0 +1,102 @@
@@ -200,7 +200,7 @@ index 0000000000000000000000000000000000000000..9ec722e010d8183198d9f817756b06ff
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/admin/QoSScannerAdmin.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/admin/QoSScannerAdmin.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..f6395d463cdb819bbc4e18e73df54016002391ac
+index 0000000000..f6395d463c
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/admin/QoSScannerAdmin.java
 @@ -0,0 +1,891 @@
@@ -1097,7 +1097,7 @@ index 0000000000000000000000000000000000000000..f6395d463cdb819bbc4e18e73df54016
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolFilter.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolFilter.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..7515d2e8bc1ccc0ba6635363289cdbfc98781100
+index 0000000000..7515d2e8bc
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolFilter.java
 @@ -0,0 +1,170 @@
@@ -1273,7 +1273,7 @@ index 0000000000000000000000000000000000000000..7515d2e8bc1ccc0ba6635363289cdbfc
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolMatcher.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolMatcher.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..cca3bd26179ec3b6f051c7c58138c92200b20aa2
+index 0000000000..cca3bd2617
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolMatcher.java
 @@ -0,0 +1,87 @@
@@ -1366,7 +1366,7 @@ index 0000000000000000000000000000000000000000..cca3bd26179ec3b6f051c7c58138c922
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolOperation.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolOperation.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..68931ece228278dc73d04b3f67eee9400065078c
+index 0000000000..68931ece22
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolOperation.java
 @@ -0,0 +1,268 @@
@@ -1641,7 +1641,7 @@ index 0000000000000000000000000000000000000000..68931ece228278dc73d04b3f67eee940
 \ No newline at end of file
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolOperationMap.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolOperationMap.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..a36f211abc04d2b6d75c99fab59f1737cb4b5fa0
+index 0000000000..a36f211abc
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolOperationMap.java
 @@ -0,0 +1,1166 @@
@@ -2814,7 +2814,7 @@ index 0000000000000000000000000000000000000000..a36f211abc04d2b6d75c99fab59f1737
 \ No newline at end of file
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolScanSummary.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolScanSummary.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..cc70a5e71dd126e56e26ff75fd90bbb900af5d61
+index 0000000000..cc70a5e71d
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/data/PoolScanSummary.java
 @@ -0,0 +1,127 @@
@@ -2947,7 +2947,7 @@ index 0000000000000000000000000000000000000000..cc70a5e71dd126e56e26ff75fd90bbb9
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/handlers/PoolOpChangeHandler.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/handlers/PoolOpChangeHandler.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..901075021a81e565cfb3625831213957fa1df168
+index 0000000000..901075021a
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/handlers/PoolOpChangeHandler.java
 @@ -0,0 +1,463 @@
@@ -3416,7 +3416,7 @@ index 0000000000000000000000000000000000000000..901075021a81e565cfb3625831213957
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/handlers/PoolOpDiff.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/handlers/PoolOpDiff.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..18155a2a9f5c4c9e20a8a31b7725b464042b63c4
+index 0000000000..18155a2a9f
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/handlers/PoolOpDiff.java
 @@ -0,0 +1,211 @@
@@ -3633,7 +3633,7 @@ index 0000000000000000000000000000000000000000..18155a2a9f5c4c9e20a8a31b7725b464
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/handlers/PoolOperationHandler.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/handlers/PoolOperationHandler.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..2a8676f7d81fd69daa2ab6bccaad4f334d936262
+index 0000000000..2a8676f7d8
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/handlers/PoolOperationHandler.java
 @@ -0,0 +1,162 @@
@@ -3801,7 +3801,7 @@ index 0000000000000000000000000000000000000000..2a8676f7d81fd69daa2ab6bccaad4f33
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/handlers/PoolTaskCompletionHandler.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/handlers/PoolTaskCompletionHandler.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..5b23d52119e19c1477f33ea10e064cf30e6569de
+index 0000000000..5b23d52119
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/handlers/PoolTaskCompletionHandler.java
 @@ -0,0 +1,91 @@
@@ -3898,7 +3898,7 @@ index 0000000000000000000000000000000000000000..5b23d52119e19c1477f33ea10e064cf3
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/namespace/LocalNamespaceAccess.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/namespace/LocalNamespaceAccess.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c9beeb0c7061eea37df2772cc8e4e85f9becfcbe
+index 0000000000..c9beeb0c70
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/namespace/LocalNamespaceAccess.java
 @@ -0,0 +1,321 @@
@@ -4225,7 +4225,7 @@ index 0000000000000000000000000000000000000000..c9beeb0c7061eea37df2772cc8e4e85f
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/namespace/NamespaceAccess.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/namespace/NamespaceAccess.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..5a5de6d81688531ace30968e5ec74d7323994717
+index 0000000000..5a5de6d816
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/namespace/NamespaceAccess.java
 @@ -0,0 +1,105 @@
@@ -4336,7 +4336,7 @@ index 0000000000000000000000000000000000000000..5a5de6d81688531ace30968e5ec74d73
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/util/PoolScanTask.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/util/PoolScanTask.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..2e187da6fa21c019a0ab81fb5f376caae0fb13dd
+index 0000000000..2e187da6fa
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/util/PoolScanTask.java
 @@ -0,0 +1,112 @@
@@ -4454,7 +4454,7 @@ index 0000000000000000000000000000000000000000..2e187da6fa21c019a0ab81fb5f376caa
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/util/QoSScannerCounters.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/util/QoSScannerCounters.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..3b796fa4cd5284b53f744fb695fc551e6b0beed7
+index 0000000000..3b796fa4cd
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/util/QoSScannerCounters.java
 @@ -0,0 +1,239 @@
@@ -4699,7 +4699,7 @@ index 0000000000000000000000000000000000000000..3b796fa4cd5284b53f744fb695fc551e
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/util/ScannerMapInitializer.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/util/ScannerMapInitializer.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..79e8a38a69979fdf1c7715c7b802414736d4c4ec
+index 0000000000..79e8a38a69
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/scanner/util/ScannerMapInitializer.java
 @@ -0,0 +1,136 @@

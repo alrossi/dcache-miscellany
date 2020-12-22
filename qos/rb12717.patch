@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/pool/qos/BrokenFileListener.java b/modules/dcache-qos/src/main/java/org/dcache/pool/qos/BrokenFileListener.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..22295cf90b5b1a4641109e941e1af123ff281bbd
+index 0000000000..22295cf90b
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/pool/qos/BrokenFileListener.java
 @@ -0,0 +1,98 @@
@@ -104,7 +104,7 @@ index 0000000000000000000000000000000000000000..22295cf90b5b1a4641109e941e1af123
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/pool/qos/QoSMessageHandler.java b/modules/dcache-qos/src/main/java/org/dcache/pool/qos/QoSMessageHandler.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..04f6e3b33e22264316b22f783da984e5ad6de50a
+index 0000000000..04f6e3b33e
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/pool/qos/QoSMessageHandler.java
 @@ -0,0 +1,206 @@

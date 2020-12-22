@@ -1,5 +1,5 @@
 diff --git a/packages/fhs/src/main/assembly/filter.properties b/packages/fhs/src/main/assembly/filter.properties
-index 00f5a96f6ac9cb72674c9269a4b966463492c58b..10fb97a03792226c436bcf6e1d24a013a7907997 100644
+index 00f5a96f6a..10fb97a037 100644
 --- a/packages/fhs/src/main/assembly/filter.properties
 +++ b/packages/fhs/src/main/assembly/filter.properties
 @@ -104,3 +104,4 @@ dcache.paths.bulk=/var/lib/dcache/bulk
@@ -8,7 +8,7 @@ index 00f5a96f6ac9cb72674c9269a4b966463492c58b..10fb97a03792226c436bcf6e1d24a013
  dcache.paths.nfs=/var/lib/dcache/nfs
 +dcache.paths.qos=/var/lib/dcache/qos
 diff --git a/packages/fhs/src/main/rpm/dcache-server.spec b/packages/fhs/src/main/rpm/dcache-server.spec
-index 46ef848f43130e26e2f1eea81c23f95dbbb327e4..bbafdd7bfe0206968a069ee8cb06883646aabe46 100644
+index 46ef848f43..bbafdd7bfe 100644
 --- a/packages/fhs/src/main/rpm/dcache-server.spec
 +++ b/packages/fhs/src/main/rpm/dcache-server.spec
 @@ -118,6 +118,7 @@ rm -rf $RPM_BUILD_ROOT
@@ -19,8 +19,24 @@ index 46ef848f43130e26e2f1eea81c23f95dbbb327e4..bbafdd7bfe0206968a069ee8cb068836
  %attr(700,dcache,dcache) /var/lib/dcache/statistics
  %attr(700,dcache,dcache) /var/lib/dcache/nfs
  %attr(750,dcache,dcache) /var/lib/dcache/billing
+diff --git a/packages/pom.xml b/packages/pom.xml
+index a526aa125f..e6d606cd0d 100644
+--- a/packages/pom.xml
++++ b/packages/pom.xml
+@@ -38,6 +38,11 @@
+       <artifactId>dcache-resilience</artifactId>
+       <version>${project.version}</version>
+     </dependency>
++    <dependency>
++      <groupId>org.dcache</groupId>
++      <artifactId>dcache-qos</artifactId>
++      <version>${project.version}</version>
++    </dependency>
+     <dependency>
+         <groupId>org.dcache</groupId>
+         <artifactId>dcache-ftp</artifactId>
 diff --git a/packages/system-test/src/main/assembly/filter.properties b/packages/system-test/src/main/assembly/filter.properties
-index 123eb4dc2b6861867404cfcd2e48205a3f12ae3d..dda8cfe1b4263ae61850700f490b3117b1e87bb4 100644
+index 123eb4dc2b..dda8cfe1b4 100644
 --- a/packages/system-test/src/main/assembly/filter.properties
 +++ b/packages/system-test/src/main/assembly/filter.properties
 @@ -69,3 +69,4 @@ dcache.paths.bulk=${dcache.home}/var/bulk
@@ -29,7 +45,7 @@ index 123eb4dc2b6861867404cfcd2e48205a3f12ae3d..dda8cfe1b4263ae61850700f490b3117
  dcache.paths.nfs=${dcache.home}/var/nfs
 +dcache.paths.qos=${dcache.home}/var/qos
 diff --git a/packages/tar/src/main/assembly/filter.properties b/packages/tar/src/main/assembly/filter.properties
-index b60a31f584cc41f1c525dbae8cbbb286135e0dd0..992d2fbf9fd0c765d9e0b5a8aa71b08d07c20c7e 100644
+index b60a31f584..992d2fbf9f 100644
 --- a/packages/tar/src/main/assembly/filter.properties
 +++ b/packages/tar/src/main/assembly/filter.properties
 @@ -113,3 +113,4 @@ dcache.paths.alarms=${dcache.home}/var/alarms
@@ -38,7 +54,7 @@ index b60a31f584cc41f1c525dbae8cbbb286135e0dd0..992d2fbf9fd0c765d9e0b5a8aa71b08d
  dcache.paths.nfs=${dcache.home}/var/nfs
 +dcache.paths.qos=${dcache.home}/var/qos
 diff --git a/skel/etc/logback.xml b/skel/etc/logback.xml
-index dfb1edd84828c51847062cb4a3acf29ac090ced0..722c1f6ead952abd3cea250632b4717beaef9836 100644
+index dfb1edd848..722c1f6ead 100644
 --- a/skel/etc/logback.xml
 +++ b/skel/etc/logback.xml
 @@ -150,12 +150,11 @@
@@ -99,7 +115,7 @@ index dfb1edd84828c51847062cb4a3acf29ac090ced0..722c1f6ead952abd3cea250632b4717b
        <level>${dcache.log.level.resilience}</level>
      </threshold>
 diff --git a/skel/share/defaults/dcache.properties b/skel/share/defaults/dcache.properties
-index b712b4101c56c3f02e7acdd56d06eefd1c9fe68c..cc0710949bd974152a42d0778af0669c8e4aeb49 100644
+index b712b4101c..cc0710949b 100644
 --- a/skel/share/defaults/dcache.properties
 +++ b/skel/share/defaults/dcache.properties
 @@ -73,6 +73,7 @@
@@ -140,7 +156,7 @@ index b712b4101c56c3f02e7acdd56d06eefd1c9fe68c..cc0710949bd974152a42d0778af0669c
  
  #  -----------------------------------------------------------------------
 diff --git a/skel/share/defaults/paths.properties b/skel/share/defaults/paths.properties
-index ef7d6ab37cf4f85ea9b1b7cb3ff00f5fa516b39e..e4d3a6cb16d61e11a023c1d26fd57a033693bc45 100644
+index ef7d6ab37c..e4d3a6cb16 100644
 --- a/skel/share/defaults/paths.properties
 +++ b/skel/share/defaults/paths.properties
 @@ -50,3 +50,4 @@ dcache.paths.content-types = ${dcache.paths.etc}/content-types.properties
@@ -149,7 +165,7 @@ index ef7d6ab37cf4f85ea9b1b7cb3ff00f5fa516b39e..e4d3a6cb16d61e11a023c1d26fd57a03
  dcache.paths.nfs=@dcache.paths.nfs@
 +dcache.paths.qos=@dcache.paths.qos@
 diff --git a/skel/share/defaults/pool.properties b/skel/share/defaults/pool.properties
-index 7fcca74033f0d0dab4aeb35c0739d81d60b48282..defc42c649da758646afe7f6b285314dbd175525 100644
+index 7fcca74033..defc42c649 100644
 --- a/skel/share/defaults/pool.properties
 +++ b/skel/share/defaults/pool.properties
 @@ -598,7 +598,7 @@ pool.destination.replicate =
@@ -173,7 +189,7 @@ index 7fcca74033f0d0dab4aeb35c0739d81d60b48282..defc42c649da758646afe7f6b285314d
  #
 diff --git a/skel/share/defaults/qos.properties b/skel/share/defaults/qos.properties
 new file mode 100644
-index 0000000000000000000000000000000000000000..3e57f6d9c37630a43d6fdd27b0b4ed5e03ef6fc5
+index 0000000000..3e57f6d9c3
 --- /dev/null
 +++ b/skel/share/defaults/qos.properties
 @@ -0,0 +1,374 @@
@@ -552,7 +568,7 @@ index 0000000000000000000000000000000000000000..3e57f6d9c37630a43d6fdd27b0b4ed5e
 +qos.service.verification.timeout=1
 +(one-of?MILLISECONDS|SECONDS|MINUTES|HOURS|DAYS)qos.service.verification.timeout.unit=MINUTES
 diff --git a/skel/share/services/pool.batch b/skel/share/services/pool.batch
-index b8f5ea27e071f7dfe0447d71054ac42765ea03e4..b62bd5d77671f7474a4ad2fc94a3c8610d630f71 100644
+index b8f5ea27e0..b62bd5d776 100644
 --- a/skel/share/services/pool.batch
 +++ b/skel/share/services/pool.batch
 @@ -75,6 +75,7 @@ check pool.destination.replicate
@@ -565,7 +581,7 @@ index b8f5ea27e071f7dfe0447d71054ac42765ea03e4..b62bd5d77671f7474a4ad2fc94a3c861
  define context PoolDefaults endDefine
 diff --git a/skel/share/services/qos-adjuster.batch b/skel/share/services/qos-adjuster.batch
 new file mode 100644
-index 0000000000000000000000000000000000000000..28d18e17a7244ef2370b13f06b7df2892e8e60f0
+index 0000000000..28d18e17a7
 --- /dev/null
 +++ b/skel/share/services/qos-adjuster.batch
 @@ -0,0 +1,26 @@
@@ -597,7 +613,7 @@ index 0000000000000000000000000000000000000000..28d18e17a7244ef2370b13f06b7df289
 +        -consume=${qos.adjuster.cell.consume}"
 diff --git a/skel/share/services/qos-engine.batch b/skel/share/services/qos-engine.batch
 new file mode 100644
-index 0000000000000000000000000000000000000000..62608ba81a5085b155f7924b86235600a23be96d
+index 0000000000..62608ba81a
 --- /dev/null
 +++ b/skel/share/services/qos-engine.batch
 @@ -0,0 +1,26 @@
@@ -630,7 +646,7 @@ index 0000000000000000000000000000000000000000..62608ba81a5085b155f7924b86235600
 \ No newline at end of file
 diff --git a/skel/share/services/qos-scanner.batch b/skel/share/services/qos-scanner.batch
 new file mode 100644
-index 0000000000000000000000000000000000000000..548073563c84f113137454980a3ac0bf88169693
+index 0000000000..548073563c
 --- /dev/null
 +++ b/skel/share/services/qos-scanner.batch
 @@ -0,0 +1,40 @@
@@ -677,7 +693,7 @@ index 0000000000000000000000000000000000000000..548073563c84f113137454980a3ac0bf
 \ No newline at end of file
 diff --git a/skel/share/services/qos-verifier.batch b/skel/share/services/qos-verifier.batch
 new file mode 100644
-index 0000000000000000000000000000000000000000..91426c146fd87597bd79690a3c76b6933735ef72
+index 0000000000..91426c146f
 --- /dev/null
 +++ b/skel/share/services/qos-verifier.batch
 @@ -0,0 +1,46 @@
@@ -729,7 +745,7 @@ index 0000000000000000000000000000000000000000..91426c146fd87597bd79690a3c76b693
 +        -consume=${qos.verifier.cell.consume}"
 diff --git a/skel/share/services/qos.batch b/skel/share/services/qos.batch
 new file mode 100644
-index 0000000000000000000000000000000000000000..b0f9e1be81f52a65ce311fa2a36667795d0376fc
+index 0000000000..b0f9e1be81
 --- /dev/null
 +++ b/skel/share/services/qos.batch
 @@ -0,0 +1,80 @@
@@ -815,4 +831,4 @@ index 0000000000000000000000000000000000000000..b0f9e1be81f52a65ce311fa2a3666779
 +        -consume=${qos.cell.consume}"
 diff --git a/skel/var/qos/.empty-dir b/skel/var/qos/.empty-dir
 new file mode 100644
-index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+index 0000000000..e69de29bb2

@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/local/clients/LocalQoSRequirementsClient.java b/modules/dcache-qos/src/main/java/org/dcache/qos/local/clients/LocalQoSRequirementsClient.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..d8b69b0069f215b2bbbe2d536b3e1c5d7bdc9c15
+index 0000000000..d8b69b0069
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/local/clients/LocalQoSRequirementsClient.java
 @@ -0,0 +1,96 @@
@@ -102,7 +102,7 @@ index 0000000000000000000000000000000000000000..d8b69b0069f215b2bbbe2d536b3e1c5d
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/remote/receivers/QoSRequirementsReceiver.java b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/receivers/QoSRequirementsReceiver.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c8e7a8f78f7c9ab2397e5cdc267a8f291b913018
+index 0000000000..c8e7a8f78f
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/remote/receivers/QoSRequirementsReceiver.java
 @@ -0,0 +1,185 @@
@@ -293,7 +293,7 @@ index 0000000000000000000000000000000000000000..c8e7a8f78f7c9ab2397e5cdc267a8f29
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/admin/QoSEngineAdmin.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/admin/QoSEngineAdmin.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..017398d70f7c0680af2139c12fc7a39eeae2328d
+index 0000000000..017398d70f
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/admin/QoSEngineAdmin.java
 @@ -0,0 +1,177 @@
@@ -476,7 +476,7 @@ index 0000000000000000000000000000000000000000..017398d70f7c0680af2139c12fc7a39e
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/handler/FileQoSStatusHandler.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/handler/FileQoSStatusHandler.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..8500de52a66baa159cc0ed37b32faffb4c8db6c6
+index 0000000000..8500de52a6
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/handler/FileQoSStatusHandler.java
 @@ -0,0 +1,247 @@
@@ -729,7 +729,7 @@ index 0000000000000000000000000000000000000000..8500de52a66baa159cc0ed37b32faffb
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/provider/ALRPStorageUnitQoSProvider.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/provider/ALRPStorageUnitQoSProvider.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..4e8d63b8479d1453a8728700f3bf411683a152b4
+index 0000000000..4e8d63b847
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/provider/ALRPStorageUnitQoSProvider.java
 @@ -0,0 +1,342 @@
@@ -1077,7 +1077,7 @@ index 0000000000000000000000000000000000000000..4e8d63b8479d1453a8728700f3bf4116
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/provider/QoSRequirementsProvider.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/provider/QoSRequirementsProvider.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..dd0e9b9dbd2286218c5633b74682443c107b7f56
+index 0000000000..dd0e9b9dbd
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/provider/QoSRequirementsProvider.java
 @@ -0,0 +1,84 @@
@@ -1167,7 +1167,7 @@ index 0000000000000000000000000000000000000000..dd0e9b9dbd2286218c5633b74682443c
 +}
 diff --git a/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/util/QoSEngineCounters.java b/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/util/QoSEngineCounters.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..849dd983f82f69d23718b9adf8d55833a9dff575
+index 0000000000..849dd983f8
 --- /dev/null
 +++ b/modules/dcache-qos/src/main/java/org/dcache/qos/services/engine/util/QoSEngineCounters.java
 @@ -0,0 +1,175 @@

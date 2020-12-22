@@ -1,6 +1,6 @@
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/QoSEngineAware.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/QoSEngineAware.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..678637c70efb0275c5484e3af6e43f6e7c7f0eae
+index 0000000000..678637c70e
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/QoSEngineAware.java
 @@ -0,0 +1,86 @@
@@ -91,7 +91,7 @@ index 0000000000000000000000000000000000000000..678637c70efb0275c5484e3af6e43f6e
 +    void relay(QoSTransitionCompletedMessage message);
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobFactory.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobFactory.java
-index 09902cf4186449d26438eb6b9e2eba957bf468ee..30918626fdf60d4b7421830a53fb9a7988614688 100644
+index 09902cf418..30918626fd 100644
 --- a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobFactory.java
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/job/BulkJobFactory.java
 @@ -60,6 +60,8 @@ documents or software obtained from this server.
@@ -166,7 +166,7 @@ index 09902cf4186449d26438eb6b9e2eba957bf468ee..30918626fdf60d4b7421830a53fb9a79
      }
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qosengine/UpdateQoSJob.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qosengine/UpdateQoSJob.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..662cd1c18bcc05cd2d36d271794ee80feeb355bc
+index 0000000000..662cd1c18b
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qosengine/UpdateQoSJob.java
 @@ -0,0 +1,178 @@
@@ -350,7 +350,7 @@ index 0000000000000000000000000000000000000000..662cd1c18bcc05cd2d36d271794ee80f
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qosengine/UpdateQoSJobProvider.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qosengine/UpdateQoSJobProvider.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..9c2a86b48f939ffac0f6e6cf5e2da89fce06a485
+index 0000000000..9c2a86b48f
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/plugins/qosengine/UpdateQoSJobProvider.java
 @@ -0,0 +1,101 @@
@@ -457,7 +457,7 @@ index 0000000000000000000000000000000000000000..9c2a86b48f939ffac0f6e6cf5e2da89f
 +}
 diff --git a/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/util/QoSResponseReceiver.java b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/util/QoSResponseReceiver.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..1a43caa24caa1c174df7e447f88969b2fd9fe471
+index 0000000000..1a43caa24c
 --- /dev/null
 +++ b/modules/dcache-bulk/src/main/java/org/dcache/services/bulk/util/QoSResponseReceiver.java
 @@ -0,0 +1,83 @@
@@ -545,7 +545,7 @@ index 0000000000000000000000000000000000000000..1a43caa24caa1c174df7e447f88969b2
 +  }
 +}
 diff --git a/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider b/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
-index cc7a1cf5f039ed59239b83b22c57d9e96449150c..cb5c2211162c00a243a096140634e56087bb17f2 100644
+index cc7a1cf5f0..cb5c221116 100644
 --- a/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
 +++ b/modules/dcache-bulk/src/main/resources/META-INF/services/org.dcache.services.bulk.job.BulkJobProvider
 @@ -2,5 +2,5 @@ org.dcache.services.bulk.plugins.BFirstWalkJobProvider
@@ -556,7 +556,7 @@ index cc7a1cf5f039ed59239b83b22c57d9e96449150c..cb5c2211162c00a243a096140634e560
 +org.dcache.services.bulk.plugins.qosengine.UpdateQoSJobProvider
  org.dcache.services.bulk.plugins.delete.DeleteFileJobProvider
 diff --git a/modules/dcache-bulk/src/main/resources/org/dcache/services/bulk/bulk.xml b/modules/dcache-bulk/src/main/resources/org/dcache/services/bulk/bulk.xml
-index 419588f0c366eed43c33c00a757a64ad4a0b713b..98923d07f768ea88c61ba4e37699331819856226 100644
+index 419588f0c3..98923d07f7 100644
 --- a/modules/dcache-bulk/src/main/resources/org/dcache/services/bulk/bulk.xml
 +++ b/modules/dcache-bulk/src/main/resources/org/dcache/services/bulk/bulk.xml
 @@ -38,6 +38,13 @@
@@ -594,7 +594,7 @@ index 419588f0c366eed43c33c00a757a64ad4a0b713b..98923d07f768ea88c61ba4e376993318
  
    <bean id="statistics" class="org.dcache.services.bulk.util.BulkServiceStatistics">
 diff --git a/skel/share/defaults/bulk.properties b/skel/share/defaults/bulk.properties
-index 3f395f106444023bd60b0c945aa96d6e0bff22e9..06aca1a6be5d1a880d4427cbfd976578c319b3f8 100644
+index 3f395f1064..7e01aa76c4 100644
 --- a/skel/share/defaults/bulk.properties
 +++ b/skel/share/defaults/bulk.properties
 @@ -8,7 +8,7 @@
@@ -612,7 +612,7 @@ index 3f395f106444023bd60b0c945aa96d6e0bff22e9..06aca1a6be5d1a880d4427cbfd976578
  
 +# ---- Endpoint for contacting pool manager.
 +#
-+bulk.service.qos=${dcache.service.qos-engine}
++bulk.service.qos=${dcache.service.qos}
 +
 +# ---- How long to wait for a response from the pool manager.
 +#
@@ -631,7 +631,7 @@ index 3f395f106444023bd60b0c945aa96d6e0bff22e9..06aca1a6be5d1a880d4427cbfd976578
 +#
 +bulk.qos-transition.topic=${dcache.qos-transition.topic}
 diff --git a/skel/share/services/bulk.batch b/skel/share/services/bulk.batch
-index 8e8e9fe533b83da41b6ff9f1bccc0e5115297d20..b295ea58b083898f60456ac3648b337d121f4cf6 100644
+index 8e8e9fe533..b295ea58b0 100644
 --- a/skel/share/services/bulk.batch
 +++ b/skel/share/services/bulk.batch
 @@ -27,6 +27,9 @@ check -strong bulk.service.pinmanager.timeout.unit

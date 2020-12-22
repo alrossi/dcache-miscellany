@@ -1,6 +1,6 @@
 diff --git a/docs/TheBook/src/main/markdown/config-qos-engine.md b/docs/TheBook/src/main/markdown/config-qos-engine.md
 new file mode 100644
-index 0000000000000000000000000000000000000000..8aeeed8b6f4874ce392651aed69b503c5d54a0ed
+index 0000000000..8aeeed8b6f
 --- /dev/null
 +++ b/docs/TheBook/src/main/markdown/config-qos-engine.md
 @@ -0,0 +1,1268 @@
@@ -1274,7 +1274,7 @@ index 0000000000000000000000000000000000000000..8aeeed8b6f4874ce392651aed69b503c
 +is making any progress by itself.
 \ No newline at end of file
 diff --git a/docs/TheBook/src/main/markdown/config.md b/docs/TheBook/src/main/markdown/config.md
-index 9f09396f87ffccbd68c9815d65c1c677f72a4400..c4062bad1937f741c592d4c6244b3485b7d8881c 100644
+index 9f09396f87..c4062bad19 100644
 --- a/docs/TheBook/src/main/markdown/config.md
 +++ b/docs/TheBook/src/main/markdown/config.md
 @@ -168,6 +168,8 @@ This part contains descriptions of the components of dCache, their role, functio
@@ -1287,7 +1287,7 @@ index 9f09396f87ffccbd68c9815d65c1c677f72a4400..c4062bad1937f741c592d4c6244b3485
      - [Introduction](config-acl.md#introduction)
      - [Configuring ACL support](config-acl.md#configuring-acl-support)
 diff --git a/docs/TheBook/src/main/markdown/index.md b/docs/TheBook/src/main/markdown/index.md
-index a23c5009aa1c31317a29290ab8f430cfb70f5406..0562b223d4b2825fb728e893efde0593e5a44bd8 100644
+index a23c5009aa..0562b223d4 100644
 --- a/docs/TheBook/src/main/markdown/index.md
 +++ b/docs/TheBook/src/main/markdown/index.md
 @@ -55,6 +55,8 @@ dCache Book
@@ -1300,7 +1300,7 @@ index a23c5009aa1c31317a29290ab8f430cfb70f5406..0562b223d4b2825fb728e893efde0593
  
          -   spacemanager service
 diff --git a/docs/TheBook/src/main/markdown/rf-glossary.md b/docs/TheBook/src/main/markdown/rf-glossary.md
-index ff9e35f87475fdb9dcc1ca06f8e4de5b9dd84992..17cee2fca6588c58a8b5d11cae10957d2c05300b 100644
+index ff9e35f874..17cee2fca6 100644
 --- a/docs/TheBook/src/main/markdown/rf-glossary.md
 +++ b/docs/TheBook/src/main/markdown/rf-glossary.md
 @@ -185,7 +185,7 @@ A cached [replica](#replica) is a replica that should not be stored on tape.
