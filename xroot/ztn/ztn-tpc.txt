@@ -1,0 +1,94 @@
+1096:  volatile
+1097:  tape
+
+DCACHE READ
+
+xrdcp5x -f 
+xroot://fndcatemp2.fnal.gov:1096//pnfs/fs/usr/test/arossi/volatile/data_100mb?authz=Bearer%20  
+/dev/null
+
+DCACHE-DCACHE TPC
+
+xrdcp5x --tpc delegate only
+xroot://fndcatemp2.fnal.gov:1096//pnfs/fs/usr/test/arossi/volatile/data_100mb?authz=Bearer%20 
+xroot://fndcatemp2.fnal.gov:1097//pnfs/fs/usr/test/arossi/tape/data-`date | tr ' ' '.'`?authz=Bearer%20
+
+
+DCACHE-XRD TPC --- DOES NOT WORK BECAUSE OF THE RENDEZ-VOUS PROBLEM
+
+xrdcp5x --tpc delegate only  
+xroot://fndcatemp2.fnal.gov:1096//pnfs/fs/usr/test/arossi/volatile/data_100mb?authz0
+xroot://fndcatemp1.fnal.gov:1094//data/xrootdfs/data-`date | tr ' ' '.'`?authz=Bearer%20
+
+
+XRD-DCACHE TPC
+
+xrdcp5x --tpc delegate only 
+xroot://fndcatemp1.fnal.gov:1094//data/xrootdfs/data_100mb?authz=Bearer%20
+xroot://fndcatemp2.fnal.gov:1096//pnfs/fs/usr/test/arossi/volatile/data-`date | tr ' ' '.'`?authz=Bearer%20
+
+
+===============
+xrdcp5x --tpc delegate only 
+xroot://griddev08.slac.stanford.edu:1094//tmp/albert.file?authz=Bearer%20
+xroot://fndcatemp2.fnal.gov:1096//pnfs/fs/usr/test/arossi/volatile/data-`date | tr ' ' '.'`?authz=Bearer%20
+===============
+
+"scope": "read:/pnfs/fs/usr/test/arossi write:/pnfs/fs/usr/test/arossi"
+"scope": "read:/pnfs/fs/usr/test/arossi/volatile write:/pnfs/fs/usr/test/arossi/volatile"
+"scope": "read:/pnfs/fs/usr/test/arossi/tape write:/pnfs/fs/usr/test/arossi/tape"
+"scope": "read:/ write:/"
+
+ZTN
+{
+  "ver": "scitoken:2.0",
+  "iss": "https://demo.scitokens.org",
+  "aud": "https://demo.scitokens.org"
+}
+
+eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImtleS1yczI1NiJ9.eyJ2ZXIiOiJzY2l0b2tlbjoyLjAiLCJpc3MiOiJodHRwczovL2RlbW8uc2NpdG9rZW5zLm9yZyIsImF1ZCI6Imh0dHBzOi8vZGVtby5zY2l0b2tlbnMub3JnIiwiZXhwIjoxNjE4MTk5MzQ2LCJpYXQiOjE2MTcxOTg3NDksIm5iZiI6MTYxNzE5ODc0OSwianRpIjoiZTBkYTdkYTItYjY4My00ZTgxLWEwNGEtYTY3MmE1ZDhlMGM4In0.tfM5Vm3JxHmW3YMKzbAWR2nq42-6fm5Gm-9RR1bouDRiOyGRZp7N0-otyGI3u3zzqgtEl30nTYtRtSAysD2PQauhOs4e1u1zzIE6yvt1qHLv6_DWEbm1Ezw45u4Vi2ps45v7oaSA--DZh_w5S-7m9CY3ZP0Q7W8ev-j2X323Uz58THj3ilpkwLWVl7a672qPG4OVbZDxRU4RAibGyqUUKhjH0Yo9ddZlUtuIiovlKJ13C9Jnc8TjPrckfe5Pq2HDKWK-uTidPS3mQRC8JryBgDWPIOrp_mMfEbc7w90P2tsLLQylXtdRSaZj8OMiIGZxmb_5Sn1UNZzIU5q5O-BSPg
+
+DCACHE
+{
+  "ver": "scitokens:2.0",
+  "sub": "arossi",
+  "aud": "https://demo.scitokens.org",
+  "iss": "https://demo.scitokens.org",
+  "scope": "read:/pnfs/fs/usr/test/arossi write:/pnfs/fs/usr/test/arossi"
+}
+
+eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImtleS1yczI1NiJ9.eyJ2ZXIiOiJzY2l0b2tlbnM6Mi4wIiwic3ViIjoiYXJvc3NpIiwiYXVkIjoiaHR0cHM6Ly9kZW1vLnNjaXRva2Vucy5vcmciLCJpc3MiOiJodHRwczovL2RlbW8uc2NpdG9rZW5zLm9yZyIsInNjb3BlIjoicmVhZDovcG5mcy9mcy91c3IvdGVzdC9hcm9zc2kgd3JpdGU6L3BuZnMvZnMvdXNyL3Rlc3QvYXJvc3NpIiwiZXhwIjoxNjE4MTk5Mjc5LCJpYXQiOjE2MTcxOTg2ODUsIm5iZiI6MTYxNzE5ODY4NSwianRpIjoiYTRmMzFkNjUtOGRhMy00NmFmLTg2YzYtMTM4YzcyM2UxMTQ3In0.kCtfALykcf5QQ0_fFJnlR5GCawB38hTpXAf_c_vrMzGVrLeHAfOSpUwrE4F3oq-a-wf1PSOS5qC57bNuXy9ZkS3B-afwrkIZ5V6b-uhgpIjCPDjjLtQJpCoC4MYwkmXDNpFUUCBqnauORkNsMmyhxh3EAnZpKLGGA8V7BMOfs9d1yMhryr4kAhBVEF3bzbun4ew7cPoe7oh-I039OUUAZNHXtCkLfKNUgx8O9amUO9ZRJETygRaqdacYQMRSZ1aayPO3Uj5Y1D2dXyuRS8axaJuQ-I2tEyMguToOT_Ewn57AZ50BoA7XRCTnCUvo4-9olQyYuH-l7eNHusDCgfXgYQ
+
+XROOTD
+
+{
+  "ver": "scitokens:2.0",
+  "sub": "dcache",
+  "aud": "https://osg.slac.org",
+  "iss": "https://demo.scitokens.org",
+  "scope": "read:/ write:/"
+}
+
+eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImtleS1yczI1NiJ9.eyJ2ZXIiOiJzY2l0b2tlbnM6Mi4wIiwic3ViIjoiZGNhY2hlIiwiYXVkIjoiaHR0cHM6Ly9vc2cuc2xhYy5vcmciLCJpc3MiOiJodHRwczovL2RlbW8uc2NpdG9rZW5zLm9yZyIsInNjb3BlIjoicmVhZDovIHdyaXRlOi8iLCJleHAiOjE2MTgxOTkyOTksImlhdCI6MTYxNzE5ODcwNCwibmJmIjoxNjE3MTk4NzA0LCJqdGkiOiIyMDI4YmQ5NC0zNDYyLTRlMDktYTBkMy1jMDVjMTI3ZGI0MTYifQ.fLTbbl_6wYzAmilzLm1DrVE5nzc085hMLZi6rxwylMVQpN6tG-dugabCDcXqkDAKFqmRd39mKdga0hhuh2ez3QRsc-TrlH9loZ2_948Zv43OUtj4wx6Fl60hTJ0KzNfxPeQLCP3NGmZZpIsQ1XGVgWjKz71wWvqZoUIw9eydRxI4ZTD16hCtP2SVfZFrLUA6FMgcIyM9niGh5mdS63dQGph4gY0LygMd9N1B7bEXxDpdWMoGSxIpgHM3V1Gphp6UTcg-ISaXB7zXYg4Dit9ss1E9FnGAOKHU0bl7Qk8r8pRTLAnk00OmQ7CRrJc7Psj8oFK0FLbH3pDbCvwlrcTZ_g
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+

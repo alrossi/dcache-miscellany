@@ -1,0 +1,13 @@
+ImportString( "MainServerURL",    "XRDTEST_MAINSERVERURL" );
+  ImportString( "DiskServerURL",    "XRDTEST_DISKSERVERURL" );
+  ImportString( "Manager1URL",      "XRDTEST_MANAGER1URL" );
+  ImportString( "Manager2URL",      "XRDTEST_MANAGER2URL" );
+  ImportString( "DataPath",         "XRDTEST_DATAPATH" );
+  ImportString( "LocalFile",        "XRDTEST_LOCALFILE" );
+  ImportString( "RemoteFile",       "XRDTEST_REMOTEFILE" );
+  ImportString( "MultiIPServerURL", "XRDTEST_MULTIIPSERVERURL" );
+
+
+export XRDTEST_MAINSERVERURL=xroot://fndcatemp2.fnal.gov:1094
+export XRDTEST_DATAPATH=/pnfs/fs/usr
+

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+
+function submit () {
+	USER="--user test$2$3:dickerelch$2$3"
+
+	curl -k -v $USER -X POST "https://fndcatemp2.fnal.gov:3880/api/v1/bulk-requests" -H "accept: application/json" -H "content-type: application/json" -d @filesets/$1$2$3.json
+}
+
+
+for job in `seq 0 9`
+do
+	submit $job $1 $2
+	sleep 5
+done
+
+

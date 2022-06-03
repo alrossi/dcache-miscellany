@@ -1,0 +1,17 @@
+xrootd.tls.handler-factory.class=
+
+xrootd.plugin!scitokens.authz-factory.class=
+
+xrootd.plugin!ztn.authn-handler.class=
+xrootd.plugin!ztn.max-token-len-in-bytes=4096
+xrootd.plugin!ztn.alt-token-locs=
+xrootd.plugin!ztn.token-flags=
+
+----------------------------------------
+test the protocol one first with GSI
+
+fix/master/xroot-4.1.0  <= fix/master/extract-protocol-method
+
+1.  feature/master/move-tls <= fix/master/integrate-tls-from-dcache
+2.  feature/master/move-scitokens <= fix/master/integrate-scitokens-from-dcache
+3.  feature/master/ztn-authn <= fix/master/support-tls-check,fix/master/extract-protocol-method,feature/master/authn-ztn

@@ -1,0 +1,289 @@
+[2021-11-18 13:14:24.481456 -0600][Debug  ][Utility           ] Initializing xrootd client version: v20211116-cd1c351
+[2021-11-18 13:14:24.482048 -0600][Debug  ][Utility           ] Unable to process user config file: [ERROR] OS Error: no such file or directory
+[2021-11-18 13:14:24.482367 -0600][Debug  ][PlugInMgr         ] Initializing plug-in manager...
+[2021-11-18 13:14:24.482405 -0600][Debug  ][PlugInMgr         ] No default plug-in, loading plug-in configs...
+[2021-11-18 13:14:24.482430 -0600][Debug  ][PlugInMgr         ] Processing plug-in definitions in /etc/xrootd/client.plugins.d...
+[2021-11-18 13:14:24.482597 -0600][Debug  ][PlugInMgr         ] Processing plug-in definitions in /home/arossi/.xrootd/client.plugins.d...
+[2021-11-18 13:14:24.482636 -0600][Debug  ][PlugInMgr         ] Unable to process directory /home/arossi/.xrootd/client.plugins.d: [ERROR] OS Error: no such file or directory
+You have selected: 
+
+Selected tests/
+  Selected tests/FileTest::VectorReadTest
+
+Running:
+
+.[2021-11-18 13:14:24.485910 -0600][Info   ][Utility           ] Env: Importing from shell XRDTEST_MAINSERVERURL=xroots://fndcatemp2.fnal.gov:1094 as mainserverurl
+[2021-11-18 13:14:24.485949 -0600][Info   ][Utility           ] Env: Importing from shell XRDTEST_DATAPATH=/pnfs/fs/usr/test/arossi/volatile as datapath
+[2021-11-18 13:14:24.486071 -0600][Dump   ][Utility           ] URL: xroots://fndcatemp2.fnal.gov:1094
+[2021-11-18 13:14:24.486071 -0600][Dump   ][Utility           ] Protocol:  xroots
+[2021-11-18 13:14:24.486071 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:24.486071 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:24.486071 -0600][Dump   ][Utility           ] Host Name: fndcatemp2.fnal.gov
+[2021-11-18 13:14:24.486071 -0600][Dump   ][Utility           ] Port:      1094
+[2021-11-18 13:14:24.486071 -0600][Dump   ][Utility           ] Path:      
+[2021-11-18 13:14:24.486182 -0600][Debug  ][Utility           ] Env: trying to get a non-existent string entry: pollerpreference
+[2021-11-18 13:14:24.486219 -0600][Debug  ][Poller            ] Available pollers: built-in
+[2021-11-18 13:14:24.486236 -0600][Debug  ][Poller            ] Attempting to create a poller according to preference: built-in
+[2021-11-18 13:14:24.486252 -0600][Debug  ][Poller            ] Creating poller: built-in
+[2021-11-18 13:14:24.486280 -0600][Debug  ][Poller            ] Creating and starting the built-in poller...
+[2021-11-18 13:14:24.486545 -0600][Debug  ][Poller            ] Using 1 poller threads
+[2021-11-18 13:14:24.486613 -0600][Debug  ][TaskMgr           ] Starting the task manager...
+[2021-11-18 13:14:24.486685 -0600][Debug  ][TaskMgr           ] Task manager started
+[2021-11-18 13:14:24.486710 -0600][Debug  ][JobMgr            ] Starting the job manager...
+[2021-11-18 13:14:24.486871 -0600][Debug  ][JobMgr            ] Job manager started, 3 workers
+[2021-11-18 13:14:24.486913 -0600][Debug  ][TaskMgr           ] Registering task: "FileTimer task" to be run at: [2021-11-18 13:14:24 -0600]
+[2021-11-18 13:14:24.486985 -0600][Dump   ][Utility           ] URL: xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat
+[2021-11-18 13:14:24.486985 -0600][Dump   ][Utility           ] Protocol:  xroots
+[2021-11-18 13:14:24.486985 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:24.486985 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:24.486985 -0600][Dump   ][Utility           ] Host Name: fndcatemp2.fnal.gov
+[2021-11-18 13:14:24.486985 -0600][Dump   ][Utility           ] Port:      1094
+[2021-11-18 13:14:24.486985 -0600][Dump   ][Utility           ] Path:      /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat
+[2021-11-18 13:14:24.487039 -0600][Dump   ][Utility           ] URL: xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat
+[2021-11-18 13:14:24.487039 -0600][Dump   ][Utility           ] Protocol:  xroots
+[2021-11-18 13:14:24.487039 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:24.487039 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:24.487039 -0600][Dump   ][Utility           ] Host Name: fndcatemp2.fnal.gov
+[2021-11-18 13:14:24.487039 -0600][Dump   ][Utility           ] Port:      1094
+[2021-11-18 13:14:24.487039 -0600][Dump   ][Utility           ] Path:      /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat
+[2021-11-18 13:14:24.487115 -0600][Dump   ][Utility           ] URL: xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat
+[2021-11-18 13:14:24.487115 -0600][Dump   ][Utility           ] Protocol:  xroots
+[2021-11-18 13:14:24.487115 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:24.487115 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:24.487115 -0600][Dump   ][Utility           ] Host Name: fndcatemp2.fnal.gov
+[2021-11-18 13:14:24.487115 -0600][Dump   ][Utility           ] Port:      1094
+[2021-11-18 13:14:24.487115 -0600][Dump   ][Utility           ] Path:      /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat
+[2021-11-18 13:14:24.487260 -0600][Debug  ][File              ] [0x1bba610@xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?xrdcl.requuid=1b2bc21b-9756-4266-8d09-3e908993bae2] Sending an open command
+[2021-11-18 13:14:24.487354 -0600][Dump   ][XRootD            ] [fndcatemp2.fnal.gov:1094] Sending message kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat, mode: 00, flags: kXR_open_read kXR_async kXR_retstat )
+[2021-11-18 13:14:24.487416 -0600][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:1094] MsgHandler created: 0x1bbffa0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) ).
+[2021-11-18 13:14:24.487504 -0600][Dump   ][Utility           ] URL: fndcatemp2.fnal.gov:1094
+[2021-11-18 13:14:24.487504 -0600][Dump   ][Utility           ] Protocol:  root
+[2021-11-18 13:14:24.487504 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:24.487504 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:24.487504 -0600][Dump   ][Utility           ] Host Name: fndcatemp2.fnal.gov
+[2021-11-18 13:14:24.487504 -0600][Dump   ][Utility           ] Port:      1094
+[2021-11-18 13:14:24.487504 -0600][Dump   ][Utility           ] Path:      
+[2021-11-18 13:14:24.487560 -0600][Dump   ][Utility           ] URL: xroots://fndcatemp2.fnal.gov:1094
+[2021-11-18 13:14:24.487560 -0600][Dump   ][Utility           ] Protocol:  xroots
+[2021-11-18 13:14:24.487560 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:24.487560 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:24.487560 -0600][Dump   ][Utility           ] Host Name: fndcatemp2.fnal.gov
+[2021-11-18 13:14:24.487560 -0600][Dump   ][Utility           ] Port:      1094
+[2021-11-18 13:14:24.487560 -0600][Dump   ][Utility           ] Path:      
+[2021-11-18 13:14:24.487598 -0600][Debug  ][PostMaster        ] Creating new channel to: xroots://fndcatemp2.fnal.gov:1094
+[2021-11-18 13:14:24.487660 -0600][Debug  ][PostMaster        ] [fndcatemp2.fnal.gov:1094] Stream parameters: Network Stack: IPAuto, Connection Window: 120, ConnectionRetry: 5, Stream Error Window: 1800
+[2021-11-18 13:14:24.487708 -0600][Debug  ][TaskMgr           ] Registering task: "TickGeneratorTask for: xroots://fndcatemp2.fnal.gov:1094" to be run at: [2021-11-18 13:14:39 -0600]
+[2021-11-18 13:14:24.487744 -0600][Dump   ][PostMaster        ] [fndcatemp2.fnal.gov:1094] Sending message kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) (0x1bbed30) through substream 0 expecting answer at 0
+[2021-11-18 13:14:24.489080 -0600][Debug  ][PostMaster        ] [fndcatemp2.fnal.gov:1094] Found 1 address(es): [::ffff:131.225.240.93]:1094
+[2021-11-18 13:14:24.489217 -0600][Debug  ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Attempting connection to [::ffff:131.225.240.93]:1094
+[2021-11-18 13:14:24.489343 -0600][Debug  ][Poller            ] Adding socket 0x1bc0d40 to the poller
+[2021-11-18 13:14:24.489667 -0600][Debug  ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Async connection call returned
+[2021-11-18 13:14:24.489755 -0600][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Sending out the initial hand shake + kXR_protocol
+[2021-11-18 13:14:24.489915 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Wrote a message:  (0xc8000950), 44 bytes
+[2021-11-18 13:14:24.615041 -0600][Dump   ][XRootDTransport   ] [msg: 0xc8000950] Expecting 8 bytes of message body
+[2021-11-18 13:14:24.615091 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received message header, size: 8
+[2021-11-18 13:14:24.615124 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received a message of 16 bytes
+[2021-11-18 13:14:24.615159 -0600][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Got the server hand shake response (type: manager [], protocol version 500)
+[2021-11-18 13:14:24.657603 -0600][Dump   ][XRootDTransport   ] [msg: 0xc8000950] Expecting 8 bytes of message body
+[2021-11-18 13:14:24.657657 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received message header, size: 8
+[2021-11-18 13:14:24.657682 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received a message of 16 bytes
+[2021-11-18 13:14:24.657726 -0600][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] kXR_protocol successful (type: manager [], protocol version 500)
+[2021-11-18 13:14:24.658051 -0600][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Sending out kXR_login request, username: arossi, cgi: ?xrd.cc=us&xrd.tz=-6&xrd.appname=test-runner&xrd.info=&xrd.hostname=fndcatemp1.fnal.gov&xrd.rn=v20211116-cd1c351, dual-stack: false, private IPv4: false, private IPv6: false
+[2021-11-18 13:14:24.658095 -0600][Debug  ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] TLS hand-shake exchange.
+[2021-11-18 13:14:24.679609 -0600][Debug  ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] TLS hand-shake exchange.
+[2021-11-18 13:14:24.689886 -0600][Debug  ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] TLS hand-shake exchange.
+[2021-11-18 13:14:24.690119 -0600][Info   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] TLS hand-shake done.
+[2021-11-18 13:14:24.690223 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Wrote a message:  (0xc8000990), 136 bytes
+[2021-11-18 13:14:24.805564 -0600][Dump   ][XRootDTransport   ] [msg: 0xc8000990] Expecting 49 bytes of message body
+[2021-11-18 13:14:24.805610 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received message header, size: 8
+[2021-11-18 13:14:24.805632 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received a message of 57 bytes
+[2021-11-18 13:14:24.805659 -0600][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Logged in, session: 294b64d3f7700d36439ab45b1d52057d
+[2021-11-18 13:14:24.805675 -0600][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Authentication is required: &P=gsi,v:10400,c:ssl,ca:f5f0dfc2
+[2021-11-18 13:14:24.805692 -0600][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Sending authentication data
+[2021-11-18 13:14:24.807423 -0600][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Trying to authenticate using gsi
+[2021-11-18 13:14:24.863344 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Wrote a message:  (0xc804e580), 136 bytes
+[2021-11-18 13:14:24.977861 -0600][Dump   ][XRootDTransport   ] [msg: 0xc8026a20] Expecting 3276 bytes of message body
+[2021-11-18 13:14:24.977915 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received message header, size: 8
+[2021-11-18 13:14:24.977942 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received a message of 3284 bytes
+[2021-11-18 13:14:24.977962 -0600][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Sending more authentication data for gsi
+[2021-11-18 13:14:24.984816 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Wrote a message:  (0xc80521b0), 3881 bytes
+[2021-11-18 13:14:25.083872 -0600][Dump   ][XRootDTransport   ] [msg: 0xc80521b0] Expecting 0 bytes of message body
+[2021-11-18 13:14:25.083925 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received message header, size: 8
+[2021-11-18 13:14:25.083946 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received a message of 8 bytes
+[2021-11-18 13:14:25.084051 -0600][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Authenticated with gsi.
+[2021-11-18 13:14:25.084097 -0600][Debug  ][PostMaster        ] [fndcatemp2.fnal.gov:1094] Stream 0 connected.
+[2021-11-18 13:14:25.084127 -0600][Debug  ][Utility           ] Monitor library name not set. No monitoring
+[2021-11-18 13:14:25.084198 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Wrote a message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) (0x1bbed30), 98 bytes
+[2021-11-18 13:14:25.084253 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Successfully sent message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) (0x1bbed30).
+[2021-11-18 13:14:25.084295 -0600][Dump   ][XRootD            ] [fndcatemp2.fnal.gov:1094] Message kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) has been successfully sent.
+[2021-11-18 13:14:25.084347 -0600][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:1094] Moving MsgHandler: 0x1bbffa0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) ) from out-queu to in-queue.
+[2021-11-18 13:14:25.084383 -0600][Dump   ][PostMaster        ] [fndcatemp2.fnal.gov:1094.0] All messages consumed, disable uplink
+[2021-11-18 13:14:25.486994 -0600][Dump   ][TaskMgr           ] Running task: "FileTimer task"
+[2021-11-18 13:14:25.487079 -0600][Dump   ][TaskMgr           ] Will rerun task "FileTimer task" at [2021-11-18 13:14:40 -0600]
+[2021-11-18 13:14:25.640140 -0600][Dump   ][XRootDTransport   ] [msg: 0xc80008d0] Expecting 133 bytes of message body
+[2021-11-18 13:14:25.640197 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received message header for 0xc80008d0 size: 8
+[2021-11-18 13:14:25.640251 -0600][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received message 0xc80008d0 of 141 bytes
+[2021-11-18 13:14:25.640282 -0600][Dump   ][PostMaster        ] [fndcatemp2.fnal.gov:1094] Handling received message: 0xc80008d0.
+[2021-11-18 13:14:25.640467 -0600][Dump   ][XRootD            ] [fndcatemp2.fnal.gov:1094] Got kXR_redirect response to message kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ): dcatest04.fnal.gov?org.dcache.xrootd.client=arossi.27879@fndcatemp1.fnal.gov&org.dcache.uuid=db991d07-c78b-4dd9-bd82-edf94464ae40, port 33117
+[2021-11-18 13:14:25.640558 -0600][Dump   ][XRootD            ] [fndcatemp2.fnal.gov:1094] Current server has been assigned as a load-balancer for message kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat, mode: 00, flags: kXR_open_read kXR_async kXR_retstat )
+[2021-11-18 13:14:25.640631 -0600][Dump   ][Utility           ] URL: dcatest04.fnal.gov:33117/
+[2021-11-18 13:14:25.640631 -0600][Dump   ][Utility           ] Protocol:  root
+[2021-11-18 13:14:25.640631 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:25.640631 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:25.640631 -0600][Dump   ][Utility           ] Host Name: dcatest04.fnal.gov
+[2021-11-18 13:14:25.640631 -0600][Dump   ][Utility           ] Port:      33117
+[2021-11-18 13:14:25.640631 -0600][Dump   ][Utility           ] Path:      
+[2021-11-18 13:14:25.640765 -0600][Dump   ][Utility           ] URL: fake://fake:111//fake?org.dcache.xrootd.client=arossi.27879@fndcatemp1.fnal.gov&org.dcache.uuid=db991d07-c78b-4dd9-bd82-edf94464ae40&xrdcl.requuid=1b2bc21b-9756-4266-8d09-3e908993bae2&
+[2021-11-18 13:14:25.640765 -0600][Dump   ][Utility           ] Protocol:  fake
+[2021-11-18 13:14:25.640765 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:25.640765 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:25.640765 -0600][Dump   ][Utility           ] Host Name: fake
+[2021-11-18 13:14:25.640765 -0600][Dump   ][Utility           ] Port:      111
+[2021-11-18 13:14:25.640765 -0600][Dump   ][Utility           ] Path:      /fake
+[2021-11-18 13:14:25.640910 -0600][Dump   ][Utility           ] URL: fake://fake:111//pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat
+[2021-11-18 13:14:25.640910 -0600][Dump   ][Utility           ] Protocol:  fake
+[2021-11-18 13:14:25.640910 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:25.640910 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:25.640910 -0600][Dump   ][Utility           ] Host Name: fake
+[2021-11-18 13:14:25.640910 -0600][Dump   ][Utility           ] Port:      111
+[2021-11-18 13:14:25.640910 -0600][Dump   ][Utility           ] Path:      /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat
+[2021-11-18 13:14:25.641033 -0600][Dump   ][Utility           ] URL: xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat
+[2021-11-18 13:14:25.641033 -0600][Dump   ][Utility           ] Protocol:  xroots
+[2021-11-18 13:14:25.641033 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:25.641033 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:25.641033 -0600][Dump   ][Utility           ] Host Name: fndcatemp2.fnal.gov
+[2021-11-18 13:14:25.641033 -0600][Dump   ][Utility           ] Port:      1094
+[2021-11-18 13:14:25.641033 -0600][Dump   ][Utility           ] Path:      /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat
+[2021-11-18 13:14:25.641086 -0600][Dump   ][Utility           ] URL: roots://dcatest04.fnal.gov:33117/
+[2021-11-18 13:14:25.641086 -0600][Dump   ][Utility           ] Protocol:  roots
+[2021-11-18 13:14:25.641086 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:25.641086 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:25.641086 -0600][Dump   ][Utility           ] Host Name: dcatest04.fnal.gov
+[2021-11-18 13:14:25.641086 -0600][Dump   ][Utility           ] Port:      33117
+[2021-11-18 13:14:25.641086 -0600][Dump   ][Utility           ] Path:      
+[2021-11-18 13:14:25.641161 -0600][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33117] Retry at server MsgHandler: 0x1bbffa0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?org.dcache.uuid=db991d07-c78b-4dd9-bd82-edf94464ae40&org.dcache.xrootd.client=arossi.27879@fndcatemp1.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) ).
+[2021-11-18 13:14:25.641212 -0600][Dump   ][Utility           ] URL: dcatest04.fnal.gov:33117
+[2021-11-18 13:14:25.641212 -0600][Dump   ][Utility           ] Protocol:  root
+[2021-11-18 13:14:25.641212 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:25.641212 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:25.641212 -0600][Dump   ][Utility           ] Host Name: dcatest04.fnal.gov
+[2021-11-18 13:14:25.641212 -0600][Dump   ][Utility           ] Port:      33117
+[2021-11-18 13:14:25.641212 -0600][Dump   ][Utility           ] Path:      
+[2021-11-18 13:14:25.641278 -0600][Dump   ][Utility           ] URL: roots://dcatest04.fnal.gov:33117
+[2021-11-18 13:14:25.641278 -0600][Dump   ][Utility           ] Protocol:  roots
+[2021-11-18 13:14:25.641278 -0600][Dump   ][Utility           ] User Name: 
+[2021-11-18 13:14:25.641278 -0600][Dump   ][Utility           ] Password:  
+[2021-11-18 13:14:25.641278 -0600][Dump   ][Utility           ] Host Name: dcatest04.fnal.gov
+[2021-11-18 13:14:25.641278 -0600][Dump   ][Utility           ] Port:      33117
+[2021-11-18 13:14:25.641278 -0600][Dump   ][Utility           ] Path:      
+[2021-11-18 13:14:25.641342 -0600][Debug  ][PostMaster        ] Creating new channel to: roots://dcatest04.fnal.gov:33117
+[2021-11-18 13:14:25.641403 -0600][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33117] Stream parameters: Network Stack: IPAuto, Connection Window: 120, ConnectionRetry: 5, Stream Error Window: 1800
+[2021-11-18 13:14:25.641441 -0600][Debug  ][TaskMgr           ] Registering task: "TickGeneratorTask for: roots://dcatest04.fnal.gov:33117" to be run at: [2021-11-18 13:14:40 -0600]
+[2021-11-18 13:14:25.641470 -0600][Dump   ][PostMaster        ] [dcatest04.fnal.gov:33117] Sending message kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?org.dcache.uuid=db991d07-c78b-4dd9-bd82-edf94464ae40&org.dcache.xrootd.client=arossi.27879@fndcatemp1.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) (0x1bbed30) through substream 0 expecting answer at 0
+[2021-11-18 13:14:25.642185 -0600][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33117] Found 1 address(es): [::ffff:131.225.13.6]:33117
+[2021-11-18 13:14:25.642272 -0600][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Attempting connection to [::ffff:131.225.13.6]:33117
+[2021-11-18 13:14:25.642345 -0600][Debug  ][Poller            ] Adding socket 0xc4002570 to the poller
+[2021-11-18 13:14:25.642595 -0600][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Async connection call returned
+[2021-11-18 13:14:25.642664 -0600][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33117.0] Sending out the initial hand shake + kXR_protocol
+[2021-11-18 13:14:25.642724 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Wrote a message:  (0xc804e580), 44 bytes
+[2021-11-18 13:14:25.809989 -0600][Dump   ][XRootDTransport   ] [msg: 0xc804e580] Expecting 8 bytes of message body
+[2021-11-18 13:14:25.810043 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Received message header, size: 8
+[2021-11-18 13:14:25.810070 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Received a message of 16 bytes
+[2021-11-18 13:14:25.810092 -0600][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33117.0] Got the server hand shake response (type: server [], protocol version 500)
+[2021-11-18 13:14:25.870978 -0600][Dump   ][XRootDTransport   ] [msg: 0xc804e580] Expecting 8 bytes of message body
+[2021-11-18 13:14:25.871033 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Received message header, size: 8
+[2021-11-18 13:14:25.871060 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Received a message of 16 bytes
+[2021-11-18 13:14:25.871087 -0600][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33117.0] kXR_protocol successful (type: server [], protocol version 500)
+[2021-11-18 13:14:25.871308 -0600][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33117.0] Sending out kXR_login request, username: arossi, cgi: ?xrd.cc=us&xrd.tz=-6&xrd.appname=test-runner&xrd.info=&xrd.hostname=fndcatemp1.fnal.gov&xrd.rn=v20211116-cd1c351, dual-stack: false, private IPv4: false, private IPv6: false
+[2021-11-18 13:14:25.871347 -0600][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] TLS hand-shake exchange.
+[2021-11-18 13:14:25.912116 -0600][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] TLS hand-shake exchange.
+[2021-11-18 13:14:25.926919 -0600][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] TLS hand-shake exchange.
+[2021-11-18 13:14:25.927110 -0600][Info   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] TLS hand-shake done.
+[2021-11-18 13:14:25.927208 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Wrote a message:  (0xc8000a30), 136 bytes
+[2021-11-18 13:14:25.935287 -0600][Dump   ][XRootDTransport   ] [msg: 0xc8000a30] Expecting 16 bytes of message body
+[2021-11-18 13:14:25.935366 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Received message header, size: 8
+[2021-11-18 13:14:25.935392 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Received a message of 24 bytes
+[2021-11-18 13:14:25.935416 -0600][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33117.0] Logged in, session: 65d401aa82e1f8e8efc12d576d8f6251
+[2021-11-18 13:14:25.935444 -0600][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33117] Stream 0 connected.
+[2021-11-18 13:14:25.935501 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Wrote a message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?org.dcache.uuid=db991d07-c78b-4dd9-bd82-edf94464ae40&org.dcache.xrootd.client=arossi.27879@fndcatemp1.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) (0x1bbed30), 209 bytes
+[2021-11-18 13:14:25.935551 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Successfully sent message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?org.dcache.uuid=db991d07-c78b-4dd9-bd82-edf94464ae40&org.dcache.xrootd.client=arossi.27879@fndcatemp1.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) (0x1bbed30).
+[2021-11-18 13:14:25.935576 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] Message kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?org.dcache.uuid=db991d07-c78b-4dd9-bd82-edf94464ae40&org.dcache.xrootd.client=arossi.27879@fndcatemp1.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) has been successfully sent.
+[2021-11-18 13:14:25.935594 -0600][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33117] Moving MsgHandler: 0x1bbffa0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?org.dcache.uuid=db991d07-c78b-4dd9-bd82-edf94464ae40&org.dcache.xrootd.client=arossi.27879@fndcatemp1.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) ) from out-queu to in-queue.
+[2021-11-18 13:14:25.935621 -0600][Dump   ][PostMaster        ] [dcatest04.fnal.gov:33117.0] All messages consumed, disable uplink
+[2021-11-18 13:14:25.950248 -0600][Dump   ][XRootDTransport   ] [msg: 0xc806b7e0] Expecting 28 bytes of message body
+[2021-11-18 13:14:25.950298 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Received message header for 0xc806b7e0 size: 8
+[2021-11-18 13:14:25.950325 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Received message 0xc806b7e0 of 36 bytes
+[2021-11-18 13:14:25.950344 -0600][Dump   ][PostMaster        ] [dcatest04.fnal.gov:33117] Handling received message: 0xc806b7e0.
+[2021-11-18 13:14:25.950513 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] Got a kXR_ok response to request kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?org.dcache.uuid=db991d07-c78b-4dd9-bd82-edf94464ae40&org.dcache.xrootd.client=arossi.27879@fndcatemp1.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat )
+[2021-11-18 13:14:25.950594 -0600][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33117] Calling MsgHandler: 0x1bbffa0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?org.dcache.uuid=db991d07-c78b-4dd9-bd82-edf94464ae40&org.dcache.xrootd.client=arossi.27879@fndcatemp1.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) ) with status: [SUCCESS] .
+[2021-11-18 13:14:25.950634 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] Parsing the response to kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?org.dcache.uuid=db991d07-c78b-4dd9-bd82-edf94464ae40&org.dcache.xrootd.client=arossi.27879@fndcatemp1.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) as OpenInfo
+[2021-11-18 13:14:25.950657 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] Parsing StatInfo in response to kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?org.dcache.uuid=db991d07-c78b-4dd9-bd82-edf94464ae40&org.dcache.xrootd.client=arossi.27879@fndcatemp1.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat )
+[2021-11-18 13:14:25.950785 -0600][Debug  ][File              ] [0x1bba610@xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?xrdcl.requuid=1b2bc21b-9756-4266-8d09-3e908993bae2] Open has returned with status [SUCCESS] 
+[2021-11-18 13:14:25.950898 -0600][Debug  ][File              ] [0x1bba610@xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?xrdcl.requuid=1b2bc21b-9756-4266-8d09-3e908993bae2] successfully opened at dcatest04.fnal.gov:33117, handle: 0x0, session id: 1
+[2021-11-18 13:14:25.950991 -0600][Debug  ][XRootD            ] Redirect trace-back:
+[2021-11-18 13:14:25.950991 -0600][Debug  ][XRootD            ] 	0. Redirected from: xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat to: roots://dcatest04.fnal.gov:33117/
+[2021-11-18 13:14:25.951029 -0600][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33117] Destroying MsgHandler: 0x1bbffa0.
+[2021-11-18 13:14:25.951113 -0600][Debug  ][File              ] [0x1bba610@xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat?xrdcl.requuid=1b2bc21b-9756-4266-8d09-3e908993bae2] Sending a vector read command for handle 0x0 to dcatest04.fnal.gov:33117
+[2021-11-18 13:14:25.951277 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] Sending message kXR_readv (handle: 0x00000000, chunks: [(offset: 10485760, size: 1048576); (offset: 20971520, size: 1048576); (offset: 31457280, size: 1048576); (offset: 41943040, size: 1048576); (offset: 52428800, size: 1048576); (offset: 62914560, size: 1048576); (offset: 73400320, size: 1048576); (offset: 83886080, size: 1048576); (offset: 94371840, size: 1048576); (offset: 104857600, size: 1048576); (offset: 115343360, size: 1048576); (offset: 125829120, size: 1048576); (offset: 136314880, size: 1048576); (offset: 146800640, size: 1048576); (offset: 157286400, size: 1048576); (offset: 167772160, size: 1048576); (offset: 178257920, size: 1048576); (offset: 188743680, size: 1048576); (offset: 199229440, size: 1048576); (offset: 209715200, size: 1048576); (offset: 220200960, size: 1048576); (offset: 230686720, size: 1048576); (offset: 241172480, size: 1048576); (offset: 251658240, size: 1048576); (offset: 262144000, size: 1048576); (offset: 272629760, size: 1048576); (offset: 283115520, size: 1048576); (offset: 293601280, size: 1048576); (offset: 304087040, size: 1048576); (offset: 314572800, size: 1048576); (offset: 325058560, size: 1048576); (offset: 335544320, size: 1048576); (offset: 346030080, size: 1048576); (offset: 356515840, size: 1048576); (offset: 367001600, size: 1048576); (offset: 377487360, size: 1048576); (offset: 387973120, size: 1048576); (offset: 398458880, size: 1048576); (offset: 408944640, size: 1048576); (offset: 419430400, size: 1048576); ], total size: 41943040)
+[2021-11-18 13:14:25.951346 -0600][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33117] MsgHandler created: 0x1bc1ce0 (message: kXR_readv (handle: 0x00000000, chunks: [(offset: 10485760, size: 1048576); (offset: 20971520, size: 1048576); (offset: 31457280, size: 1048576); (offset: 41943040, size: 1048576); (offset: 52428800, size: 1048576); (offset: 62914560, size: 1048576); (offset: 73400320, size: 1048576); (offset: 83886080, size: 1048576); (offset: 94371840, size: 1048576); (offset: 104857600, size: 1048576); (offset: 115343360, size: 1048576); (offset: 125829120, size: 1048576); (offset: 136314880, size: 1048576); (offset: 146800640, size: 1048576); (offset: 157286400, size: 1048576); (offset: 167772160, size: 1048576); (offset: 178257920, size: 1048576); (offset: 188743680, size: 1048576); (offset: 199229440, size: 1048576); (offset: 209715200, size: 1048576); (offset: 220200960, size: 1048576); (offset: 230686720, size: 1048576); (offset: 241172480, size: 1048576); (offset: 251658240, size: 1048576); (offset: 262144000, size: 1048576); (offset: 272629760, size: 1048576); (offset: 283115520, size: 1048576); (offset: 293601280, size: 1048576); (offset: 304087040, size: 1048576); (offset: 314572800, size: 1048576); (offset: 325058560, size: 1048576); (offset: 335544320, size: 1048576); (offset: 346030080, size: 1048576); (offset: 356515840, size: 1048576); (offset: 367001600, size: 1048576); (offset: 377487360, size: 1048576); (offset: 387973120, size: 1048576); (offset: 398458880, size: 1048576); (offset: 408944640, size: 1048576); (offset: 419430400, size: 1048576); ], total size: 41943040) ).
+[2021-11-18 13:14:25.951441 -0600][Dump   ][PostMaster        ] [dcatest04.fnal.gov:33117] Sending message kXR_readv (handle: 0x00000000, chunks: [(offset: 10485760, size: 1048576); (offset: 20971520, size: 1048576); (offset: 31457280, size: 1048576); (offset: 41943040, size: 1048576); (offset: 52428800, size: 1048576); (offset: 62914560, size: 1048576); (offset: 73400320, size: 1048576); (offset: 83886080, size: 1048576); (offset: 94371840, size: 1048576); (offset: 104857600, size: 1048576); (offset: 115343360, size: 1048576); (offset: 125829120, size: 1048576); (offset: 136314880, size: 1048576); (offset: 146800640, size: 1048576); (offset: 157286400, size: 1048576); (offset: 167772160, size: 1048576); (offset: 178257920, size: 1048576); (offset: 188743680, size: 1048576); (offset: 199229440, size: 1048576); (offset: 209715200, size: 1048576); (offset: 220200960, size: 1048576); (offset: 230686720, size: 1048576); (offset: 241172480, size: 1048576); (offset: 251658240, size: 1048576); (offset: 262144000, size: 1048576); (offset: 272629760, size: 1048576); (offset: 283115520, size: 1048576); (offset: 293601280, size: 1048576); (offset: 304087040, size: 1048576); (offset: 314572800, size: 1048576); (offset: 325058560, size: 1048576); (offset: 335544320, size: 1048576); (offset: 346030080, size: 1048576); (offset: 356515840, size: 1048576); (offset: 367001600, size: 1048576); (offset: 377487360, size: 1048576); (offset: 387973120, size: 1048576); (offset: 398458880, size: 1048576); (offset: 408944640, size: 1048576); (offset: 419430400, size: 1048576); ], total size: 41943040) (0x1bbf320) through substream 0 expecting answer at 0
+[2021-11-18 13:14:25.951606 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Wrote a message: kXR_readv (handle: 0x00000000, chunks: [(offset: 10485760, size: 1048576); (offset: 20971520, size: 1048576); (offset: 31457280, size: 1048576); (offset: 41943040, size: 1048576); (offset: 52428800, size: 1048576); (offset: 62914560, size: 1048576); (offset: 73400320, size: 1048576); (offset: 83886080, size: 1048576); (offset: 94371840, size: 1048576); (offset: 104857600, size: 1048576); (offset: 115343360, size: 1048576); (offset: 125829120, size: 1048576); (offset: 136314880, size: 1048576); (offset: 146800640, size: 1048576); (offset: 157286400, size: 1048576); (offset: 167772160, size: 1048576); (offset: 178257920, size: 1048576); (offset: 188743680, size: 1048576); (offset: 199229440, size: 1048576); (offset: 209715200, size: 1048576); (offset: 220200960, size: 1048576); (offset: 230686720, size: 1048576); (offset: 241172480, size: 1048576); (offset: 251658240, size: 1048576); (offset: 262144000, size: 1048576); (offset: 272629760, size: 1048576); (offset: 283115520, size: 1048576); (offset: 293601280, size: 1048576); (offset: 304087040, size: 1048576); (offset: 314572800, size: 1048576); (offset: 325058560, size: 1048576); (offset: 335544320, size: 1048576); (offset: 346030080, size: 1048576); (offset: 356515840, size: 1048576); (offset: 367001600, size: 1048576); (offset: 377487360, size: 1048576); (offset: 387973120, size: 1048576); (offset: 398458880, size: 1048576); (offset: 408944640, size: 1048576); (offset: 419430400, size: 1048576); ], total size: 41943040) (0x1bbf320), 664 bytes
+[2021-11-18 13:14:25.951700 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Successfully sent message: kXR_readv (handle: 0x00000000, chunks: [(offset: 10485760, size: 1048576); (offset: 20971520, size: 1048576); (offset: 31457280, size: 1048576); (offset: 41943040, size: 1048576); (offset: 52428800, size: 1048576); (offset: 62914560, size: 1048576); (offset: 73400320, size: 1048576); (offset: 83886080, size: 1048576); (offset: 94371840, size: 1048576); (offset: 104857600, size: 1048576); (offset: 115343360, size: 1048576); (offset: 125829120, size: 1048576); (offset: 136314880, size: 1048576); (offset: 146800640, size: 1048576); (offset: 157286400, size: 1048576); (offset: 167772160, size: 1048576); (offset: 178257920, size: 1048576); (offset: 188743680, size: 1048576); (offset: 199229440, size: 1048576); (offset: 209715200, size: 1048576); (offset: 220200960, size: 1048576); (offset: 230686720, size: 1048576); (offset: 241172480, size: 1048576); (offset: 251658240, size: 1048576); (offset: 262144000, size: 1048576); (offset: 272629760, size: 1048576); (offset: 283115520, size: 1048576); (offset: 293601280, size: 1048576); (offset: 304087040, size: 1048576); (offset: 314572800, size: 1048576); (offset: 325058560, size: 1048576); (offset: 335544320, size: 1048576); (offset: 346030080, size: 1048576); (offset: 356515840, size: 1048576); (offset: 367001600, size: 1048576); (offset: 377487360, size: 1048576); (offset: 387973120, size: 1048576); (offset: 398458880, size: 1048576); (offset: 408944640, size: 1048576); (offset: 419430400, size: 1048576); ], total size: 41943040) (0x1bbf320).
+[2021-11-18 13:14:25.951768 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] Message kXR_readv (handle: 0x00000000, chunks: [(offset: 10485760, size: 1048576); (offset: 20971520, size: 1048576); (offset: 31457280, size: 1048576); (offset: 41943040, size: 1048576); (offset: 52428800, size: 1048576); (offset: 62914560, size: 1048576); (offset: 73400320, size: 1048576); (offset: 83886080, size: 1048576); (offset: 94371840, size: 1048576); (offset: 104857600, size: 1048576); (offset: 115343360, size: 1048576); (offset: 125829120, size: 1048576); (offset: 136314880, size: 1048576); (offset: 146800640, size: 1048576); (offset: 157286400, size: 1048576); (offset: 167772160, size: 1048576); (offset: 178257920, size: 1048576); (offset: 188743680, size: 1048576); (offset: 199229440, size: 1048576); (offset: 209715200, size: 1048576); (offset: 220200960, size: 1048576); (offset: 230686720, size: 1048576); (offset: 241172480, size: 1048576); (offset: 251658240, size: 1048576); (offset: 262144000, size: 1048576); (offset: 272629760, size: 1048576); (offset: 283115520, size: 1048576); (offset: 293601280, size: 1048576); (offset: 304087040, size: 1048576); (offset: 314572800, size: 1048576); (offset: 325058560, size: 1048576); (offset: 335544320, size: 1048576); (offset: 346030080, size: 1048576); (offset: 356515840, size: 1048576); (offset: 367001600, size: 1048576); (offset: 377487360, size: 1048576); (offset: 387973120, size: 1048576); (offset: 398458880, size: 1048576); (offset: 408944640, size: 1048576); (offset: 419430400, size: 1048576); ], total size: 41943040) has been successfully sent.
+[2021-11-18 13:14:25.951824 -0600][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33117] Moving MsgHandler: 0x1bc1ce0 (message: kXR_readv (handle: 0x00000000, chunks: [(offset: 10485760, size: 1048576); (offset: 20971520, size: 1048576); (offset: 31457280, size: 1048576); (offset: 41943040, size: 1048576); (offset: 52428800, size: 1048576); (offset: 62914560, size: 1048576); (offset: 73400320, size: 1048576); (offset: 83886080, size: 1048576); (offset: 94371840, size: 1048576); (offset: 104857600, size: 1048576); (offset: 115343360, size: 1048576); (offset: 125829120, size: 1048576); (offset: 136314880, size: 1048576); (offset: 146800640, size: 1048576); (offset: 157286400, size: 1048576); (offset: 167772160, size: 1048576); (offset: 178257920, size: 1048576); (offset: 188743680, size: 1048576); (offset: 199229440, size: 1048576); (offset: 209715200, size: 1048576); (offset: 220200960, size: 1048576); (offset: 230686720, size: 1048576); (offset: 241172480, size: 1048576); (offset: 251658240, size: 1048576); (offset: 262144000, size: 1048576); (offset: 272629760, size: 1048576); (offset: 283115520, size: 1048576); (offset: 293601280, size: 1048576); (offset: 304087040, size: 1048576); (offset: 314572800, size: 1048576); (offset: 325058560, size: 1048576); (offset: 335544320, size: 1048576); (offset: 346030080, size: 1048576); (offset: 356515840, size: 1048576); (offset: 367001600, size: 1048576); (offset: 377487360, size: 1048576); (offset: 387973120, size: 1048576); (offset: 398458880, size: 1048576); (offset: 408944640, size: 1048576); (offset: 419430400, size: 1048576); ], total size: 41943040) ) from out-queu to in-queue.
+[2021-11-18 13:14:25.951880 -0600][Dump   ][PostMaster        ] [dcatest04.fnal.gov:33117.0] All messages consumed, disable uplink
+[2021-11-18 13:14:26.281897 -0600][Dump   ][XRootDTransport   ] [msg: 0xc806b7e0] Expecting 7340144 bytes of message body
+[2021-11-18 13:14:26.281951 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Received message header for 0xc806b7e0 size: 8
+[2021-11-18 13:14:26.282134 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] Got a kXR_oksofar response to request kXR_readv (handle: 0x00000000, chunks: [(offset: 10485760, size: 1048576); (offset: 20971520, size: 1048576); (offset: 31457280, size: 1048576); (offset: 41943040, size: 1048576); (offset: 52428800, size: 1048576); (offset: 62914560, size: 1048576); (offset: 73400320, size: 1048576); (offset: 83886080, size: 1048576); (offset: 94371840, size: 1048576); (offset: 104857600, size: 1048576); (offset: 115343360, size: 1048576); (offset: 125829120, size: 1048576); (offset: 136314880, size: 1048576); (offset: 146800640, size: 1048576); (offset: 157286400, size: 1048576); (offset: 167772160, size: 1048576); (offset: 178257920, size: 1048576); (offset: 188743680, size: 1048576); (offset: 199229440, size: 1048576); (offset: 209715200, size: 1048576); (offset: 220200960, size: 1048576); (offset: 230686720, size: 1048576); (offset: 241172480, size: 1048576); (offset: 251658240, size: 1048576); (offset: 262144000, size: 1048576); (offset: 272629760, size: 1048576); (offset: 283115520, size: 1048576); (offset: 293601280, size: 1048576); (offset: 304087040, size: 1048576); (offset: 314572800, size: 1048576); (offset: 325058560, size: 1048576); (offset: 335544320, size: 1048576); (offset: 346030080, size: 1048576); (offset: 356515840, size: 1048576); (offset: 367001600, size: 1048576); (offset: 377487360, size: 1048576); (offset: 387973120, size: 1048576); (offset: 398458880, size: 1048576); (offset: 408944640, size: 1048576); (offset: 419430400, size: 1048576); ], total size: 41943040)
+[2021-11-18 13:14:26.282236 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Will use the raw handler to read body of message 0xc806b7e0
+[2021-11-18 13:14:26.290965 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@10485760
+[2021-11-18 13:14:26.300334 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@20971520
+[2021-11-18 13:14:26.308789 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@31457280
+[2021-11-18 13:14:26.318101 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@41943040
+[2021-11-18 13:14:26.326632 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@52428800
+[2021-11-18 13:14:26.335904 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@62914560
+[2021-11-18 13:14:26.506950 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@73400320
+[2021-11-18 13:14:26.507008 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Received message 0xc806b7e0 of 7340152 bytes
+[2021-11-18 13:14:26.507030 -0600][Dump   ][PostMaster        ] [dcatest04.fnal.gov:33117] Handling received message: 0xc806b7e0.
+[2021-11-18 13:14:26.507093 -0600][Dump   ][PostMaster        ] [dcatest04.fnal.gov:33117] Ignoring the processing handler for: 0x604298.
+[2021-11-18 13:14:26.507149 -0600][Dump   ][XRootDTransport   ] [msg: 0xc803ef80] Expecting 6291984 bytes of message body
+[2021-11-18 13:14:26.507172 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Received message header for 0xc803ef80 size: 8
+[2021-11-18 13:14:26.507193 -0600][Dump   ][AsyncSock         ] [dcatest04.fnal.gov:33117.0] Will use the raw handler to read body of message 0xc803ef80
+[2021-11-18 13:14:26.516712 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@83886080
+[2021-11-18 13:14:26.524870 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@94371840
+[2021-11-18 13:14:26.534166 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@104857600
+[2021-11-18 13:14:26.542686 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@115343360
+[2021-11-18 13:14:26.552000 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@125829120
+[2021-11-18 13:14:26.560499 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: read buffer for chunk 1048576@136314880
+[2021-11-18 13:14:26.560523 -0600][Error  ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: Impossible to find chunk buffer corresponding to 0 bytes at 146800640
+[2021-11-18 13:14:26.560533 -0600][Dump   ][XRootD            ] [dcatest04.fnal.gov:33117] ReadRawReadV: Discarding 0 bytes
+[2021-11-18 13:14:39.488477 -0600][Dump   ][TaskMgr           ] Running task: "TickGeneratorTask for: xroots://fndcatemp2.fnal.gov:1094"
+[2021-11-18 13:14:39.488607 -0600][Dump   ][TaskMgr           ] Will rerun task "TickGeneratorTask for: xroots://fndcatemp2.fnal.gov:1094" at [2021-11-18 13:14:54 -0600]
+[2021-11-18 13:14:40.488741 -0600][Dump   ][TaskMgr           ] Running task: "FileTimer task"
+[2021-11-18 13:14:40.488849 -0600][Dump   ][TaskMgr           ] Will rerun task "FileTimer task" at [2021-11-18 13:14:55 -0600]
+[2021-11-18 13:14:40.488878 -0600][Dump   ][TaskMgr           ] Running task: "TickGeneratorTask for: roots://dcatest04.fnal.gov:33117"
+[2021-11-18 13:14:40.488904 -0600][Dump   ][TaskMgr           ] Will rerun task "TickGeneratorTask for: roots://dcatest04.fnal.gov:33117" at [2021-11-18 13:14:55 -0600]
+[2021-11-18 13:14:40.574649 -0600][Dump   ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Stream inactive since 15 seconds, TTL: 1200, allocated SIDs: 0, open files: 0, bound file objects: 0
+[2021-11-18 13:14:40.574713 -0600][Dump   ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Stream inactive since 15 seconds, stream timeout: 60, allocated SIDs: 0, wait barrier: 2021-11-18 13:14:25 -0600
+[2021-11-18 13:14:41.575841 -0600][Dump   ][XRootDTransport   ] [dcatest04.fnal.gov:33117.0] Stream inactive since 15 seconds, TTL: 300, allocated SIDs: 1, open files: 1, bound file objects: 1
+[2021-11-18 13:14:41.575903 -0600][Dump   ][XRootDTransport   ] [dcatest04.fnal.gov:33117.0] Stream inactive since 15 seconds, stream timeout: 60, allocated SIDs: 1, wait barrier: 2021-11-18 13:14:26 -0600
+[2021-11-18 13:14:54.490234 -0600][Dump   ][TaskMgr           ] Running task: "TickGeneratorTask for: xroots://fndcatemp2.fnal.gov:1094"
+[2021-11-18 13:14:54.490356 -0600][Dump   ][TaskMgr           ] Will rerun task "TickGeneratorTask for: xroots://fndcatemp2.fnal.gov:1094" at [2021-11-18 13:15:09 -0600]
+[2021-11-18 13:14:55.490450 -0600][Dump   ][TaskMgr           ] Running task: "FileTimer task"
+[2021-11-18 13:14:55.490520 -0600][Dump   ][TaskMgr           ] Will rerun task "FileTimer task" at [2021-11-18 13:15:10 -0600]
+[2021-11-18 13:14:55.490543 -0600][Dump   ][TaskMgr           ] Running task: "TickGeneratorTask for: roots://dcatest04.fnal.gov:33117"
+[2021-11-18 13:14:55.490650 -0600][Dump   ][TaskMgr           ] Will rerun task "TickGeneratorTask for: roots://dcatest04.fnal.gov:33117" at [2021-11-18 13:15:10 -0600]
+[2021-11-18 13:14:55.589978 -0600][Dump   ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Stream inactive since 30 seconds, TTL: 1200, allocated SIDs: 0, open files: 0, bound file objects: 0
+[2021-11-18 13:14:55.590044 -0600][Dump   ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Stream inactive since 30 seconds, stream timeout: 60, allocated SIDs: 0, wait barrier: 2021-11-18 13:14:25 -0600
+[2021-11-18 13:14:56.591125 -0600][Dump   ][XRootDTransport   ] [dcatest04.fnal.gov:33117.0] Stream inactive since 30 seconds, TTL: 300, allocated SIDs: 1, open files: 1, bound file objects: 1
+[2021-11-18 13:14:56.591186 -0600][Dump   ][XRootDTransport   ] [dcatest04.fnal.gov:33117.0] Stream inactive since 30 seconds, stream timeout: 60, allocated SIDs: 1, wait barrier: 2021-11-18 13:14:26 -0600
+[2021-11-18 13:15:09.492206 -0600][Dump   ][TaskMgr           ] Running task: "TickGeneratorTask for: xroots://fndcatemp2.fnal.gov:1094"
+[2021-11-18 13:15:09.492346 -0600][Dump   ][TaskMgr           ] Will rerun task "TickGeneratorTask for: xroots://fndcatemp2.fnal.gov:1094" at [2021-11-18 13:15:24 -0600]
+[2021-11-18 13:15:10.492454 -0600][Dump   ][TaskMgr           ] Running task: "FileTimer task"
+[2021-11-18 13:15:10.492525 -0600][Dump   ][TaskMgr           ] Will rerun task "FileTimer task" at [2021-11-18 13:15:25 -0600]
+[2021-11-18 13:15:10.492548 -0600][Dump   ][TaskMgr           ] Running task: "TickGeneratorTask for: roots://dcatest04.fnal.gov:33117"
+[2021-11-18 13:15:10.492573 -0600][Dump   ][TaskMgr           ] Will rerun task "TickGeneratorTask for: roots://dcatest04.fnal.gov:33117" at [2021-11-18 13:15:25 -0600]
+[2021-11-18 13:15:10.605223 -0600][Dump   ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Stream inactive since 45 seconds, TTL: 1200, allocated SIDs: 0, open files: 0, bound file objects: 0
+[2021-11-18 13:15:10.605288 -0600][Dump   ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Stream inactive since 45 seconds, stream timeout: 60, allocated SIDs: 0, wait barrier: 2021-11-18 13:14:25 -0600
+[2021-11-18 13:15:11.606319 -0600][Dump   ][XRootDTransport   ] [dcatest04.fnal.gov:33117.0] Stream inactive since 45 seconds, TTL: 300, allocated SIDs: 1, open files: 1, bound file objects: 1
+[2021-11-18 13:15:11.606381 -0600][Dump   ][XRootDTransport   ] [dcatest04.fnal.gov:33117.0] Stream inactive since 45 seconds, stream timeout: 60, allocated SIDs: 1, wait barrier: 2021-11-18 13:14:26 -0600

@@ -1,0 +1,142 @@
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] REGISTERED
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] ACTIVE
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ: org.dcache.xrootd.protocol.messages.ProtocolRequest@71df98da
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] doOnProtocolRequest, version 1296, expect 3, option 3.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] setLocalTlsActivation 1296, 3, 3.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Client version 1296, options 3, expect 3.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] setLocalTlsActivation, server mode is OPTIONAL, flags are turned off.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] PROTOCOL RESPONSE TO CLIENT null.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ COMPLETE
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ COMPLETE
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] server uses TLS ? false.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Sending protocol message with server flags mode: OPTIONAL, flags: -2147483646 (manager true, meta-server false, proxy-server false, server false, supervisor false, data-server false, load-balancer true, tlsData false, tlsGPF false, tlsLogin false, tlsSession false, tlsTPC false, goToTLS false, anonGPF false), signing policy (secLvl 0)(overrides {})(force false).
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] PROTOCOL RESPONSE TO CLIENT protocol-response[-2147483646][(secLvl 0)(overrides {})(force false)].
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] WRITE: protocol-response[-2147483646][(secLvl 0)(overrides {})(force false)]
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] FLUSH
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ: login[arossi,13309,133,0,?xrd.cc=us&xrd.tz=-6&xrd.appname=test-runner&xrd.info=&xrd.hostname=fndcatemp1.fnal.gov&xrd.rn=v20211116-cd1c351]
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Time since last server cert refresh 1637261744335
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Loading server certificates. Current refresh interval: 60000 ms
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Verifying host certificate
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] WRITE: login-response[6983F57D344DEBA01A0A6D12149F1EFD,&P=gsi,v:10400,c:ssl,ca:f5f0dfc2]
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] FLUSH
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ COMPLETE
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ: org.dcache.xrootd.protocol.messages.AuthenticationRequest@75105652
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3000, type kXRS_cryptomod
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_cryptomod has length 3.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3014, type kXRS_version
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_version has length 4.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3023, type kXRS_issuer_hash
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_issuer_hash has length 21.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3019, type kXRS_clnt_opts
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_clnt_opts has length 4.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3001, type kXRS_main
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_main has length 28.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] NestedBucketBuffer protocol: gsi, step 1000
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3006, type kXRS_rtag
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_rtag has length 8.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Client protocol version was 10400, using GSIPost49ServerRequestHandler.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Received kXRS_clnt_opts 0; can sign proxy requests false.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Validating crypto mode.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] The following ca hashes are recognized: [01b5d333.0, 10718cba.0].
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Time since last server cert refresh 61
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher initialized for encryption using private key of length 1219, max block size 245.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Post-processing main bucket.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Generated new challenge string: *XICo %).
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Signing sender's random challenge tag of length 8.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher encryption, incoming length 8; max block 245.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher processing block of length 8.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Building unencrypted main bucket.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Getting encoded dh paramters (signed: true).
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Signing encoded dh paramters.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher encryption, incoming length 313; max block 245.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher processing block of length 245.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher processing block of length 68.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Getting encoded host certificate from PEM credential.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] authenticate, processed certreq step for stream 0, session org.dcache.xrootd.core.XrootdSession@8551135.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] WRITE: org.dcache.xrootd.protocol.messages.AuthenticationResponse@460b23bc
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] FLUSH
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ COMPLETE
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ: org.dcache.xrootd.protocol.messages.AuthenticationRequest@d30016a
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3001, type kXRS_main
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_main has length 3120.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] NestedBucketBuffer protocol: Mzr/, step 1247171944
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3000, type kXRS_cryptomod
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_cryptomod has length 3.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3025, type kXRS_cipher_alg
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_cipher_alg has length 14.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3026, type kXRS_md_alg
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_md_alg has length 4.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3005, type kXRS_cipher
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_cipher has length 384.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3004, type kXRS_puk
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_puk has length 272.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Validating cipher algorithm.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] checking cipher algorithm aes-128-cbc#16.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Selected cipher algorithm aes-128-cbc#16
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Setting sessionIVLen to 16.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Validating cipher digests.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Length of kXRS_puk bucket content: 272, size 280.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] resulting base64 byte array length 162.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA modulus lenghth: 1024.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher initialized for decryption using public key of length 162, max block size 245.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Finalizing session key using bucket type kXRS_cipher.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Decrypting cipher bucket using public key, buffer length 384.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher decryption, in length 384; max block 128.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher processing block of length 128.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher processing block of length 128.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher processing block of length 128.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] DH message (params) from kXRS_cipher after decryption: -----BEGIN DH PARAMETERS-----
+MEoCQQCoN51v/+hjoLFHDCbdGkUL4gOa8IOxulv6HS9bKokIAtjE1GaNFI01uySx
+rxrTdcfAO2GqhT9Waa7yZ9ogh12TAgECAgICAA==
+-----END DH PARAMETERS-----
+---BPUB---679554820D08ACA3C9B534AE8FA9FFD0E08FEFEE6BF7A122CC8C2C6C71E4FC413663A3D8BB8EBAE7FE1FF2B8C8E75E9B6A72A555201C285F0A6765574A762F05---EPUB---.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Remote endpoint sent: P = 8810252053191919589359420599637641654529526533255167910139019997260323899182669360368264455955601543214780189083983437542290860708561316883421676261825939, G = 2, L = 0,
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Constructed buffer handler for signed hash use.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Decrypting main bucket with session key.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Using padded DH secret generation.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] NestedBucketBuffer protocol: gsi, step 1001
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3007, type kXRS_signed_rtag
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_signed_rtag has length 128.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3022, type kXRS_x509
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_x509 has length 2920.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Deserialized a bucket with code 3006, type kXRS_rtag
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] bucket type kXRS_rtag has length 8.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Processing RSA cert chain verification; previous key to match? true.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Extracting X509Certificate chain.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher decryption, in length 128; max block 128.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] RSA cipher processing block of length 128.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] signature of challenge tag ok. Challenge: *XICo %), rTagString: *XICo %)
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] authenticate, processed cert step for stream 0, session org.dcache.xrootd.core.XrootdSession@8551135.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] server uses TLS ? false.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] WRITE: ok
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] FLUSH
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ COMPLETE
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ: open[0,1104,/pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat,]
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ COMPLETE
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] open[0,1104,/pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat,] –– not a third-party request.
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Opening /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat for read
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] open flags: options to apply for open path (raw=1104 ): kXR_async kXR_open_read kXR_retstat
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] mode to apply to open path: --- --- ---
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] OPAQUE : {}
+18 Nov 2021 12:55:44 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] tried null, triedrc null, ignoring.
+18 Nov 2021 12:55:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg dcatest04-5 XrootdDoorAdressInfo] Received redirect msg from mover
+18 Nov 2021 12:55:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Redirecting to dcatest04.fnal.gov, dcatest04.fnal.gov/131.225.13.6:33141
+18 Nov 2021 12:55:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Sending the following host information to the client: dcatest04.fnal.gov
+18 Nov 2021 12:55:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] WRITE: redirect[dcatest04.fnal.gov:33141,org.dcache.xrootd.client=arossi.13309@fndcatemp1.fnal.gov&org.dcache.uuid=7ac9525c-9163-421e-9532-ff0caa963d04,]
+18 Nov 2021 12:55:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] FLUSH
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ: open[0,16,/pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat,]
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ COMPLETE
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] open[0,16,/pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat,] –– not a third-party request.
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Opening /pnfs/fs/usr/test/arossi/volatile/a048e67f-4397-4bb8-85eb-8d7e40d90763.dat for read
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] open flags: options to apply for open path (raw=16 ): kXR_open_read
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] mode to apply to open path: --- --- ---
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] OPAQUE : {}
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] tried null, triedrc null, ignoring.
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg dcatest04-5 XrootdDoorAdressInfo] Received redirect msg from mover
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Redirecting to dcatest04.fnal.gov, dcatest04.fnal.gov/131.225.13.6:33141
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] Sending the following host information to the client: dcatest04.fnal.gov
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] WRITE: redirect[dcatest04.fnal.gov:33141,org.dcache.xrootd.client=arossi.13309@fndcatemp1.fnal.gov&org.dcache.uuid=4738aee8-1582-4fff-bbef-9c8dd17e0fba,]
+18 Nov 2021 12:56:45 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] FLUSH
+18 Nov 2021 12:57:07 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 - R:/131.225.240.89:40794] READ COMPLETE
+18 Nov 2021 12:57:07 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 ! R:fndcatemp1.fnal.gov/131.225.240.89:40794] INACTIVE
+18 Nov 2021 12:57:07 (xrootd-1094-fndcatemp2) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg] [id: 0x78ef9537, L:/131.225.240.93:1094 ! R:fndcatemp1.fnal.gov/131.225.240.89:40794] UNREGISTERED

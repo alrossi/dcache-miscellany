@@ -1,0 +1,1 @@
+for i in 03-26 03-27 03-28 03-29 03-31 04-01 04-02 04-02 04-03 04-04 04-05 04-06 04-07; do echo ${i} ; zgrep open  rw*.access.*2021-${i}.gz | cut -d ' ' -f7 | cut -d '&' -f 1 | sort | uniq -c | grep "2 opaque"; done

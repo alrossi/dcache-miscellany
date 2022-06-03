@@ -1,0 +1,271 @@
+%MSG-i MF_INIT_OK:  Early 25-Oct-2021 14:38:26 CDT JobSetup
+Messagelogger initialization complete.
+%MSG
+25-Oct-2021 14:38:28 CDT  Initiating request to open input file "root://fndcatemp2.fnal.gov:1094///pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art"
+[2021-10-25 14:38:28.733996 -0500][Debug  ][Utility           ] Initializing xrootd client version: v5.1.0
+[2021-10-25 14:38:28.746996 -0500][Debug  ][Utility           ] Unable to process user config file: [ERROR] OS Error: no such file or directory
+[2021-10-25 14:38:28.747553 -0500][Debug  ][PlugInMgr         ] Initializing plug-in manager...
+[2021-10-25 14:38:28.747575 -0500][Debug  ][PlugInMgr         ] No default plug-in, loading plug-in configs...
+[2021-10-25 14:38:28.747587 -0500][Debug  ][PlugInMgr         ] Processing plug-in definitions in /etc/xrootd/client.plugins.d...
+[2021-10-25 14:38:28.747838 -0500][Debug  ][PlugInMgr         ] Processing plug-in definitions in /mu2e/app/home/mu2epro/.xrootd/client.plugins.d...
+[2021-10-25 14:38:28.747854 -0500][Debug  ][PlugInMgr         ] Unable to process directory /mu2e/app/home/mu2epro/.xrootd/client.plugins.d: [ERROR] OS Error: no such file or directory
+[2021-10-25 14:38:28.848115 -0500][Debug  ][Utility           ] Env: trying to get a non-existent string entry: PollerPreference
+[2021-10-25 14:38:28.848449 -0500][Debug  ][Poller            ] Available pollers: built-in
+[2021-10-25 14:38:28.848455 -0500][Debug  ][Poller            ] Attempting to create a poller according to preference: built-in
+[2021-10-25 14:38:28.848459 -0500][Debug  ][Poller            ] Creating poller: built-in
+[2021-10-25 14:38:28.848527 -0500][Debug  ][Poller            ] Creating and starting the built-in poller...
+[2021-10-25 14:38:28.848815 -0500][Debug  ][Poller            ] Using 1 poller threads
+[2021-10-25 14:38:28.848840 -0500][Debug  ][TaskMgr           ] Starting the task manager...
+[2021-10-25 14:38:28.848885 -0500][Debug  ][TaskMgr           ] Task manager started
+[2021-10-25 14:38:28.848908 -0500][Debug  ][JobMgr            ] Starting the job manager...
+[2021-10-25 14:38:28.849047 -0500][Debug  ][JobMgr            ] Job manager started, 3 workers
+[2021-10-25 14:38:28.849103 -0500][Debug  ][TaskMgr           ] Registering task: "FileTimer task" to be run at: [2021-10-25 14:38:28 -0500]
+[2021-10-25 14:38:28.849301 -0500][Debug  ][Utility           ] Env: overriding entry: ConnectionWindow=120 with 30
+[2021-10-25 14:38:28.849312 -0500][Debug  ][Utility           ] Env: overriding entry: RequestTimeout=1800 with 4096
+[2021-10-25 14:38:28.849319 -0500][Debug  ][Utility           ] Env: overriding entry: RequestTimeout=4096 with 14400
+[2021-10-25 14:38:28.849339 -0500][Debug  ][Utility           ] Env: overriding entry: RedirectLimit=16 with 64
+[2021-10-25 14:38:28.849368 -0500][Debug  ][Utility           ] Env: overriding entry: MultiProtocol=0 with 1
+[2021-10-25 14:38:28.849974 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending an open command
+[2021-10-25 14:38:28.850299 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:1094] MsgHandler created: 0x51313d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) ).
+[2021-10-25 14:38:28.850545 -0500][Debug  ][PostMaster        ] Creating new channel to: root://fndcatemp2.fnal.gov:1094
+[2021-10-25 14:38:28.850608 -0500][Debug  ][PostMaster        ] [fndcatemp2.fnal.gov:1094] Stream parameters: Network Stack: IPAuto, Connection Window: 30, ConnectionRetry: 5, Stream Error Window: 1800
+[2021-10-25 14:38:28.850701 -0500][Debug  ][TaskMgr           ] Registering task: "TickGeneratorTask for: root://fndcatemp2.fnal.gov:1094" to be run at: [2021-10-25 14:38:43 -0500]
+[2021-10-25 14:38:28.851766 -0500][Debug  ][PostMaster        ] [fndcatemp2.fnal.gov:1094] Found 1 address(es): [::ffff:131.225.240.93]:1094
+[2021-10-25 14:38:28.851848 -0500][Debug  ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Attempting connection to [::ffff:131.225.240.93]:1094
+[2021-10-25 14:38:28.851909 -0500][Debug  ][Poller            ] Adding socket 0x33a7af0 to the poller
+[2021-10-25 14:38:28.852272 -0500][Debug  ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Async connection call returned
+[2021-10-25 14:38:28.852386 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Sending out the initial hand shake + kXR_protocol
+[2021-10-25 14:38:28.980795 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Got the server hand shake response (type: manager [], protocol version 500)
+[2021-10-25 14:38:28.999014 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] kXR_protocol successful (type: manager [], protocol version 500)
+[2021-10-25 14:38:28.999309 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Sending out kXR_login request, username: mu2epro, cgi: ?xrd.cc=us&xrd.tz=-6&xrd.appname=mu2e&xrd.info=&xrd.hostname=mu2egpvm03.fnal.gov&xrd.rn=v5.1.0, dual-stack: false, private IPv4: false, private IPv6: false
+[2021-10-25 14:38:29.115538 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Logged in, session: 2013f8a5f966a93950e7a6041bc67a6d
+[2021-10-25 14:38:29.115566 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Authentication is required: &P=gsi,v:10400,c:ssl,ca:f5f0dfc2
+[2021-10-25 14:38:29.115600 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Sending authentication data
+[2021-10-25 14:38:29.130255 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Trying to authenticate using gsi
+[2021-10-25 14:38:29.291589 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Sending more authentication data for gsi
+[2021-10-25 14:38:29.552870 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Authenticated with gsi.
+[2021-10-25 14:38:29.552941 -0500][Debug  ][PostMaster        ] [fndcatemp2.fnal.gov:1094] Stream 0 connected.
+[2021-10-25 14:38:29.552990 -0500][Debug  ][Utility           ] Monitor library name not set. No monitoring
+[2021-10-25 14:38:29.553405 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:1094] Moving MsgHandler: 0x51313d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) ) from out-queu to in-queue.
+[2021-10-25 14:38:30.532631 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Retry at server MsgHandler: 0x51313d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?org.dcache.uuid=86bcd4cb-5749-4cc3-a206-a391e41104dd&org.dcache.xrootd.client=mu2epro.25581@mu2egpvm03.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) ).
+[2021-10-25 14:38:30.532702 -0500][Debug  ][PostMaster        ] Creating new channel to: root://dcatest04.fnal.gov:33127
+[2021-10-25 14:38:30.532722 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Stream parameters: Network Stack: IPAuto, Connection Window: 30, ConnectionRetry: 5, Stream Error Window: 1800
+[2021-10-25 14:38:30.532738 -0500][Debug  ][TaskMgr           ] Registering task: "TickGeneratorTask for: root://dcatest04.fnal.gov:33127" to be run at: [2021-10-25 14:38:45 -0500]
+[2021-10-25 14:38:30.533369 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Found 1 address(es): [::ffff:131.225.13.6]:33127
+[2021-10-25 14:38:30.533413 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] Attempting connection to [::ffff:131.225.13.6]:33127
+[2021-10-25 14:38:30.533449 -0500][Debug  ][Poller            ] Adding socket 0x517afb0 to the poller
+[2021-10-25 14:38:30.533731 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] Async connection call returned
+[2021-10-25 14:38:30.533755 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Sending out the initial hand shake + kXR_protocol
+[2021-10-25 14:38:30.718351 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Got the server hand shake response (type: server [], protocol version 500)
+[2021-10-25 14:38:30.772596 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] kXR_protocol successful (type: server [], protocol version 500)
+[2021-10-25 14:38:30.772815 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Sending out kXR_login request, username: mu2epro, cgi: ?xrd.cc=us&xrd.tz=-6&xrd.appname=mu2e&xrd.info=&xrd.hostname=mu2egpvm03.fnal.gov&xrd.rn=v5.1.0, dual-stack: false, private IPv4: false, private IPv6: false
+[2021-10-25 14:38:30.772891 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake exchange.
+[2021-10-25 14:38:30.801420 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake exchange.
+[2021-10-25 14:38:30.817614 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake exchange.
+[2021-10-25 14:38:30.817782 -0500][Info   ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake done.
+[2021-10-25 14:38:30.824025 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Logged in, session: f214004e78fa504a79c12bf4baee766a
+[2021-10-25 14:38:30.824048 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Stream 0 connected.
+[2021-10-25 14:38:30.824096 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x51313d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?org.dcache.uuid=86bcd4cb-5749-4cc3-a206-a391e41104dd&org.dcache.xrootd.client=mu2epro.25581@mu2egpvm03.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) ) from out-queu to in-queue.
+[2021-10-25 14:38:30.841496 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x51313d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?org.dcache.uuid=86bcd4cb-5749-4cc3-a206-a391e41104dd&org.dcache.xrootd.client=mu2epro.25581@mu2egpvm03.fnal.gov, mode: 00, flags: kXR_open_read kXR_async kXR_retstat ) ) with status: [SUCCESS] .
+[2021-10-25 14:38:30.841663 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Open has returned with status [SUCCESS] 
+[2021-10-25 14:38:30.841717 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] successfully opened at dcatest04.fnal.gov:33127, handle: 0x0, session id: 1
+[2021-10-25 14:38:30.841850 -0500][Debug  ][XRootD            ] Redirect trace-back:
+[2021-10-25 14:38:30.841850 -0500][Debug  ][XRootD            ] 	0. Redirected from: root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art to: root://dcatest04.fnal.gov:33127/
+[2021-10-25 14:38:30.841858 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x51313d0.
+[2021-10-25 14:38:30.842027 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:30.842114 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x51313d0 (message: kXR_read (handle: 0x00000000, offset: 0, size: 300) ).
+[2021-10-25 14:38:30.842182 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x51313d0 (message: kXR_read (handle: 0x00000000, offset: 0, size: 300) ) from out-queu to in-queue.
+[2021-10-25 14:38:30.879509 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x51313d0 (message: kXR_read (handle: 0x00000000, offset: 0, size: 300) ) with status: [SUCCESS] .
+[2021-10-25 14:38:30.879618 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x51313d0.
+[2021-10-25 14:38:30.879773 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:30.879796 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x51313d0 (message: kXR_read (handle: 0x00000000, offset: 144500019, size: 666) ).
+[2021-10-25 14:38:30.879843 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x51313d0 (message: kXR_read (handle: 0x00000000, offset: 144500019, size: 666) ) from out-queu to in-queue.
+[2021-10-25 14:38:30.887630 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x51313d0 (message: kXR_read (handle: 0x00000000, offset: 144500019, size: 666) ) with status: [SUCCESS] .
+[2021-10-25 14:38:30.887653 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x51313d0.
+[2021-10-25 14:38:30.887756 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:30.887776 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x518f430 (message: kXR_read (handle: 0x00000000, offset: 144270482, size: 13265) ).
+[2021-10-25 14:38:30.887815 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x518f430 (message: kXR_read (handle: 0x00000000, offset: 144270482, size: 13265) ) from out-queu to in-queue.
+[2021-10-25 14:38:30.899852 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x518f430 (message: kXR_read (handle: 0x00000000, offset: 144270482, size: 13265) ) with status: [SUCCESS] .
+[2021-10-25 14:38:30.899882 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x518f430.
+[2021-10-25 14:38:32.850021 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x52a7100 (message: kXR_query (code: kXR_Qconfig, arg length: 28) ).
+[2021-10-25 14:38:32.850213 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x52a7100 (message: kXR_query (code: kXR_Qconfig, arg length: 28) ) from out-queu to in-queue.
+[2021-10-25 14:38:32.854484 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x52a7100 (message: kXR_query (code: kXR_Qconfig, arg length: 28) ) with status: [SUCCESS] .
+[2021-10-25 14:38:32.854531 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x52a7100.
+25-Oct-2021 14:38:32 CDT  Opened input file "root://fndcatemp2.fnal.gov:1094///pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art"
+[2021-10-25 14:38:32.854803 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:32.854839 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x522bdc0 (message: kXR_read (handle: 0x00000000, offset: 144283747, size: 213447) ).
+[2021-10-25 14:38:32.854904 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x522bdc0 (message: kXR_read (handle: 0x00000000, offset: 144283747, size: 213447) ) from out-queu to in-queue.
+[2021-10-25 14:38:32.870089 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x522bdc0 (message: kXR_read (handle: 0x00000000, offset: 144283747, size: 213447) ) with status: [SUCCESS] .
+[2021-10-25 14:38:32.870135 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x522bdc0.
+[2021-10-25 14:38:32.966640 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:32.966740 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x97f6e20 (message: kXR_read (handle: 0x00000000, offset: 144260278, size: 5680) ).
+[2021-10-25 14:38:32.966873 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x97f6e20 (message: kXR_read (handle: 0x00000000, offset: 144260278, size: 5680) ) from out-queu to in-queue.
+[2021-10-25 14:38:32.969516 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x97f6e20 (message: kXR_read (handle: 0x00000000, offset: 144260278, size: 5680) ) with status: [SUCCESS] .
+[2021-10-25 14:38:32.969536 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x97f6e20.
+[2021-10-25 14:38:32.969918 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:32.969946 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x97fc150 (message: kXR_read (handle: 0x00000000, offset: 144497737, size: 851) ).
+[2021-10-25 14:38:32.969995 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x97fc150 (message: kXR_read (handle: 0x00000000, offset: 144497737, size: 851) ) from out-queu to in-queue.
+[2021-10-25 14:38:32.971734 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x97fc150 (message: kXR_read (handle: 0x00000000, offset: 144497737, size: 851) ) with status: [SUCCESS] .
+[2021-10-25 14:38:32.971756 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x97fc150.
+[2021-10-25 14:38:32.971868 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:32.971885 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x9402360 (message: kXR_read (handle: 0x00000000, offset: 144266547, size: 388) ).
+[2021-10-25 14:38:32.971928 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x9402360 (message: kXR_read (handle: 0x00000000, offset: 144266547, size: 388) ) from out-queu to in-queue.
+[2021-10-25 14:38:32.973556 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x9402360 (message: kXR_read (handle: 0x00000000, offset: 144266547, size: 388) ) with status: [SUCCESS] .
+[2021-10-25 14:38:32.973569 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x9402360.
+[2021-10-25 14:38:32.973633 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:32.973649 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x9402a30 (message: kXR_read (handle: 0x00000000, offset: 144266935, size: 346) ).
+[2021-10-25 14:38:32.973699 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x9402a30 (message: kXR_read (handle: 0x00000000, offset: 144266935, size: 346) ) from out-queu to in-queue.
+[2021-10-25 14:38:32.975189 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x9402a30 (message: kXR_read (handle: 0x00000000, offset: 144266935, size: 346) ) with status: [SUCCESS] .
+[2021-10-25 14:38:32.975202 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x9402a30.
+[2021-10-25 14:38:32.975260 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:32.975275 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x97f6480 (message: kXR_read (handle: 0x00000000, offset: 144498745, size: 382) ).
+[2021-10-25 14:38:32.975322 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x97f6480 (message: kXR_read (handle: 0x00000000, offset: 144498745, size: 382) ) from out-queu to in-queue.
+[2021-10-25 14:38:32.976592 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x97f6480 (message: kXR_read (handle: 0x00000000, offset: 144498745, size: 382) ) with status: [SUCCESS] .
+[2021-10-25 14:38:32.976602 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x97f6480.
+[2021-10-25 14:38:32.976659 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:32.976672 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x97f09e0 (message: kXR_read (handle: 0x00000000, offset: 144499270, size: 358) ).
+[2021-10-25 14:38:32.976717 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x97f09e0 (message: kXR_read (handle: 0x00000000, offset: 144499270, size: 358) ) from out-queu to in-queue.
+[2021-10-25 14:38:32.977921 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x97f09e0 (message: kXR_read (handle: 0x00000000, offset: 144499270, size: 358) ) with status: [SUCCESS] .
+[2021-10-25 14:38:32.977931 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x97f09e0.
+[2021-10-25 14:38:32.977980 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:32.977993 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x97f1ce0 (message: kXR_read (handle: 0x00000000, offset: 144499628, size: 391) ).
+[2021-10-25 14:38:32.978042 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x97f1ce0 (message: kXR_read (handle: 0x00000000, offset: 144499628, size: 391) ) from out-queu to in-queue.
+[2021-10-25 14:38:32.979378 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x97f1ce0 (message: kXR_read (handle: 0x00000000, offset: 144499628, size: 391) ) with status: [SUCCESS] .
+[2021-10-25 14:38:32.979388 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x97f1ce0.
+[2021-10-25 14:38:32.979774 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:32.979799 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x97f1760 (message: kXR_read (handle: 0x00000000, offset: 144269244, size: 709) ).
+[2021-10-25 14:38:32.979844 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x97f1760 (message: kXR_read (handle: 0x00000000, offset: 144269244, size: 709) ) from out-queu to in-queue.
+[2021-10-25 14:38:32.981118 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x97f1760 (message: kXR_read (handle: 0x00000000, offset: 144269244, size: 709) ) with status: [SUCCESS] .
+[2021-10-25 14:38:32.981129 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x97f1760.
+[2021-10-25 14:38:32.984210 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:32.984240 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x9410bb0 (message: kXR_read (handle: 0x00000000, offset: 145200851, size: 120) ).
+[2021-10-25 14:38:32.984305 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x9410bb0 (message: kXR_read (handle: 0x00000000, offset: 145200851, size: 120) ) from out-queu to in-queue.
+[2021-10-25 14:38:32.987204 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x9410bb0 (message: kXR_read (handle: 0x00000000, offset: 145200851, size: 120) ) with status: [SUCCESS] .
+[2021-10-25 14:38:32.987217 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x9410bb0.
+[2021-10-25 14:38:32.987437 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:32.987469 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x94112a0 (message: kXR_read (handle: 0x00000000, offset: 144256561, size: 555) ).
+[2021-10-25 14:38:32.987521 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x94112a0 (message: kXR_read (handle: 0x00000000, offset: 144256561, size: 555) ) from out-queu to in-queue.
+[2021-10-25 14:38:32.991819 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x94112a0 (message: kXR_read (handle: 0x00000000, offset: 144256561, size: 555) ) with status: [SUCCESS] .
+[2021-10-25 14:38:32.991833 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x94112a0.
+[2021-10-25 14:38:32.992749 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a vector read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:32.992781 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x94dcc90 (message: kXR_readv (handle: 0x00000000, chunks: 1, total size: 2885) ).
+[2021-10-25 14:38:32.992856 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x94dcc90 (message: kXR_readv (handle: 0x00000000, chunks: 1, total size: 2885) ) from out-queu to in-queue.
+[2021-10-25 14:38:33.006101 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x94dcc90 (message: kXR_readv (handle: 0x00000000, chunks: 1, total size: 2885) ) with status: [SUCCESS] .
+[2021-10-25 14:38:33.006167 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x94dcc90.
+[2021-10-25 14:38:33.006973 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Sending a vector read command for handle 0x0 to dcatest04.fnal.gov:33127
+[2021-10-25 14:38:33.007003 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x982b190 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ).
+[2021-10-25 14:38:33.007059 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x982b190 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ) from out-queu to in-queue.
+[2021-10-25 14:39:33.070807 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] Closing the socket
+[2021-10-25 14:39:33.072113 -0500][Debug  ][Poller            ] <[::ffff:131.225.67.36]:37782><--><[::ffff:131.225.13.6]:33127> Removing socket from the poller
+[2021-10-25 14:39:33.072754 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Recovering error for stream #0: [ERROR] Socket error.
+[2021-10-25 14:39:33.072973 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Reporting disconnection to queued message handlers.
+[2021-10-25 14:39:33.073136 -0500][Debug  ][XRootD            ] [dcatest04.fnal.gov:33127] Handling error while processing kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647): [ERROR] Socket error.
+[2021-10-25 14:39:33.073215 -0500][Error  ][XRootD            ] [dcatest04.fnal.gov:33127] Unable to get the response to request kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647)
+[2021-10-25 14:39:33.073340 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Passing to the thread-pool MsgHandler: 0x982b190 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ).
+[2021-10-25 14:39:33.073466 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x982b190 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ) with status: [ERROR] Socket error.
+[2021-10-25 14:39:33.073741 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Running the recovery procedure
+[2021-10-25 14:39:33.073869 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:1094] MsgHandler created: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?, mode: 00, flags: kXR_open_read ) ).
+[2021-10-25 14:39:33.073930 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x982b190.
+[2021-10-25 14:39:33.073990 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:1094] Moving MsgHandler: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?, mode: 00, flags: kXR_open_read ) ) from out-queu to in-queue.
+[2021-10-25 14:39:33.258706 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Retry at server MsgHandler: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?org.dcache.uuid=26d75a76-96fe-41f7-a15a-55db9a5f565b&org.dcache.xrootd.client=mu2epro.25581@mu2egpvm03.fnal.gov, mode: 00, flags: kXR_open_read ) ).
+[2021-10-25 14:39:33.259820 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Found 1 address(es): [::ffff:131.225.13.6]:33127
+[2021-10-25 14:39:33.259902 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] Attempting connection to [::ffff:131.225.13.6]:33127
+[2021-10-25 14:39:33.260496 -0500][Debug  ][Poller            ] Adding socket 0x517afb0 to the poller
+[2021-10-25 14:39:33.260780 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] Async connection call returned
+[2021-10-25 14:39:33.260820 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Sending out the initial hand shake + kXR_protocol
+[2021-10-25 14:39:33.310728 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Got the server hand shake response (type: server [], protocol version 500)
+[2021-10-25 14:39:33.316520 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] kXR_protocol successful (type: server [], protocol version 500)
+[2021-10-25 14:39:33.316835 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Sending out kXR_login request, username: mu2epro, cgi: ?xrd.cc=us&xrd.tz=-6&xrd.appname=mu2e&xrd.info=&xrd.hostname=mu2egpvm03.fnal.gov&xrd.rn=v5.1.0, dual-stack: false, private IPv4: false, private IPv6: false
+[2021-10-25 14:39:33.316849 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake exchange.
+[2021-10-25 14:39:33.328946 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake exchange.
+[2021-10-25 14:39:33.335314 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake exchange.
+[2021-10-25 14:39:33.335433 -0500][Info   ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake done.
+[2021-10-25 14:39:33.339787 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Logged in, session: 09e58495c3d8fd23e9fb19378f6c4710
+[2021-10-25 14:39:33.340499 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Sending out kXR_endsess for session: f214004e78fa504a79c12bf4baee766a
+[2021-10-25 14:39:33.347251 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Stream 0 connected.
+[2021-10-25 14:39:33.347820 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?org.dcache.uuid=26d75a76-96fe-41f7-a15a-55db9a5f565b&org.dcache.xrootd.client=mu2epro.25581@mu2egpvm03.fnal.gov, mode: 00, flags: kXR_open_read ) ) from out-queu to in-queue.
+[2021-10-25 14:39:33.351513 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?org.dcache.uuid=26d75a76-96fe-41f7-a15a-55db9a5f565b&org.dcache.xrootd.client=mu2epro.25581@mu2egpvm03.fnal.gov, mode: 00, flags: kXR_open_read ) ) with status: [SUCCESS] .
+[2021-10-25 14:39:33.351594 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Open has returned with status [SUCCESS] 
+[2021-10-25 14:39:33.351608 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] successfully opened at dcatest04.fnal.gov:33127, handle: 0x0, session id: 2
+[2021-10-25 14:39:33.351721 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x5175660 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ).
+[2021-10-25 14:39:33.351771 -0500][Debug  ][XRootD            ] Redirect trace-back:
+[2021-10-25 14:39:33.351771 -0500][Debug  ][XRootD            ] 	0. Redirected from: root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art to: root://dcatest04.fnal.gov:33127/
+[2021-10-25 14:39:33.351780 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x982c4d0.
+[2021-10-25 14:39:33.351798 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x5175660 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ) from out-queu to in-queue.
+[2021-10-25 14:40:33.407726 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] Closing the socket
+[2021-10-25 14:40:33.407953 -0500][Debug  ][Poller            ] <[::ffff:131.225.67.36]:37784><--><[::ffff:131.225.13.6]:33127> Removing socket from the poller
+[2021-10-25 14:40:33.408023 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Recovering error for stream #0: [ERROR] Socket error.
+[2021-10-25 14:40:33.408040 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Reporting disconnection to queued message handlers.
+[2021-10-25 14:40:33.408067 -0500][Debug  ][XRootD            ] [dcatest04.fnal.gov:33127] Handling error while processing kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647): [ERROR] Socket error.
+[2021-10-25 14:40:33.408091 -0500][Error  ][XRootD            ] [dcatest04.fnal.gov:33127] Unable to get the response to request kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647)
+[2021-10-25 14:40:33.408112 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Passing to the thread-pool MsgHandler: 0x5175660 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ).
+[2021-10-25 14:40:33.408218 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x5175660 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ) with status: [ERROR] Socket error.
+[2021-10-25 14:40:33.408288 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Running the recovery procedure
+[2021-10-25 14:40:33.408402 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:1094] MsgHandler created: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?, mode: 00, flags: kXR_open_read ) ).
+[2021-10-25 14:40:33.408482 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x5175660.
+[2021-10-25 14:40:33.408535 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:1094] Moving MsgHandler: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?, mode: 00, flags: kXR_open_read ) ) from out-queu to in-queue.
+[2021-10-25 14:40:33.522827 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Retry at server MsgHandler: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?org.dcache.uuid=249d3e94-916f-45ee-8d7d-cf6cd7d98030&org.dcache.xrootd.client=mu2epro.25581@mu2egpvm03.fnal.gov, mode: 00, flags: kXR_open_read ) ).
+[2021-10-25 14:40:33.523649 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Found 1 address(es): [::ffff:131.225.13.6]:33127
+[2021-10-25 14:40:33.523702 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] Attempting connection to [::ffff:131.225.13.6]:33127
+[2021-10-25 14:40:33.523994 -0500][Debug  ][Poller            ] Adding socket 0x517afb0 to the poller
+[2021-10-25 14:40:33.524250 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] Async connection call returned
+[2021-10-25 14:40:33.524263 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Sending out the initial hand shake + kXR_protocol
+[2021-10-25 14:40:33.568390 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Got the server hand shake response (type: server [], protocol version 500)
+[2021-10-25 14:40:33.571836 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] kXR_protocol successful (type: server [], protocol version 500)
+[2021-10-25 14:40:33.572089 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Sending out kXR_login request, username: mu2epro, cgi: ?xrd.cc=us&xrd.tz=-6&xrd.appname=mu2e&xrd.info=&xrd.hostname=mu2egpvm03.fnal.gov&xrd.rn=v5.1.0, dual-stack: false, private IPv4: false, private IPv6: false
+[2021-10-25 14:40:33.572100 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake exchange.
+[2021-10-25 14:40:33.594992 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake exchange.
+[2021-10-25 14:40:33.598878 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake exchange.
+[2021-10-25 14:40:33.598966 -0500][Info   ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake done.
+[2021-10-25 14:40:33.602252 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Logged in, session: 97011715b930fcfc68608d5b0c6694a5
+[2021-10-25 14:40:33.602270 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Sending out kXR_endsess for session: 09e58495c3d8fd23e9fb19378f6c4710
+[2021-10-25 14:40:33.605140 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Stream 0 connected.
+[2021-10-25 14:40:33.605189 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?org.dcache.uuid=249d3e94-916f-45ee-8d7d-cf6cd7d98030&org.dcache.xrootd.client=mu2epro.25581@mu2egpvm03.fnal.gov, mode: 00, flags: kXR_open_read ) ) from out-queu to in-queue.
+[2021-10-25 14:40:33.609653 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?org.dcache.uuid=249d3e94-916f-45ee-8d7d-cf6cd7d98030&org.dcache.xrootd.client=mu2epro.25581@mu2egpvm03.fnal.gov, mode: 00, flags: kXR_open_read ) ) with status: [SUCCESS] .
+[2021-10-25 14:40:33.609759 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Open has returned with status [SUCCESS] 
+[2021-10-25 14:40:33.609775 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] successfully opened at dcatest04.fnal.gov:33127, handle: 0x0, session id: 3
+[2021-10-25 14:40:33.609797 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x9830ee0 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ).
+[2021-10-25 14:40:33.609842 -0500][Debug  ][XRootD            ] Redirect trace-back:
+[2021-10-25 14:40:33.609842 -0500][Debug  ][XRootD            ] 	0. Redirected from: root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art to: root://dcatest04.fnal.gov:33127/
+[2021-10-25 14:40:33.609853 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x982c4d0.
+[2021-10-25 14:40:33.609873 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x9830ee0 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ) from out-queu to in-queue.
+[2021-10-25 14:41:33.658956 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] Closing the socket
+[2021-10-25 14:41:33.659270 -0500][Debug  ][Poller            ] <[::ffff:131.225.67.36]:37786><--><[::ffff:131.225.13.6]:33127> Removing socket from the poller
+[2021-10-25 14:41:33.659406 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Recovering error for stream #0: [ERROR] Socket error.
+[2021-10-25 14:41:33.659425 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Reporting disconnection to queued message handlers.
+[2021-10-25 14:41:33.659466 -0500][Debug  ][XRootD            ] [dcatest04.fnal.gov:33127] Handling error while processing kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647): [ERROR] Socket error.
+[2021-10-25 14:41:33.659480 -0500][Error  ][XRootD            ] [dcatest04.fnal.gov:33127] Unable to get the response to request kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647)
+[2021-10-25 14:41:33.659512 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Passing to the thread-pool MsgHandler: 0x9830ee0 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ).
+[2021-10-25 14:41:33.659613 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x9830ee0 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ) with status: [ERROR] Socket error.
+[2021-10-25 14:41:33.659697 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Running the recovery procedure
+[2021-10-25 14:41:33.659827 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:1094] MsgHandler created: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?, mode: 00, flags: kXR_open_read ) ).
+[2021-10-25 14:41:33.659902 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x9830ee0.
+[2021-10-25 14:41:33.659951 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:1094] Moving MsgHandler: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?, mode: 00, flags: kXR_open_read ) ) from out-queu to in-queue.
+[2021-10-25 14:41:33.789996 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Retry at server MsgHandler: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?org.dcache.uuid=6e9e7bee-eaab-44b9-9988-65403e08ca28&org.dcache.xrootd.client=mu2epro.25581@mu2egpvm03.fnal.gov, mode: 00, flags: kXR_open_read ) ).
+[2021-10-25 14:41:33.790604 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Found 1 address(es): [::ffff:131.225.13.6]:33127
+[2021-10-25 14:41:33.790651 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] Attempting connection to [::ffff:131.225.13.6]:33127
+[2021-10-25 14:41:33.790969 -0500][Debug  ][Poller            ] Adding socket 0x517afb0 to the poller
+[2021-10-25 14:41:33.791240 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] Async connection call returned
+[2021-10-25 14:41:33.791265 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Sending out the initial hand shake + kXR_protocol
+[2021-10-25 14:41:33.815718 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Got the server hand shake response (type: server [], protocol version 500)
+[2021-10-25 14:41:33.820065 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] kXR_protocol successful (type: server [], protocol version 500)
+[2021-10-25 14:41:33.820321 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Sending out kXR_login request, username: mu2epro, cgi: ?xrd.cc=us&xrd.tz=-6&xrd.appname=mu2e&xrd.info=&xrd.hostname=mu2egpvm03.fnal.gov&xrd.rn=v5.1.0, dual-stack: false, private IPv4: false, private IPv6: false
+[2021-10-25 14:41:33.820345 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake exchange.
+[2021-10-25 14:41:33.839445 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake exchange.
+[2021-10-25 14:41:33.842965 -0500][Debug  ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake exchange.
+[2021-10-25 14:41:33.843043 -0500][Info   ][AsyncSock         ] [dcatest04.fnal.gov:33127.0] TLS hand-shake done.
+[2021-10-25 14:41:33.845515 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Logged in, session: c575e61da7417cb234c84676b18ebfdb
+[2021-10-25 14:41:33.845544 -0500][Debug  ][XRootDTransport   ] [dcatest04.fnal.gov:33127.0] Sending out kXR_endsess for session: 97011715b930fcfc68608d5b0c6694a5
+[2021-10-25 14:41:33.847375 -0500][Debug  ][PostMaster        ] [dcatest04.fnal.gov:33127] Stream 0 connected.
+[2021-10-25 14:41:33.847424 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?org.dcache.uuid=6e9e7bee-eaab-44b9-9988-65403e08ca28&org.dcache.xrootd.client=mu2epro.25581@mu2egpvm03.fnal.gov, mode: 00, flags: kXR_open_read ) ) from out-queu to in-queue.
+[2021-10-25 14:41:33.850031 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Calling MsgHandler: 0x982c4d0 (message: kXR_open (file: /pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?org.dcache.uuid=6e9e7bee-eaab-44b9-9988-65403e08ca28&org.dcache.xrootd.client=mu2epro.25581@mu2egpvm03.fnal.gov, mode: 00, flags: kXR_open_read ) ) with status: [SUCCESS] .
+[2021-10-25 14:41:33.850110 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] Open has returned with status [SUCCESS] 
+[2021-10-25 14:41:33.850128 -0500][Debug  ][File              ] [0x51087e0@root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art?xrdcl.requuid=7c00c99b-78bf-4bec-80dc-f1662131497f] successfully opened at dcatest04.fnal.gov:33127, handle: 0x0, session id: 4
+[2021-10-25 14:41:33.850148 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] MsgHandler created: 0x9838260 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ).
+[2021-10-25 14:41:33.850176 -0500][Debug  ][XRootD            ] Redirect trace-back:
+[2021-10-25 14:41:33.850176 -0500][Debug  ][XRootD            ] 	0. Redirected from: root://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/dts.mu2e.CosmicCORSIKA.MDC2020k.001205_00000083.art to: root://dcatest04.fnal.gov:33127/
+[2021-10-25 14:41:33.850183 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Destroying MsgHandler: 0x982c4d0.
+[2021-10-25 14:41:33.850218 -0500][Debug  ][ExDbgMsg          ] [dcatest04.fnal.gov:33127] Moving MsgHandler: 0x9838260 (message: kXR_readv (handle: 0x00000000, chunks: 2, total size: 57647) ) from out-queu to in-queue.
+User signal SIGINT terminating the process
+terminate called without an active exception
+Aborted

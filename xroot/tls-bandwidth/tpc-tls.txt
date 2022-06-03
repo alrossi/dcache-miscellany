@@ -1,0 +1,37 @@
+I'm not posting this to dCache Slack yet, because it is embarrassing.   Here is the proof that the xrootd vanilla client (which I believe does vectorized reads) is faster than our embedded TPC client.  This seems to have little to do with TLS encryption. Could it be because of on-the-fly checksumming?  I don't remember TPC being _this_ slow when I originally tested it.  But in any case, I don't think this is acceptable, however important (or not) xrootd TPC turns out to be.
+
+(1) TLS on for pools and vanilla server
+
+dCache source, vanilla destination
+xrdcp5x --tpc delegate only xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/data-Thu-May-20-13:14:54-CDT-2021 xroot://fndcatemp1.fnal.gov:1095//data/xrootdfs/data-`date | tr ' ' '.'`
+[9.406GB/9.406GB][100%][==================================================][157.9MB/s]  
+
+vanilla source, dCache destination
+xrdcp5x --tpc delegate only xroot://fndcatemp1.fnal.gov:1095//data/xrootdfs/data_10gb xroot://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/test/arossi/volatile/data-`date | tr ' ' '.'`
+[9.406GB/9.406GB][100%][==================================================][11.47MB/s]
+
+(2) TLS off for pools and vanilla server
+
+dCache source, vanilla destination
+xrdcp5x --tpc delegate only xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/data-Thu-May-20-13:14:54-CDT-2021 xroot://fndcatemp1.fnal.gov:1095//data/xrootdfs/data-`date | tr ' ' '.'`
+[9.406GB/9.406GB][100%][==================================================][155.4MB/s]  
+
+vanilla source, dCache destination
+xrdcp5x --tpc delegate only xroot://fndcatemp1.fnal.gov:1095//data/xrootdfs/data_10gb xroot://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/test/arossi/volatile/data-`date | tr ' ' '.'`
+[9.406GB/9.406GB][100%][==================================================][15.34MB/s] 
+
+
+
+==============================================
+dCache source, dCache destination
+xrdcp5x --tpc delegate only xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/test/arossi/volatile/data-Thu-May-20-13:14:54-CDT-2021 xroot://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/test/arossi/volatile/data-`date | tr ' ' '.'`
+
+
+time curl -L --capath /etc/grid-security/certificates --cert /tmp/x509up_u`id -u` --cacert /tmp/x509up_u`id -u` --key  /tmp/x509up_u`id -u` -X COPY -H 'Source: https://fndcatemp2.fnal.gov:2880/pnfs/fs/usr/test/arossi/volatile/data-Thu-May-20-13:14:54-CDT-2021' https://fndcatemp2.fnal.gov:2881/pnfs/fs/usr/test/arossi/volatile/data-`date | tr ' ' '-'`
+
+
+time curl -L --capath /etc/grid-security/certificates --cert /tmp/x509up_u`id -u` --cacert /tmp/x509up_u`id -u` --key  /tmp/x509up_u`id -u` -X COPY -H 'Destination: https://fndcatemp2.fnal.gov:2881/pnfs/fs/usr/test/arossi/volatile/data-from-https-1' https://fndcatemp2.fnal.gov:2880/pnfs/fs/usr/test/arossi/volatile/data-Thu-May-20-13:14:54-CDT-2021
+
+
+
+davix-cp  --debug --cert /tmp/x509up_u`id -u` --capath /etc/grid-security/certificates -H RequireChecksumVerification:false https://fndcatemp2.fnal.gov:2880/pnfs/fs/usr/test/arossi/volatile/data-Thu-May-20-13:14:54-CDT-2021  https://fndcatemp2.fnal.gov:2881/pnfs/fs/usr/test/arossi/volatile/data-`date | tr ' ' '-'`

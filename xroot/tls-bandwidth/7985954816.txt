@@ -1,0 +1,68 @@
+xrootd server 5.1x
+
+[2021-04-30 08:27:35.406573 -0500][Dump   ][XRootD            ] [fndcatemp1.fnal.gov:1095] Sending message kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608)
+[2021-04-30 08:27:35.406592 -0500][Debug  ][ExDbgMsg          ] [fndcatemp1.fnal.gov:1095] MsgHandler created: 0xc9f1b0 (message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) ).
+[2021-04-30 08:27:35.406608 -0500][Dump   ][PostMaster        ] [fndcatemp1.fnal.gov:1095] Sending message kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0xc9c460) through substream 0 expecting answer at 0
+[2021-04-30 08:27:35.444479 -0500][Dump   ][AsyncSock         ] [fndcatemp1.fnal.gov:1095.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0xc9c460), 24 bytes
+[2021-04-30 08:27:35.453905 -0500][Dump   ][AsyncSock         ] [fndcatemp1.fnal.gov:1095.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0xc9c460), 24 bytes
+[2021-04-30 08:27:35.463819 -0500][Dump   ][AsyncSock         ] [fndcatemp1.fnal.gov:1095.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0xc9c460), 24 bytes
+[2021-04-30 08:27:35.464974 -0500][Dump   ][AsyncSock         ] [fndcatemp1.fnal.gov:1095.0] Successfully sent message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0xc9c460).
+[2021-04-30 08:27:35.464991 -0500][Dump   ][XRootD            ] [fndcatemp1.fnal.gov:1095] Message kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) has been successfully sent.
+[2021-04-30 08:27:35.465000 -0500][Debug  ][ExDbgMsg          ] [fndcatemp1.fnal.gov:1095] Moving MsgHandler: 0xc9f1b0 (message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) ) from out-queu to in-queue.
+[2021-04-30 08:27:35.492370 -0500][Dump   ][XRootD            ] [fndcatemp1.fnal.gov:1095] Got a kXR_ok response to request kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608)
+[2021-04-30 08:27:35.492401 -0500][Debug  ][ExDbgMsg          ] [fndcatemp1.fnal.gov:1095] Calling MsgHandler: 0xc9f1b0 (message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) ) with status: [SUCCESS] .
+[2021-04-30 08:27:35.492412 -0500][Dump   ][File              ] [0xc9cd30@xroot://fndcatemp1.fnal.gov:1095//data/xrootdfs/data-5.1?oss.asize=10100000000&xrdcl.requuid=34ac92c8-3777-4237-a817-e72a23f7a142] Got state response for message kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608)
+
+492412-406573 = .085839 sec
+
+---------------------------
+
+dCache pool without TLS
+
+[2021-05-02 13:15:49.084815 -0500][Dump   ][XRootD            ] [fndcatemp2.fnal.gov:33145] Sending message kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608)
+[2021-05-02 13:15:49.084842 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:33145] MsgHandler created: 0x40814a0 (message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) ).
+[2021-05-02 13:15:49.084869 -0500][Dump   ][PostMaster        ] [fndcatemp2.fnal.gov:33145] Sending message kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x87fcd0) through substream 0 expecting answer at 0
+[2021-05-02 13:15:49.142867 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33145.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x87fcd0), 24 bytes
+[2021-05-02 13:15:49.190880 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33145.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x87fcd0), 24 bytes
+[2021-05-02 13:15:49.194583 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33145.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x87fcd0), 24 bytes
+[2021-05-02 13:15:49.194948 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33145.0] Successfully sent message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x87fcd0).
+[2021-05-02 13:15:49.194984 -0500][Dump   ][XRootD            ] [fndcatemp2.fnal.gov:33145] Message kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) has been successfully sent.
+[2021-05-02 13:15:49.195057 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:33145] Moving MsgHandler: 0x40814a0 (message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) ) from out-queu to in-queue.
+[2021-05-02 13:15:49.295750 -0500][Dump   ][XRootD            ] [fndcatemp2.fnal.gov:33145] Got a kXR_ok response to request kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608)
+[2021-05-02 13:15:49.295810 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:33145] Calling MsgHandler: 0x40814a0 (message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) ) with status: [SUCCESS] .
+[2021-05-02 13:15:49.295834 -0500][Dump   ][File              ] [0x87e450@xroot://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/test/arossi/volatile/data-Sun.May..2.13:14:59.CDT.2021?oss.asize=10100000000&xrdcl.requuid=dac172cb-039e-41d1-8ab1-95911e9cde85] Got state response for message kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608)
+
+dcache no tls 295834-084815 = .211019 sec
+
+---------------------------
+
+dCache pool with TLS
+
+[2021-05-02 12:58:49.002627 -0500][Dump   ][XRootD            ] [fndcatemp2.fnal.gov:33130] Sending message kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608)
+[2021-05-02 12:58:49.002667 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:33130] MsgHandler created: 0x9d27f0 (message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) ).
+[2021-05-02 12:58:49.002703 -0500][Dump   ][PostMaster        ] [fndcatemp2.fnal.gov:33130] Sending message kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0) through substream 0 expecting answer at 0
+[2021-05-02 12:58:49.180474 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.182299 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.184063 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.185960 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.223841 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.225844 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.228701 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.234709 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.237115 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.239238 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.244140 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.246689 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.248883 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.250781 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.252802 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Wrote a message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0), 24 bytes
+[2021-05-02 12:58:49.253014 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:33130.0] Successfully sent message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) (0x9d00b0).
+[2021-05-02 12:58:49.253032 -0500][Dump   ][XRootD            ] [fndcatemp2.fnal.gov:33130] Message kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) has been successfully sent.
+[2021-05-02 12:58:49.253041 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:33130] Moving MsgHandler: 0x9d27f0 (message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) ) from out-queu to in-queue.
+[2021-05-02 12:58:49.295795 -0500][Dump   ][XRootD            ] [fndcatemp2.fnal.gov:33130] Got a kXR_ok response to request kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608)
+[2021-05-02 12:58:49.295828 -0500][Debug  ][ExDbgMsg          ] [fndcatemp2.fnal.gov:33130] Calling MsgHandler: 0x9d27f0 (message: kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608) ) with status: [SUCCESS] .
+[2021-05-02 12:58:49.295846 -0500][Dump   ][File              ] [0x9d0450@xroot://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/test/arossi/volatile/data-Sun.May..2.12:57:26.CDT.2021?oss.asize=10100000000&xrdcl.requuid=869e80e6-383e-4ae2-92a8-c953e1c99dce] Got state response for message kXR_write (handle: 0x00000000, offset: 7985954816, size: 8388608)
+
+dcache tls 295846-002627= .293219 sec
+
+

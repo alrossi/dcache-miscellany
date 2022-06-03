@@ -1,0 +1,506 @@
+						********** CONFIGURATION **********
+
+DOORS (1094, 1095) on fndcatemp2
+
+[xrootd-1094-${host.name}Domain]
+dcache.java.memory.heap=2048m
+dcache.java.memory.direct=2048m
+[xrootd-1094-${host.name}Domain/xrootd]
+xrootd.cell.name=xrootd-1094-${host.name}
+xrootd.net.port=1094
+xrootd.authz.write-paths=/
+xrootd.authz.read-paths=/
+xrootd.plugins=gplazma:ztn,gplazma:gsi,gplazma:none,authz:scitokens
+
+POOLS:
+
+[root@fndcatemp2 ~]# for i in `seq 3 9`
+do
+ssh dcatest0${i} grep tpc-authn-plugins  /etc/dcache/dcache.conf
+done
+pool.mover.xrootd.tpc-authn-plugins=gsi,unix,ztn
+pool.mover.xrootd.tpc-authn-plugins=gsi,unix,ztn
+pool.mover.xrootd.tpc-authn-plugins=gsi,unix,ztn
+pool.mover.xrootd.tpc-authn-plugins=gsi,unix,ztn
+pool.mover.xrootd.tpc-authn-plugins=gsi,unix,ztn
+pool.mover.xrootd.tpc-authn-plugins=gsi,unix,ztn
+pool.mover.xrootd.tpc-authn-plugins=gsi,unix,ztn
+
+(though ztn will currently fail on TPC except if it is dCache to dCache)
+
+(A PATCH WILL MAKE THESE THE DEFAULTS)
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+XROOTD SERVERS (current master) on fndcatemp1
+
+[note there is a way to configure the server to support both,
+but I haven't found it yet ...]
+
+1094:  scitokens, no ZTN (but turned on for the last two tests)
+1095:  gsi, authfile authorization
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+/pnfs/fs/usr/fermilab/users/arossi/volatile
+
+drwx------   16 arossi ods  512 Apr  2 10:58 protected
+-rw-------    1 arossi ods    1 Apr  2 10:12 protected-file
+-rw-r--r--    1 arossi ods    1 Apr  2 10:11 world-readable
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+token gives full permissions on the specified directory to arossi@fnal.gov:
+
+[arossi@fndcatemp1 ~]$ httokendecode 
+{
+  "wlcg.ver": "1.0",
+  "aud": "https://wlcg.cern.ch/jwt/v1/any",
+  "sub": "arossi@fnal.gov",
+  "nbf": 1648909639,
+  "scope": "storage.create:/fermilab/users/arossi compute.create compute.read compute.cancel compute.modify storage.read:/fermilab/users/arossi",
+  "iss": "https://cilogon.org/fermilab",
+  "exp": 1648920444,
+  "iat": 1648909644,
+  "wlcg.groups": [
+    "/fermilab"
+  ],
+  "jti": "https://cilogon.org/oauth2/1124fa40671aa9d0efd92f882e2f5add?type=accessToken&ts=1648909644358&version=v2.0&lifetime=10800000"
+}
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+						***** dCache TWO PARTY TESTS *****
+
+no x509 cert
+no JWT token
+
+xroot://
+
+- read world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable /dev/null
+security protocol 'ztn' disallowed for non-TLS connections.
+[1B/1B][100%][==================================================][1B/s]
+
+- read non-world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file /dev/null
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3010] Access denied (source)	
+
+- write to protected area
+
+[arossi@fndcatemp1 ~]$ xrdcp5x data/data_1b xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3010] Access denied: /pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-2022040210461648914393012158267 (destination)
+
+xroots://
+
+- read world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable /dev/null
+[1B/1B][100%][==================================================][1B/s]  
+
+- read non-world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file /dev/null
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3010] Access denied (source)
+
+- write to protected area
+
+[arossi@fndcatemp1 ~]$ xrdcp5x data/data_1b xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3010] Access denied: /pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-2022040210501648914619694923165 (destination)
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+x509 cert
+no JWT token
+
+xroot://
+
+- read world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable /dev/null
+[1B/1B][100%][==================================================][0B/s]  
+
+- read non-world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file /dev/null
+[1B/1B][100%][==================================================][1B/s]
+
+- write to protected area
+
+[arossi@fndcatemp1 ~]$  xrdcp5x data/data_1b xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+[1B/1B][100%][==================================================][1B/s]
+
+xroots://
+
+- read world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable /dev/null
+[1B/1B][100%][==================================================][1B/s]  
+
+- read non-world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file /dev/null
+[1B/1B][100%][==================================================][0B/s] 
+
+- write to protected area
+
+[arossi@fndcatemp1 ~]$  xrdcp5x data/data_1b xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+[1B/1B][100%][==================================================][1B/s] 
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+no x509 cert
+JWT authorization token (as CGI)
+
+xroot://
+
+- read world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable?authz=Bearer%20`cat ~/authn/bt_u8773` /dev/null
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3013] TLS is required for scitokens (source)
+
+- read non-world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file?authz=Bearer%20`cat ~/authn/bt_u8773` /dev/null
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3013] TLS is required for scitokens (source)
+
+- write to protected area
+
+[arossi@fndcatemp1 ~]$ xrdcp5x data/data_1b xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`?authz=Bearer%20`cat ~/authn/bt_u8773`
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3013] TLS is required for scitokens (destination)
+
+xroots://
+
+- read world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable?authz=Bearer%20`cat ~/authn/bt_u8773` /dev/null
+[1B/1B][100%][==================================================][0B/s] 
+
+- read non-world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file?authz=Bearer%20`cat ~/authn/bt_u8773` /dev/null
+[1B/1B][100%][==================================================][1B/s]  
+
+- write to protected area
+
+[arossi@fndcatemp1 ~]$ xrdcp5x data/data_1b xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`?authz=Bearer%20`cat ~/authn/bt_u8773`
+[1B/1B][100%][==================================================][1B/s] 
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+no x509 cert
+JWT authorization in known location (ZTN) [fallback]
+
+xroot://
+(since ZTN won't work, these end up being equivalent to anonymous operations)
+
+- read world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable /dev/null
+security protocol 'ztn' disallowed for non-TLS connections.
+[1B/1B][100%][==================================================][0B/s]  
+
+- read non-world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file /dev/null
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3010] Access denied (source)
+
+- write to protected area
+
+[arossi@fndcatemp1 ~]$ xrdcp5x data/data_1b xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3010] Access denied: /pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-2022040211221648916557602068613 (destination)
+
+xroots://
+
+- read world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable /dev/null
+[1B/1B][100%][==================================================][1B/s]  
+
+- read non-world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file /dev/null
+[1B/1B][100%][==================================================][1B/s] 
+
+- write to protected area
+
+[arossi@fndcatemp1 ~]$ xrdcp5x data/data_1b xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+[1B/1B][100%][==================================================][1B/s]
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+no x509 cert
+JWT authorization in known location (ZTN) and as CGI
+
+xroot://
+
+- read world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773` /dev/null
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3013] TLS is required for scitokens (source)
+
+- read non-world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773` /dev/null
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3013] TLS is required for scitokens (source)
+
+- write to protected area
+
+[arossi@fndcatemp1 ~]$ xrdcp5x data/data_1b xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773`
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]
+Run: [ERROR] Server responded with an error: [3013] TLS is required for scitokens (destination)
+
+xroots://
+
+- read world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773` /dev/null
+[1B/1B][100%][==================================================][1B/s]  
+
+- read non-world-readable file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773` /dev/null
+[1B/1B][100%][==================================================][0B/s]  
+
+- write to protected area
+
+[arossi@fndcatemp1 ~]$ xrdcp5x data/data_1b xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773`
+[1B/1B][100%][==================================================][1B/s]
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+x509 cert
+JWT authorization in known location (ZTN)
+(both valid)
+
+- write to protected area
+
+[arossi@fndcatemp1 ~]$ xrdcp5x data/data_1b xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+[1B/1B][100%][==================================================][1B/s]  
+
+(under the covers, we see the client has selected the first and successfully used the cert:
+
+[2022-04-02 11:35:40.091040 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Authentication is required: &P=gsi,v:10400,c:ssl,ca:f5f0dfc2&P=ztn,0:4096:&P=unix
+[2022-04-02 11:35:40.091068 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Sending authentication data
+[2022-04-02 11:35:40.092964 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Trying to authenticate using gsi
+[2022-04-02 11:35:40.653278 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Wrote a message:  (0xbc038810), 136 bytes
+[2022-04-02 11:35:40.677121 -0500][Dump   ][XRootDTransport   ] [msg: 0xbc000c90] Expecting 3276 bytes of message body
+[2022-04-02 11:35:40.677145 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received message header, size: 8
+[2022-04-02 11:35:40.677159 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received a message of 3284 bytes
+[2022-04-02 11:35:40.677168 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Sending more authentication data for gsi
+[2022-04-02 11:35:40.682839 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Wrote a message:  (0xbc028400), 3881 bytes
+[2022-04-02 11:35:40.696000 -0500][Dump   ][XRootDTransport   ] [msg: 0xbc005540] Expecting 0 bytes of message body
+[2022-04-02 11:35:40.696050 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received message header, size: 8
+[2022-04-02 11:35:40.696069 -0500][Dump   ][AsyncSock         ] [fndcatemp2.fnal.gov:1094.0] Received a message of 8 bytes
+[2022-04-02 11:35:40.696152 -0500][Debug  ][XRootDTransport   ] [fndcatemp2.fnal.gov:1094.0] Authenticated with gsi.
+
+so no TLS is required.  However, if we put a token as CGI, we get an error on authorization even if not on authentication:
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773` /dev/null
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3013] TLS is required for scitokens (source)
+
+Protecting it with xroots allows override:
+
+[arossi@fndcatemp1 ~]$ xrdcp5x -f xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773` /dev/null
+[1B/1B][100%][==================================================][0B/s]
+
+In fact, if we create a directory inside volatile that would not be normally accessible by the user, the straight gsi fails, but with token, the permissions are given:
+
+[root@fndcatemp1 arossi]# ls -la /pnfs/fs/usr/test/arossi/volatile/root-owned/
+total 1
+drwx------    2 root   root 512 Apr  2 11:40 .
+
+[arossi@fndcatemp1 ~]$ xrdcp5x data/data_1b xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/root-owned/data-`suffix`
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3010] Access denied: /pnfs/fs/usr/fermilab/users/arossi/volatile/root-owned/data-2022040211451648917904320242031 (destination)
+
+but
+
+[arossi@fndcatemp1 ~]$ xrdcp5x data/data_1b xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/root-owned/data-`suffix`?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773`
+[1B/1B][100%][==================================================][0B/s]
+      
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+						      ** dCache to dCache THIRD PARTY TESTS **
+
+x509 delegated proxy regression test:
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc delegate only xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file xroot://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+security protocol 'ztn' disallowed for non-TLS connections.
+security protocol 'ztn' disallowed for non-TLS connections.
+[1B/1B][100%][==================================================][0B/s]
+
+with xroots:
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc delegate only xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file xroots://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+[1B/1B][100%][==================================================][0B/s]
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+JWT token as CGI [uses rendezvous key]
+
+- destination only  (anonymous read of world-reable source)
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable xroots://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`?authz=Bearer%20`cat ~/authn/bt_u8773`
+security protocol 'ztn' disallowed for non-TLS connections.
+security protocol 'ztn' disallowed for non-TLS connections.
+[1B/1B][100%][==================================================][0B/s]
+
+(fails on protected file)
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file xroots://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`?authz=Bearer%20`cat ~/authn/bt_u8773`
+security protocol 'ztn' disallowed for non-TLS connections.
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3006] not allowed to read file. (source)
+
+- source and destination
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file?authz=Bearer%20`cat ~/authn/bt_u8773` xroots://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`?authz=Bearer%20`cat ~/authn/bt_u8773`
+security protocol 'ztn' disallowed for non-TLS connections.
+[1B/1B][100%][==================================================][0B/s]  
+	
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+JWT token in known location (ZTN) [uses rendezvous key]
+
+anonymous read of world-reable source
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable xroots://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+security protocol 'ztn' disallowed for non-TLS connections.
+security protocol 'ztn' disallowed for non-TLS connections.
+[1B/1B][100%][==================================================][0B/s]
+
+protected file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file xroots://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+security protocol 'ztn' disallowed for non-TLS connections.
+[1B/1B][100%][==================================================][0B/s]			
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+						    ** dCache to xrootd THIRD PARTY TESTS **
+
+x509 delegated proxy regression test:
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc delegate only xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file xroot://fndcatemp1.fnal.gov:1095//fermilab/users/arossi/data-`suffix`
+[1B/1B][100%][==================================================][0B/s]
+	
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+JWT token as CGI [uses rendezvous key]
+
+- destination only  (anonymous read of world-reable source)
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable xroots://fndcatemp1.fnal.gov:1094//fermilab/users/arossi/data-`suffix`?authz=Bearer%20`cat ~/authn/bt_u8773`
+security protocol 'ztn' disallowed for non-TLS connections.
+security protocol 'ztn' disallowed for non-TLS connections.
+[1B/1B][100%][==================================================][0B/s]
+
+- source and destination
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file?authz=Bearer%20`cat ~/authn/bt_u8773` xroots://fndcatemp1.fnal.gov:1094//fermilab/users/arossi/data-`suffix`?authz=Bearer%20`cat ~/authn/bt_u8773`
+security protocol 'ztn' disallowed for non-TLS connections.
+[1B/1B][100%][==================================================][0B/s]  
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+JWT token in known location (ZTN) [uses rendezvous key]
+THESE FAIL NOW BUT SHOULD NOT WHEN THE NEW SCITOKENS LIBRARY VERSION WHICH IMPLEMENTS FALLBACK FROM ZTN BECOMES AVAILALBLE
+
+(anonymous read of world-reable source)
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroot://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/world-readable xroots://fndcatemp1.fnal.gov:1094//fermilab/users/arossi/data-`suffix`
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3010] Unable to create /fermilab/users/arossi/data-2022040214431648928580699573800; permission denied (destination)
+
+protected file
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file xroots://fndcatemp1.fnal.gov:1094//fermilab/users/arossi/data-`suffix`
+security protocol 'ztn' disallowed for non-TLS connections.
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3010] Unable to create /fermilab/users/arossi/data-2022040214441648928660711919133; permission denied (destination)
+
+NOTE:  dCache allows the xrootd vanilla third-party client access to the source file without having to authenticate via ZTN, thanks to our chaining:
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected-file xroots://fndcatemp1.fnal.gov:1094//fermilab/users/arossi/data-`suffix`?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773`
+security protocol 'ztn' disallowed for non-TLS connections.
+[1B/1B][100%][==================================================][0B/s]
+
+
+						    ** xrootd to dCache THIRD PARTY TESTS **
+
+x509 delegated proxy regression test:
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc delegate only xroot://fndcatemp1.fnal.gov:1095//fermilab/users/arossi/data_1b xroots://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+[1B/1B][100%][==================================================][0B/s]
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+JWT token as CGI [uses rendezvous key]
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroots://fndcatemp1.fnal.gov:1094//fermilab/users/arossi/data_1b?authz=Bearer%20`cat ~/authn/bt_u8773` xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`?authz=Bearer%20`cat ~/authn/bt_u8773`
+[1B/1B][100%][==================================================][0B/s]  
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+JWT token in known location (ZTN) [uses rendezvous key]
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroots://fndcatemp1.fnal.gov:1094//fermilab/users/arossi/data_1b xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3010] Unable to open /fermilab/users/arossi/data_1b; permission denied
+
+Without a bearer token on the source, the vanilla server does not authorize reading the file.  AFTER THE NEW LIBRARY VERSION, THIS SHOULD WORK
+
+[arossi@fndcatemp1 ~]$ xrdcp5x --tpc only xroots://fndcatemp1.fnal.gov:1094//fermilab/users/arossi/data_1b?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773` xroots://fndcatemp2.fnal.gov:1094//pnfs/fs/usr/fermilab/users/arossi/volatile/protected/data-`suffix`
+[0B/0B][100%][==================================================][0B/s]  
+Run: [ERROR] Server responded with an error: [3010] Authentication to fndcatemp1.fnal.gov:1094 failed; all protocols have been tried.
+
+This should work if the server is configured to use unix as well ... but I can't currently figure out how (should work) (note that the token on the destination should not be necessary, since we do have a fallback to the ZTN token).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

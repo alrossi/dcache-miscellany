@@ -1,0 +1,62 @@
+
+======================================================
+
+https://fndcatemp2.fnal.gov:2880/.well-known/wlcg-tape-rest-api
+
+======================================================
+
+cat bulk-wlcg-scripts/stage-post-curl.sh
+
+cat filelists/demo_XX/wlcg-stage-tape-release.json | less
+
+./bulk-wlcg-scripts/stage-post-curl.sh @filelists/demo_XX/wlcg-stage-tape-release.json
+
+cat bulk-wlcg-scripts/stage-get-curl.sh
+
+./bulk-wlcg-scripts/stage-get-curl.sh RID | less
+
+cat bulk-wlcg-scripts/stage-release-curl.sh
+
+./bulk-wlcg-scripts/stage-release-curl.sh RID @filelists/demo_XX/wlcg-paths-tape-release.json
+
+cat bulk-wlcg-scripts/stage-delete-curl.sh
+
+./bulk-wlcg-scripts/stage-delete-curl.sh RID
+
+./bulk-wlcg-scripts/stage-get-curl.sh RID
+
+======================================================
+
+./bulk-wlcg-scripts/stage-post-curl.sh @filelists/demo_XX/wlcg-stage-tape-cancel.json
+
+./bulk-wlcg-scripts/stage-get-curl.sh RID | less
+
+cat ./bulk-wlcg-scripts/stage-cancel-curl.sh
+
+./bulk-wlcg-scripts/stage-cancel-curl.sh RID @filelists/demo_XX/wlcg-paths-tape-cancel.json
+
+./bulk-wlcg-scripts/stage-get-curl.sh RID | less
+
+./bulk-wlcg-scripts/stage-cancel-curl.sh RID
+
+./bulk-wlcg-scripts/bulk-get-curl.sh RID | less
+
+./bulk-wlcg-scripts/bulk-delete-curl.sh RID
+
+./bulk-wlcg-scripts/bulk-get-curl.sh RID
+
+======================================================
+
+cat filelists/demo_XX/qos-disk-tape-to-tape.json
+
+./bulk-wlcg-scripts/bulk-post-curl.sh @filelists/demo_XX/qos-disk-tape-to-tape.json
+
+./bulk-wlcg-scripts/bulk-get-curl.sh RID | less
+
+======================================================
+
+request submit -activity=LOG_TARGET -expandDirectories=ALL -prestore /pnfs/fs/usr/fermilab/users/arossi/persistent
+
+target ls -count -state
+
+request submit -activity=LOG_TARGET -expandDirectories=ALL /pnfs/fs/usr/fermilab/users/arossi/persistent

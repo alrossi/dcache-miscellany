@@ -1,0 +1,5 @@
+xrdcp5x --tpc only xroots://fndcatemp1.fnal.gov:1094//fermilab/users/arossi/data_1b?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773` xroots://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/fermilab/users/arossi/volatile/data_1b-`suffix`?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773`
+
+xrdcp5x --tpc only xroots://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/fermilab/users/arossi/volatile/data_1b?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773` xroots://fndcatemp1.fnal.gov:1094//fermilab/users/arossi/data_1b-`suffix`?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773`
+
+xrdcp5x --tpc only xroots://fndcatemp2.fnal.gov:1095//pnfs/fs/usr/fermilab/users/arossi/volatile/data_1b?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773` xroots://fndcatemp2.fnal.gov:1096//pnfs/fs/usr/fermilab/users/arossi/volatile/data_1b-`suffix`?authz=Bearer%20`cat $XDG_RUNTIME_DIR/bt_u8773`

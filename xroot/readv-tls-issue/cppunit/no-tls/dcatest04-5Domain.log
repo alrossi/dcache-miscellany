@@ -1,0 +1,27 @@
+18 Nov 2021 12:55:45 (dcatest04-5) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg xrootd-1094-fndcatemp2 PoolDeliverFile 0000BF5BF832944E4B23A50AAB0B21E8454C] sending redirect /131.225.13.6 to Xrootd-door [>xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain]
+18 Nov 2021 12:55:45 (dcatest04-5) [] doOnProtocolRequest, version 1296, expect 3, option 3.
+18 Nov 2021 12:55:45 (dcatest04-5) [] setLocalTlsActivation 1296, 3, 3.
+18 Nov 2021 12:55:45 (dcatest04-5) [] Client version 1296, options 3, expect 3.
+18 Nov 2021 12:55:45 (dcatest04-5) [] setLocalTlsActivation, server mode is OPTIONAL, flags are turned off.
+18 Nov 2021 12:55:45 (dcatest04-5) [] server uses TLS ? false.
+18 Nov 2021 12:55:45 (dcatest04-5) [] Sending protocol message with server flags mode: OPTIONAL, flags: -2147483647 (manager false, meta-server false, proxy-server false, server true, supervisor false, data-server true, load-balancer true, tlsData false, tlsGPF false, tlsLogin false, tlsSession false, tlsTPC false, goToTLS false, anonGPF false), signing policy (secLvl 0)(overrides {})(force false).
+18 Nov 2021 12:55:45 (dcatest04-5) [] PROTOCOL RESPONSE TO CLIENT protocol-response[-2147483647][(secLvl 0)(overrides {})(force false)].
+18 Nov 2021 12:55:45 (dcatest04-5) [] server uses TLS ? false.
+18 Nov 2021 12:55:45 (dcatest04-5) [] no authentication or TLS enforced.
+18 Nov 2021 12:55:45 (dcatest04-5) [] server is not TPC destination; no TLS TPC check.
+18 Nov 2021 12:55:45 (dcatest04-5) [] doOnOpen, called cancel on reconnect timers for 7ac9525c-9163-421e-9532-ff0caa963d04
+18 Nov 2021 12:56:45 (dcatest04-5) [] [id: 0xef30fe3f, L:/131.225.13.6:33141 ! R:/131.225.240.89:55334] channeInactive, starting timer for reconnect with mover 7ac9525c-9163-421e-9532-ff0caa963d04.
+18 Nov 2021 12:56:45 (dcatest04-5) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFLSrYfg xrootd-1094-fndcatemp2 PoolDeliverFile 0000BF5BF832944E4B23A50AAB0B21E8454C] sending redirect /131.225.13.6 to Xrootd-door [>xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain]
+18 Nov 2021 12:56:45 (dcatest04-5) [] doOnProtocolRequest, version 1296, expect 3, option 3.
+18 Nov 2021 12:56:45 (dcatest04-5) [] setLocalTlsActivation 1296, 3, 3.
+18 Nov 2021 12:56:45 (dcatest04-5) [] Client version 1296, options 3, expect 3.
+18 Nov 2021 12:56:45 (dcatest04-5) [] setLocalTlsActivation, server mode is OPTIONAL, flags are turned off.
+18 Nov 2021 12:56:45 (dcatest04-5) [] server uses TLS ? false.
+18 Nov 2021 12:56:45 (dcatest04-5) [] Sending protocol message with server flags mode: OPTIONAL, flags: -2147483647 (manager false, meta-server false, proxy-server false, server true, supervisor false, data-server true, load-balancer true, tlsData false, tlsGPF false, tlsLogin false, tlsSession false, tlsTPC false, goToTLS false, anonGPF false), signing policy (secLvl 0)(overrides {})(force false).
+18 Nov 2021 12:56:45 (dcatest04-5) [] PROTOCOL RESPONSE TO CLIENT protocol-response[-2147483647][(secLvl 0)(overrides {})(force false)].
+18 Nov 2021 12:56:45 (dcatest04-5) [] server uses TLS ? false.
+18 Nov 2021 12:56:45 (dcatest04-5) [] no authentication or TLS enforced.
+18 Nov 2021 12:56:45 (dcatest04-5) [] server is not TPC destination; no TLS TPC check.
+18 Nov 2021 12:56:45 (dcatest04-5) [] doOnOpen, called cancel on reconnect timers for 4738aee8-1582-4fff-bbef-9c8dd17e0fba
+18 Nov 2021 12:57:07 (dcatest04-5) [] [id: 0x05ee7ab9, L:/131.225.13.6:33141 ! R:/131.225.240.89:55342] channeInactive, starting timer for reconnect with mover 4738aee8-1582-4fff-bbef-9c8dd17e0fba.
+18 Nov 2021 13:01:45 (dcatest04-5) [] reconnect timer expired for 7ac9525c-9163-421e-9532-ff0caa963d04; channel was released and timer cancelled.

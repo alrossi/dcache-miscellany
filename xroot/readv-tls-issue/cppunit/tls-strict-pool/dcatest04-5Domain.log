@@ -1,0 +1,19 @@
+18 Nov 2021 13:05:58 (dcatest04-5) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXRFNk6qog xrootd-1094-fndcatemp2 PoolDeliverFile 0000BF5BF832944E4B23A50AAB0B21E8454C] sending redirect /131.225.13.6 to Xrootd-door [>xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain]
+18 Nov 2021 13:05:58 (dcatest04-5) [] doOnProtocolRequest, version 1296, expect 3, option 3.
+18 Nov 2021 13:05:58 (dcatest04-5) [] setLocalTlsActivation 1296, 3, 3.
+18 Nov 2021 13:05:58 (dcatest04-5) [] Client version 1296, options 3, expect 3.
+18 Nov 2021 13:05:58 (dcatest04-5) [] setLocalTlsActivation, requires TLS for login, client kXR_ExpLogin.
+18 Nov 2021 13:05:58 (dcatest04-5) [] server uses TLS ? true.
+18 Nov 2021 13:05:58 (dcatest04-5) [] transitionedToTLS, server tlsActivation: LOGIN.
+18 Nov 2021 13:05:58 (dcatest04-5) [] PIPELINE addFirst:  SSLHandler need auth false, want auth false.
+18 Nov 2021 13:05:58 (dcatest04-5) [] server transitioned to TLS ? true.
+18 Nov 2021 13:05:58 (dcatest04-5) [] kXR_protocol, server has now transitioned to tls? true.
+18 Nov 2021 13:05:58 (dcatest04-5) [] Sending protocol message with server flags mode: STRICT, flags: -1006632959 (manager false, meta-server false, proxy-server false, server true, supervisor false, data-server true, load-balancer true, tlsData false, tlsGPF false, tlsLogin true, tlsSession false, tlsTPC false, goToTLS true, anonGPF false), signing policy (secLvl 0)(overrides {})(force false).
+18 Nov 2021 13:05:58 (dcatest04-5) [] PROTOCOL RESPONSE TO CLIENT protocol-response[-1006632959][(secLvl 0)(overrides {})(force false)].
+18 Nov 2021 13:05:58 (dcatest04-5) [] Server: TLS handshake completed.
+18 Nov 2021 13:05:58 (dcatest04-5) [] server uses TLS ? true.
+18 Nov 2021 13:05:58 (dcatest04-5) [] server transitioned to TLS ? false.
+18 Nov 2021 13:05:58 (dcatest04-5) [] kXR_login, server has now transitioned to tls? false.
+18 Nov 2021 13:05:58 (dcatest04-5) [] server is not TPC destination; no TLS TPC check.
+18 Nov 2021 13:05:58 (dcatest04-5) [] doOnOpen, called cancel on reconnect timers for 74a0efbf-e797-40ff-955a-ffae7a47a0a6
+18 Nov 2021 13:06:30 (dcatest04-5) [] [id: 0x716e7d2e, L:/131.225.13.6:33130 ! R:/131.225.240.89:38802] channeInactive, starting timer for reconnect with mover 74a0efbf-e797-40ff-955a-ffae7a47a0a6.

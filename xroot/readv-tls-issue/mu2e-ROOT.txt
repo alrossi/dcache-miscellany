@@ -1,0 +1,11 @@
+ssh mu2epro@mu2egpvm03.fnal.gov
+cd temp
+source setup.sh
+source run.sh
+will hang on rootd access
+
+
+/DC=org/DC=incommon/C=US/ST=Illinois/L=Batavia/O=Fermi Research Alliance/OU=Fermilab/CN=mu2epro-mu2egpvm01.fnal.gov/CN=2712326798
+
+
+

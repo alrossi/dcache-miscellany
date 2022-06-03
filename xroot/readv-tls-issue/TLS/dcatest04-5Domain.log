@@ -1,0 +1,126 @@
+25 Oct 2021 14:38:30 (dcatest04-5) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXPMoFXi9A xrootd-1094-fndcatemp2 PoolDeliverFile 000075E2B7C4F37C412380EA01157E28DB36] sending redirect /131.225.13.6 to Xrootd-door [>xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain]
+25 Oct 2021 14:38:30 (dcatest04-5) [] doOnProtocolRequest, version 1280, expect 3, option 3.
+25 Oct 2021 14:38:30 (dcatest04-5) [] setLocalTlsActivation 1280, 3, 3.
+25 Oct 2021 14:38:30 (dcatest04-5) [] Client version 1280, options 3, expect 3.
+25 Oct 2021 14:38:30 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:38:30 (dcatest04-5) [] setLocalTlsActivation, requires TLS for login, client kXR_ExpLogin.
+25 Oct 2021 14:38:30 (dcatest04-5) [] setGoToTLS true.
+25 Oct 2021 14:38:30 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:38:30 (dcatest04-5) [] server uses TLS ? true.
+25 Oct 2021 14:38:30 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:38:30 (dcatest04-5) [] transitionedToTLS, server tlsActivation: LOGIN.
+25 Oct 2021 14:38:30 (dcatest04-5) [] goToTLS ? true.
+25 Oct 2021 14:38:30 (dcatest04-5) [] PIPELINE addFirst:  SSLHandler need auth false, want auth false.
+25 Oct 2021 14:38:30 (dcatest04-5) [] server transitioned to TLS ? true.
+25 Oct 2021 14:38:30 (dcatest04-5) [] kXR_protocol, server has now transitioned to tls? true.
+25 Oct 2021 14:38:30 (dcatest04-5) [] Sending protocol message with server flags mode: STRICT, flags: -1006632959 (manager false, meta-server false, proxy-server false, server true, supervisor false, data-server true, load-balancer true, tlsData false, tlsGPF false, tlsLogin true, tlsSession false, tlsTPC false, goToTLS true, anonGPF false), signing policy (secLvl 0)(overrides {})(force false).
+25 Oct 2021 14:38:30 (dcatest04-5) [] PROTOCOL RESPONSE TO CLIENT protocol-response[-1006632959][(secLvl 0)(overrides {})(force false)].
+25 Oct 2021 14:38:30 (dcatest04-5) [] Server: TLS handshake completed.
+25 Oct 2021 14:38:30 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:38:30 (dcatest04-5) [] server uses TLS ? true.
+25 Oct 2021 14:38:30 (dcatest04-5) [] server transitioned to TLS ? false.
+25 Oct 2021 14:38:30 (dcatest04-5) [] kXR_login, server has now transitioned to tls? false.
+25 Oct 2021 14:38:30 (dcatest04-5) [] server is not TPC destination; no TLS TPC check.
+25 Oct 2021 14:38:30 (dcatest04-5) [] doOnOpen, called cancel on reconnect timers for 86bcd4cb-5749-4cc3-a206-a391e41104dd
+25 Oct 2021 14:38:30 (dcatest04-5) [] READ 300 bytes, offset is now 300.
+25 Oct 2021 14:38:30 (dcatest04-5) [] READ 666 bytes, offset is now 144500685.
+25 Oct 2021 14:38:30 (dcatest04-5) [] READ 13265 bytes, offset is now 144283747.
+25 Oct 2021 14:38:32 (dcatest04-5) [] READ 213447 bytes, offset is now 144497194.
+25 Oct 2021 14:38:32 (dcatest04-5) [] READ 5680 bytes, offset is now 144265958.
+25 Oct 2021 14:38:32 (dcatest04-5) [] READ 851 bytes, offset is now 144498588.
+25 Oct 2021 14:38:32 (dcatest04-5) [] READ 388 bytes, offset is now 144266935.
+25 Oct 2021 14:38:32 (dcatest04-5) [] READ 346 bytes, offset is now 144267281.
+25 Oct 2021 14:38:32 (dcatest04-5) [] READ 382 bytes, offset is now 144499127.
+25 Oct 2021 14:38:32 (dcatest04-5) [] READ 358 bytes, offset is now 144499628.
+25 Oct 2021 14:38:32 (dcatest04-5) [] READ 391 bytes, offset is now 144500019.
+25 Oct 2021 14:38:32 (dcatest04-5) [] READ 709 bytes, offset is now 144269953.
+25 Oct 2021 14:38:32 (dcatest04-5) [] READ 120 bytes, offset is now 145200971.
+25 Oct 2021 14:38:32 (dcatest04-5) [] READ 555 bytes, offset is now 144257116.
+25 Oct 2021 14:38:33 (dcatest04-5) [] READ 2885 bytes, offset is now 144200122.
+25 Oct 2021 14:38:33 (dcatest04-5) [] READ 55165 bytes, offset is now 144255287.
+25 Oct 2021 14:38:33 (dcatest04-5) [] READ 2482 bytes, offset is now 145204131.
+25 Oct 2021 14:39:33 (dcatest04-5) [] [id: 0x47643640, L:/131.225.13.6:33127 ! R:/131.225.67.36:37782] channeInactive, starting timer for reconnect with mover 86bcd4cb-5749-4cc3-a206-a391e41104dd.
+25 Oct 2021 14:39:33 (dcatest04-5) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXPMoFXi9A xrootd-1094-fndcatemp2 PoolDeliverFile 000075E2B7C4F37C412380EA01157E28DB36] sending redirect /131.225.13.6 to Xrootd-door [>xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain]
+25 Oct 2021 14:39:33 (dcatest04-5) [] doOnProtocolRequest, version 1280, expect 3, option 7.
+25 Oct 2021 14:39:33 (dcatest04-5) [] setLocalTlsActivation 1280, 3, 7.
+25 Oct 2021 14:39:33 (dcatest04-5) [] Client version 1280, options 7, expect 3.
+25 Oct 2021 14:39:33 (dcatest04-5) [] Client kXR_wantTLS.
+25 Oct 2021 14:39:33 (dcatest04-5) [] setRequiresTLSForLogin true.
+25 Oct 2021 14:39:33 (dcatest04-5) [] setGoToTLS true.
+25 Oct 2021 14:39:33 (dcatest04-5) [] setLocalTlsActivation, activation is now LOGIN.
+25 Oct 2021 14:39:33 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:39:33 (dcatest04-5) [] server uses TLS ? true.
+25 Oct 2021 14:39:33 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:39:33 (dcatest04-5) [] transitionedToTLS, server tlsActivation: LOGIN.
+25 Oct 2021 14:39:33 (dcatest04-5) [] goToTLS ? true.
+25 Oct 2021 14:39:33 (dcatest04-5) [] PIPELINE addFirst:  SSLHandler need auth false, want auth false.
+25 Oct 2021 14:39:33 (dcatest04-5) [] server transitioned to TLS ? true.
+25 Oct 2021 14:39:33 (dcatest04-5) [] kXR_protocol, server has now transitioned to tls? true.
+25 Oct 2021 14:39:33 (dcatest04-5) [] Sending protocol message with server flags mode: STRICT, flags: -1006632959 (manager false, meta-server false, proxy-server false, server true, supervisor false, data-server true, load-balancer true, tlsData false, tlsGPF false, tlsLogin true, tlsSession false, tlsTPC false, goToTLS true, anonGPF false), signing policy (secLvl 0)(overrides {})(force false).
+25 Oct 2021 14:39:33 (dcatest04-5) [] PROTOCOL RESPONSE TO CLIENT protocol-response[-1006632959][(secLvl 0)(overrides {})(force false)].
+25 Oct 2021 14:39:33 (dcatest04-5) [] Server: TLS handshake completed.
+25 Oct 2021 14:39:33 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:39:33 (dcatest04-5) [] server uses TLS ? true.
+25 Oct 2021 14:39:33 (dcatest04-5) [] server transitioned to TLS ? false.
+25 Oct 2021 14:39:33 (dcatest04-5) [] kXR_login, server has now transitioned to tls? false.
+25 Oct 2021 14:39:33 (dcatest04-5) [] server is not TPC destination; no TLS TPC check.
+25 Oct 2021 14:39:33 (dcatest04-5) [] doOnOpen, called cancel on reconnect timers for 26d75a76-96fe-41f7-a15a-55db9a5f565b
+25 Oct 2021 14:39:33 (dcatest04-5) [] READ 55165 bytes, offset is now 144255287.
+25 Oct 2021 14:39:33 (dcatest04-5) [] READ 2482 bytes, offset is now 145204131.
+25 Oct 2021 14:40:33 (dcatest04-5) [] [id: 0xde422683, L:/131.225.13.6:33127 ! R:/131.225.67.36:37784] channeInactive, starting timer for reconnect with mover 26d75a76-96fe-41f7-a15a-55db9a5f565b.
+25 Oct 2021 14:40:33 (dcatest04-5) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXPMoFXi9A xrootd-1094-fndcatemp2 PoolDeliverFile 000075E2B7C4F37C412380EA01157E28DB36] sending redirect /131.225.13.6 to Xrootd-door [>xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain]
+25 Oct 2021 14:40:33 (dcatest04-5) [] doOnProtocolRequest, version 1280, expect 3, option 7.
+25 Oct 2021 14:40:33 (dcatest04-5) [] setLocalTlsActivation 1280, 3, 7.
+25 Oct 2021 14:40:33 (dcatest04-5) [] Client version 1280, options 7, expect 3.
+25 Oct 2021 14:40:33 (dcatest04-5) [] Client kXR_wantTLS.
+25 Oct 2021 14:40:33 (dcatest04-5) [] setRequiresTLSForLogin true.
+25 Oct 2021 14:40:33 (dcatest04-5) [] setGoToTLS true.
+25 Oct 2021 14:40:33 (dcatest04-5) [] setLocalTlsActivation, activation is now LOGIN.
+25 Oct 2021 14:40:33 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:40:33 (dcatest04-5) [] server uses TLS ? true.
+25 Oct 2021 14:40:33 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:40:33 (dcatest04-5) [] transitionedToTLS, server tlsActivation: LOGIN.
+25 Oct 2021 14:40:33 (dcatest04-5) [] goToTLS ? true.
+25 Oct 2021 14:40:33 (dcatest04-5) [] PIPELINE addFirst:  SSLHandler need auth false, want auth false.
+25 Oct 2021 14:40:33 (dcatest04-5) [] server transitioned to TLS ? true.
+25 Oct 2021 14:40:33 (dcatest04-5) [] kXR_protocol, server has now transitioned to tls? true.
+25 Oct 2021 14:40:33 (dcatest04-5) [] Sending protocol message with server flags mode: STRICT, flags: -1006632959 (manager false, meta-server false, proxy-server false, server true, supervisor false, data-server true, load-balancer true, tlsData false, tlsGPF false, tlsLogin true, tlsSession false, tlsTPC false, goToTLS true, anonGPF false), signing policy (secLvl 0)(overrides {})(force false).
+25 Oct 2021 14:40:33 (dcatest04-5) [] PROTOCOL RESPONSE TO CLIENT protocol-response[-1006632959][(secLvl 0)(overrides {})(force false)].
+25 Oct 2021 14:40:33 (dcatest04-5) [] Server: TLS handshake completed.
+25 Oct 2021 14:40:33 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:40:33 (dcatest04-5) [] server uses TLS ? true.
+25 Oct 2021 14:40:33 (dcatest04-5) [] server transitioned to TLS ? false.
+25 Oct 2021 14:40:33 (dcatest04-5) [] kXR_login, server has now transitioned to tls? false.
+25 Oct 2021 14:40:33 (dcatest04-5) [] server is not TPC destination; no TLS TPC check.
+25 Oct 2021 14:40:33 (dcatest04-5) [] doOnOpen, called cancel on reconnect timers for 249d3e94-916f-45ee-8d7d-cf6cd7d98030
+25 Oct 2021 14:40:33 (dcatest04-5) [] READ 55165 bytes, offset is now 144255287.
+25 Oct 2021 14:40:33 (dcatest04-5) [] READ 2482 bytes, offset is now 145204131.
+25 Oct 2021 14:41:33 (dcatest04-5) [] [id: 0x5cb7e22e, L:/131.225.13.6:33127 ! R:/131.225.67.36:37786] channeInactive, starting timer for reconnect with mover 249d3e94-916f-45ee-8d7d-cf6cd7d98030.
+25 Oct 2021 14:41:33 (dcatest04-5) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXPMoFXi9A xrootd-1094-fndcatemp2 PoolDeliverFile 000075E2B7C4F37C412380EA01157E28DB36] sending redirect /131.225.13.6 to Xrootd-door [>xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain]
+25 Oct 2021 14:41:33 (dcatest04-5) [] doOnProtocolRequest, version 1280, expect 3, option 7.
+25 Oct 2021 14:41:33 (dcatest04-5) [] setLocalTlsActivation 1280, 3, 7.
+25 Oct 2021 14:41:33 (dcatest04-5) [] Client version 1280, options 7, expect 3.
+25 Oct 2021 14:41:33 (dcatest04-5) [] Client kXR_wantTLS.
+25 Oct 2021 14:41:33 (dcatest04-5) [] setRequiresTLSForLogin true.
+25 Oct 2021 14:41:33 (dcatest04-5) [] setGoToTLS true.
+25 Oct 2021 14:41:33 (dcatest04-5) [] setLocalTlsActivation, activation is now LOGIN.
+25 Oct 2021 14:41:33 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:41:33 (dcatest04-5) [] server uses TLS ? true.
+25 Oct 2021 14:41:33 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:41:33 (dcatest04-5) [] transitionedToTLS, server tlsActivation: LOGIN.
+25 Oct 2021 14:41:33 (dcatest04-5) [] goToTLS ? true.
+25 Oct 2021 14:41:33 (dcatest04-5) [] PIPELINE addFirst:  SSLHandler need auth false, want auth false.
+25 Oct 2021 14:41:33 (dcatest04-5) [] server transitioned to TLS ? true.
+25 Oct 2021 14:41:33 (dcatest04-5) [] kXR_protocol, server has now transitioned to tls? true.
+25 Oct 2021 14:41:33 (dcatest04-5) [] Sending protocol message with server flags mode: STRICT, flags: -1006632959 (manager false, meta-server false, proxy-server false, server true, supervisor false, data-server true, load-balancer true, tlsData false, tlsGPF false, tlsLogin true, tlsSession false, tlsTPC false, goToTLS true, anonGPF false), signing policy (secLvl 0)(overrides {})(force false).
+25 Oct 2021 14:41:33 (dcatest04-5) [] PROTOCOL RESPONSE TO CLIENT protocol-response[-1006632959][(secLvl 0)(overrides {})(force false)].
+25 Oct 2021 14:41:33 (dcatest04-5) [] Server: TLS handshake completed.
+25 Oct 2021 14:41:33 (dcatest04-5) [] requiresTLSForLogin ? true.
+25 Oct 2021 14:41:33 (dcatest04-5) [] server uses TLS ? true.
+25 Oct 2021 14:41:33 (dcatest04-5) [] server transitioned to TLS ? false.
+25 Oct 2021 14:41:33 (dcatest04-5) [] kXR_login, server has now transitioned to tls? false.
+25 Oct 2021 14:41:33 (dcatest04-5) [] server is not TPC destination; no TLS TPC check.
+25 Oct 2021 14:41:33 (dcatest04-5) [] doOnOpen, called cancel on reconnect timers for 6e9e7bee-eaab-44b9-9988-65403e08ca28
+25 Oct 2021 14:41:33 (dcatest04-5) [] READ 55165 bytes, offset is now 144255287.
+25 Oct 2021 14:41:33 (dcatest04-5) [] READ 2482 bytes, offset is now 145204131.
+25 Oct 2021 14:41:42 (dcatest04-5) [] [id: 0x1fd2fe9b, L:/131.225.13.6:33127 ! R:/131.225.67.36:37792] channeInactive, starting timer for reconnect with mover 6e9e7bee-eaab-44b9-9988-65403e08ca28.

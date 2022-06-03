@@ -1,0 +1,73 @@
+I have this huge patch now where I eliminated pgroup entirely from the way resilience operates. I regressed on basic resilience functions and seems correct. I'm holding aside the problem of QoS/sticky pin interaction for the moment because I don't think that depends on anything I'm doing, but it does need to be addressed. However, it seems to me that this really is not the way FNAL works with resilience.  We are using it for availability for particular experiments (20 copies). Their space allocations are defined using pool groups. We can't just put their extra replicas anywhere.  So I think we may be back to square one with asking how to figure out where to put the files.
+It seems to me that we need to do something like the following:  pool group is left in place in resilience as a factor. But the default behavior is to leave it undefined. Later, when we decide policy description, we can include an attribute which says "always use this pool group." This would be metadata associated with one or more files (in a policy file?).  At any rate, I don't think eliminating pool group tout court is what we want to do.
+Or:  What if we turned the -resilient pool group flag into something like '-primary' group (of which a pool can only belong to one)? Or maybe give it a numerical preference value, like on the links? Then resilience, in the absence of a preference, can choose among any pools; but if there are preferential groups, it ranks them and always uses the pools from the one of highest preference.  The question then would be whether to fail if it runs out of pools in the group, or whether it should only fail if there is absolutely no place to put the replica. (edited) 
+
+arossi  13:07
+Report on today's testing.   I have a fresh patch which modifies resilience to use a "SYSTEM" pool group which includes all mapped pools when the source pool does not belong to any "resilient" group.  When a source pool belongs to one (or more) resilient groups, for the moment we choose randomly among them.  If it is only one, the behavior will be identical to what it was before.   Internally to resilience I have changed the designation of this marker from "resilient" to "primary" pool group.  I have not altered the psu yet, but we will probably want to support -resilient AND -primary for a while.   Eventually, may also want to weight these, and have resilience choose the one with highest weight.   I am going to prepare the patch for posting.  It is a bit ample, but a lot of it is just renaming or deletion.  The next step (after the PSU flag change) will be to eliminate the pinning part of the QoS engine and see if resilience takes care of the QoS change.
+
+arossi  13:42
+Actually, the next patch is now to eliminate that 'required' be defined.   Concept:  if required is undefined, it is = 0 (meaning no necessary permanent copies).   A file inspected by resilience belonging to a unit with this value means resilience should still examine it to make sure it is on tape if it needs to be (CUSTODIAL).   Undef or 0 required means resilience will not automatically stage the file if it is missing on disk, whereas 1 does enforce this.   With this change, complete QoS control (as it is currently defined) should be possible via changes in AL and RP. (edited) 
+
+
+
+
+
+During my testing I have been prompted to reconsider a discussion we had a while back about how to choose a pool from overlapping pool groups in the new setup.  My working decision was:  if there is a preferential group (and only one), choose from that; otherwise choose from all available pools.   It seems to me the second alternative is not quite right.  I think it makes more sense to choose a pool in that case from the union of all the pool groups that the file is linked to.
+
+It's more complicated than that, though.  You need to choose the pool group which will satisfy the requirements...
+
+Easier to go back to the original solution.
+
+Nah, not giving up so easily.  Will see if we an retry with another group ...
+
+After considering this again, the union idea is flawed.  Here's why
+Consider pool groups:
+g1 {p1, p2, p3}
+g2 {p1, p4, p5}
+g3 {p2, p6, p7}
+Say none of these groups are resilient/primary.
+Using the union of the groups to which the source pool belongs in order to select a target for copying, let us follow this example: File A needs 3 copies.
+  
+1. The first one lands on p7. 
+2. {p2, p6} are left to choose from.
+3. Selecting p2, the next choice would give us {p6}U{p1, p3}
+4. Select p6   
+File A is now on {p2, p6, p7}.  Now say p7 goes down.  Since it only belongs to g3, we would according to this algorithm have to choose from {p2, p6}, but both are occupied, so the operation fails.
+If p2 had gone down, however, it would succeed, since {p1, p3} are available from g1 U g2 to which p2 belongs.
+Clearly it does not make sense to select a target this way.  If we select from all pools (i.e., ignore the pool group) except in the case where the original pool belongs to a primary or resilient pool group, we should not have this problem, even in the latter case, where transitivity would guarantee that we are always selecting from the restricted group.
+Long and short of it, I am not changing the way the algorithm currently works.
+
+"where transitivity would guarantee that we are always selecting from the restricted group."  Actually, that's not quite true if we allow a pool to belong to more than one primary group.   I'm afraid that if we want to retain the usefulness of the primary group, we will need to continue to enforce that restriction.
+
+
+
+
+
+
+
+
+===========
+
+g1 {p1, p2, p3}
+g2 {p1, p4, p5}
+g3 {p2, p6, p7}
+
+
+p7 
+
+effective group for replicas of file:  g3
+choose p2
+
+{p2, p7}
+
+effective group for replicas of file == union of its current locations
+
+aleatoric as to whether it gets maximum or not.   So everywhere
+
+===========
+
+now, suppose we make g1 and g3 resilient
+
+file lands on p5 to be copied.  Choose p1
+
+p1 belongs to g1 (resilient) and g2 (not).   So now it thinks it must put all copies in g1.

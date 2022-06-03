@@ -1,0 +1,6 @@
+{
+  "iss": "https://demo.scitokens.org",
+  "sub": "arossi",
+  "aud": "https://wlcg.cern.ch/jwt/v1/any",
+"scope": "write:/fermilab/users/arossi read:/fermilab/users/arossi"
+}

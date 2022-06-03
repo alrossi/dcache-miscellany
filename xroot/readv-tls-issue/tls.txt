@@ -1,0 +1,96 @@
+08:15:27.598907 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [S.], seq 1766021000, ack 3188704077, win 28960, options [mss 1460,sackOK,TS val 2565209339 ecr 425919176,nop,wscale 7], length 0
+08:15:27.599678 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], ack 45, win 227, options [nop,nop,TS val 2565209339 ecr 425919177], length 0
+08:15:27.758228 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 1:17, ack 45, win 227, options [nop,nop,TS val 2565209498 ecr 425919177], length 16
+08:15:27.808060 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 17:33, ack 45, win 227, options [nop,nop,TS val 2565209548 ecr 425919336], length 16
+08:15:27.810447 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], ack 176, win 235, options [nop,nop,TS val 2565209550 ecr 425919387], length 0
+08:15:27.850604 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 33:2186, ack 176, win 235, options [nop,nop,TS val 2565209590 ecr 425919387], length 2153
+08:15:27.852929 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], ack 302, win 235, options [nop,nop,TS val 2565209593 ecr 425919430], length 0
+08:15:27.865600 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 2186:2237, ack 302, win 235, options [nop,nop,TS val 2565209605 ecr 425919430], length 51
+08:15:27.875418 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 2237:2290, ack 449, win 243, options [nop,nop,TS val 2565209615 ecr 425919444], length 53
+08:15:27.891230 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 2290:2355, ack 698, win 252, options [nop,nop,TS val 2565209631 ecr 425919453], length 65
+08:15:27.932786 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], ack 759, win 252, options [nop,nop,TS val 2565209673 ecr 425919470], length 0
+08:15:27.951554 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 2355:2692, ack 759, win 252, options [nop,nop,TS val 2565209691 ecr 425919470], length 337
+08:15:27.953690 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], ack 820, win 252, options [nop,nop,TS val 2565209693 ecr 425919530], length 0
+08:15:27.957263 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 2692:3395, ack 820, win 252, options [nop,nop,TS val 2565209697 ecr 425919530], length 703
+08:15:27.976184 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 3395:10635, ack 881, win 252, options [nop,nop,TS val 2565209716 ecr 425919535], length 7240
+08:15:27.976200 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 10635:16697, ack 881, win 252, options [nop,nop,TS val 2565209716 ecr 425919535], length 6062
+08:15:29.739574 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 16697:16752, ack 962, win 252, options [nop,nop,TS val 2565211479 ecr 425921308], length 55
+08:15:29.779760 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], ack 1023, win 252, options [nop,nop,TS val 2565211520 ecr 425921318], length 0
+08:15:29.841563 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 16752:23992, ack 1023, win 252, options [nop,nop,TS val 2565211581 ecr 425921318], length 7240
+08:15:29.841595 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 23992:31232, ack 1023, win 252, options [nop,nop,TS val 2565211581 ecr 425921318], length 7240
+08:15:29.842145 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 31232:38472, ack 1023, win 252, options [nop,nop,TS val 2565211582 ecr 425921419], length 7240
+08:15:29.842164 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 38472:44264, ack 1023, win 252, options [nop,nop,TS val 2565211582 ecr 425921419], length 5792
+08:15:29.842621 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 44264:50056, ack 1023, win 252, options [nop,nop,TS val 2565211582 ecr 425921420], length 5792
+08:15:29.842696 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 50056:57296, ack 1023, win 252, options [nop,nop,TS val 2565211582 ecr 425921420], length 7240
+08:15:29.843097 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 57296:63088, ack 1023, win 252, options [nop,nop,TS val 2565211583 ecr 425921420], length 5792
+08:15:29.843193 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 63088:70328, ack 1023, win 252, options [nop,nop,TS val 2565211583 ecr 425921420], length 7240
+08:15:29.843551 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 70328:77568, ack 1023, win 252, options [nop,nop,TS val 2565211583 ecr 425921421], length 7240
+08:15:29.843620 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 77568:84808, ack 1023, win 252, options [nop,nop,TS val 2565211583 ecr 425921421], length 7240
+08:15:29.844237 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 84808:92048, ack 1023, win 252, options [nop,nop,TS val 2565211584 ecr 425921421], length 7240
+08:15:29.844245 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 92048:94944, ack 1023, win 252, options [nop,nop,TS val 2565211584 ecr 425921421], length 2896
+08:15:29.844260 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 94944:100736, ack 1023, win 252, options [nop,nop,TS val 2565211584 ecr 425921421], length 5792
+08:15:29.844776 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 100736:107976, ack 1023, win 252, options [nop,nop,TS val 2565211585 ecr 425921422], length 7240
+08:15:29.844797 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 107976:116664, ack 1023, win 252, options [nop,nop,TS val 2565211585 ecr 425921422], length 8688
+08:15:29.845461 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 116664:125352, ack 1023, win 252, options [nop,nop,TS val 2565211585 ecr 425921422], length 8688
+08:15:29.845481 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 125352:134040, ack 1023, win 252, options [nop,nop,TS val 2565211585 ecr 425921422], length 8688
+08:15:29.846001 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 134040:142728, ack 1023, win 252, options [nop,nop,TS val 2565211586 ecr 425921423], length 8688
+08:15:29.846019 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 142728:151416, ack 1023, win 252, options [nop,nop,TS val 2565211586 ecr 425921423], length 8688
+08:15:29.846457 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 151416:160104, ack 1023, win 252, options [nop,nop,TS val 2565211586 ecr 425921424], length 8688
+08:15:29.846728 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 160104:165896, ack 1023, win 252, options [nop,nop,TS val 2565211586 ecr 425921424], length 5792
+08:15:29.847058 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 165896:174584, ack 1023, win 252, options [nop,nop,TS val 2565211587 ecr 425921424], length 8688
+08:15:29.847323 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 174584:183272, ack 1023, win 252, options [nop,nop,TS val 2565211587 ecr 425921424], length 8688
+08:15:29.847650 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 183272:193408, ack 1023, win 252, options [nop,nop,TS val 2565211587 ecr 425921425], length 10136
+08:15:29.847970 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 193408:202096, ack 1023, win 252, options [nop,nop,TS val 2565211588 ecr 425921425], length 8688
+08:15:29.848242 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 202096:212232, ack 1023, win 252, options [nop,nop,TS val 2565211588 ecr 425921425], length 10136
+08:15:29.848585 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 212232:218024, ack 1023, win 252, options [nop,nop,TS val 2565211588 ecr 425921426], length 5792
+08:15:29.848603 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 218024:219472, ack 1023, win 252, options [nop,nop,TS val 2565211588 ecr 425921426], length 1448
+08:15:29.848620 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 196304:197752, ack 1023, win 252, options [nop,nop,TS val 2565211588 ecr 425921426], length 1448
+08:15:29.848633 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 219472:220920, ack 1023, win 252, options [nop,nop,TS val 2565211588 ecr 425921426], length 1448
+08:15:29.848883 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 220920:223816, ack 1023, win 252, options [nop,nop,TS val 2565211589 ecr 425921426], length 2896
+08:15:29.848897 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 223816:225264, ack 1023, win 252, options [nop,nop,TS val 2565211589 ecr 425921426], length 1448
+08:15:29.849396 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 225264:226712, ack 1023, win 252, options [nop,nop,TS val 2565211589 ecr 425921426], length 1448
+08:15:29.849414 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 226712:230642, ack 1023, win 252, options [nop,nop,TS val 2565211589 ecr 425921426], length 3930
+08:15:29.921312 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], ack 1084, win 252, options [nop,nop,TS val 2565211661 ecr 425921498], length 0
+08:15:29.926809 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 230642:236359, ack 1084, win 252, options [nop,nop,TS val 2565211667 ecr 425921498], length 5717
+08:15:29.931677 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 236359:237247, ack 1145, win 252, options [nop,nop,TS val 2565211671 ecr 425921505], length 888
+08:15:29.936089 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 237247:237672, ack 1206, win 252, options [nop,nop,TS val 2565211676 ecr 425921510], length 425
+08:15:29.940234 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 237672:238055, ack 1267, win 252, options [nop,nop,TS val 2565211680 ecr 425921514], length 383
+08:15:29.949727 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 238055:238474, ack 1328, win 252, options [nop,nop,TS val 2565211689 ecr 425921518], length 419
+08:15:29.953016 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 238474:238869, ack 1389, win 252, options [nop,nop,TS val 2565211693 ecr 425921527], length 395
+08:15:29.956209 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 238869:239297, ack 1450, win 252, options [nop,nop,TS val 2565211696 ecr 425921531], length 428
+08:15:30.156765 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 238869:239297, ack 1450, win 252, options [nop,nop,TS val 2565211897 ecr 425921531], length 428
+08:15:30.169371 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 239297:240043, ack 1511, win 252, options [nop,nop,TS val 2565211909 ecr 425921742], length 746
+08:15:30.175836 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 240043:240200, ack 1572, win 252, options [nop,nop,TS val 2565211916 ecr 425921750], length 157
+08:15:30.179718 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 240200:240792, ack 1633, win 252, options [nop,nop,TS val 2565211919 ecr 425921754], length 592
+08:15:30.199215 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 240792:243730, ack 1702, win 252, options [nop,nop,TS val 2565211939 ecr 425921759], length 2938
+08:15:30.223714 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 243730:249522, ack 1787, win 252, options [nop,nop,TS val 2565211963 ecr 425921778], length 5792
+08:15:30.223746 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 249522:255314, ack 1787, win 252, options [nop,nop,TS val 2565211964 ecr 425921778], length 5792
+08:15:30.224712 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 255314:262554, ack 1787, win 252, options [nop,nop,TS val 2565211964 ecr 425921801], length 7240
+08:15:30.224736 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 262554:269794, ack 1787, win 252, options [nop,nop,TS val 2565211965 ecr 425921801], length 7240
+08:15:30.225608 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 269794:277034, ack 1787, win 252, options [nop,nop,TS val 2565211965 ecr 425921802], length 7240
+08:15:30.225626 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 277034:284274, ack 1787, win 252, options [nop,nop,TS val 2565211965 ecr 425921802], length 7240
+08:15:30.226338 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 284274:291514, ack 1787, win 252, options [nop,nop,TS val 2565211966 ecr 425921803], length 7240
+08:15:30.226358 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [.], seq 291514:298754, ack 1787, win 252, options [nop,nop,TS val 2565211966 ecr 425921803], length 7240
+08:15:30.227063 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [P.], seq 298754:301591, ack 1787, win 252, options [nop,nop,TS val 2565211967 ecr 425921804], length 2837
+08:16:30.293015 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56664: Flags [F.], seq 301591, ack 1788, win 252, options [nop,nop,TS val 2565272033 ecr 425981868], length 0
+08:16:30.427822 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [S.], seq 1270121239, ack 1575297928, win 28960, options [mss 1460,sackOK,TS val 2565272168 ecr 425982005,nop,wscale 7], length 0
+08:16:30.428569 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [.], ack 45, win 227, options [nop,nop,TS val 2565272168 ecr 425982005], length 0
+08:16:30.461567 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [P.], seq 1:17, ack 45, win 227, options [nop,nop,TS val 2565272201 ecr 425982005], length 16
+08:16:30.467091 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [P.], seq 17:33, ack 45, win 227, options [nop,nop,TS val 2565272207 ecr 425982039], length 16
+08:16:30.495208 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [P.], seq 33:2186, ack 176, win 235, options [nop,nop,TS val 2565272235 ecr 425982045], length 2153
+08:16:30.498981 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [P.], seq 2186:2237, ack 302, win 235, options [nop,nop,TS val 2565272239 ecr 425982074], length 51
+08:16:30.503758 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [P.], seq 2237:2290, ack 449, win 243, options [nop,nop,TS val 2565272244 ecr 425982077], length 53
+08:16:30.510812 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [P.], seq 2290:2327, ack 502, win 243, options [nop,nop,TS val 2565272251 ecr 425982082], length 37
+08:16:30.516036 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [P.], seq 2327:2368, ack 751, win 252, options [nop,nop,TS val 2565272256 ecr 425982088], length 41
+08:16:30.556775 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [.], ack 836, win 252, options [nop,nop,TS val 2565272297 ecr 425982094], length 0
+08:16:30.571823 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [.], seq 2368:9608, ack 836, win 252, options [nop,nop,TS val 2565272312 ecr 425982094], length 7240
+08:16:30.571851 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [.], seq 9608:16848, ack 836, win 252, options [nop,nop,TS val 2565272312 ecr 425982094], length 7240
+08:16:30.572540 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [.], seq 16848:24088, ack 836, win 252, options [nop,nop,TS val 2565272312 ecr 425982150], length 7240
+08:16:30.572558 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [.], seq 24088:31328, ack 836, win 252, options [nop,nop,TS val 2565272312 ecr 425982150], length 7240
+08:16:30.573069 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [P.], seq 31328:32776, ack 836, win 252, options [nop,nop,TS val 2565272313 ecr 425982150], length 1448
+08:16:30.573077 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [.], seq 32776:40016, ack 836, win 252, options [nop,nop,TS val 2565272313 ecr 425982150], length 7240
+08:16:30.573156 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [.], seq 40016:45808, ack 836, win 252, options [nop,nop,TS val 2565272313 ecr 425982150], length 5792
+08:16:30.573498 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [P.], seq 45808:48704, ack 836, win 252, options [nop,nop,TS val 2565272313 ecr 425982151], length 2896
+08:16:30.573505 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [.], seq 48704:55944, ack 836, win 252, options [nop,nop,TS val 2565272313 ecr 425982151], length 7240
+08:16:30.573587 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [P.], seq 55944:60229, ack 836, win 252, options [nop,nop,TS val 2565272313 ecr 425982151], length 4285
+08:16:33.586621 IP dcatest04.fnal.gov.33120 > mu2egpvm03.fnal.gov.56728: Flags [F.], seq 60229, ack 837, win 252, options [nop,nop,TS val 2565275326 ecr 425985162], length 0

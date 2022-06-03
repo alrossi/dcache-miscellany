@@ -1,0 +1,47 @@
+1.  need for something like /etc/voms
+2.  need to make sure you can interoperate with voms 
+	(write with voms, read with token, e.g.)
+3.  group-based authorization (RUCIO)
+	reviewed Andrea's slides for RUCIO-FTS token exchange
+	problem of adding group-based
+	FTS does not yet target audiences, but does token exchange
+	user-based exchange is supported in RUCIO
+	so, to make it group-based:  (a) RUCIO honors group-based info in IAM
+				     (b) how to handle this in FTS
+
+	idea is eventually move from group- to scope-based?
+
+	objective:  derive audience from URL user specifies, not too complicated, 
+		    a substring of what user would provide
+
+	RUCIO uses token exchange with group info to get a proper token for FTS
+	does it also request a refresh? or leave that to FTS?
+	it does (for safety)
+
+	in addition to requesting scopes, it requests groups
+
+	most of this logic should be there in services; the frontend is just changing
+
+	SUGGESTED CHANGE TO IAM.  If you don't request scope during exchange, 
+	it should preserve the original scope.  Most of the time an exchange 
+	has to do with audience?  [this is for group-based].
+	With scope-based, you change scopes, with group-based, you expand the scope.  (offline_access)
+
+
+401 unauthorized for audience-based.
+403 should be for permission
+
+
+
+QUESTION FOR DCACHE TPC:  SHOULD THE TPC CLIENT REVALIDATE TOKEN? OR IS THAT THE SERVICE'S/DOOR'S BUSINESS?
+
+
+4.  local user mapping (EOS)
+    ORG->user account
+    We have established mapping mechanisms (i.e., LCMAPS, Argus) 
+	to map X509 certificates and VOMS attribute information to local UNIX accounts.
+
+    Do we need a similar mapping mechanism also for tokens? 
+	What are the requirements that have emerged up to now? Can we have a common approach?
+
+

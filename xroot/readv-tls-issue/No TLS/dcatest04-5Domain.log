@@ -1,0 +1,267 @@
+25 Oct 2021 14:45:45 (dcatest04-5) [door:xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain:AAXPMptdgMA xrootd-1094-fndcatemp2 PoolDeliverFile 000075E2B7C4F37C412380EA01157E28DB36] sending redirect /131.225.13.6 to Xrootd-door [>xrootd-1094-fndcatemp2@xrootd-1094-fndcatemp2Domain]
+25 Oct 2021 14:45:46 (dcatest04-5) [] doOnProtocolRequest, version 1280, expect 3, option 3.
+25 Oct 2021 14:45:46 (dcatest04-5) [] setLocalTlsActivation 1280, 3, 3.
+25 Oct 2021 14:45:46 (dcatest04-5) [] Client version 1280, options 3, expect 3.
+25 Oct 2021 14:45:46 (dcatest04-5) [] setRequiresTLSForData false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] setRequiresTLSForSession false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] setRequiresTLSForGPF false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] setRequiresTLSForGPFA false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] setRequiresTLSForLogin false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] setRequiresTLSForSession false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] setRequiresTLSForTPC false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] setLocalTlsActivation, server mode is OPTIONAL, flags are turned off.
+25 Oct 2021 14:45:46 (dcatest04-5) [] requiresTLSForLogin ? false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] requiresTLSForData ? false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] requiresTLSForGPF ? false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] requiresTLSForSession ? false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] requiresTLSForTPC ? false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] server uses TLS ? false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] Sending protocol message with server flags mode: OPTIONAL, flags: -2147483647 (manager false, meta-server false, proxy-server false, server true, supervisor false, data-server true, load-balancer true, tlsData false, tlsGPF false, tlsLogin false, tlsSession false, tlsTPC false, goToTLS false, anonGPF false), signing policy (secLvl 0)(overrides {})(force false).
+25 Oct 2021 14:45:46 (dcatest04-5) [] PROTOCOL RESPONSE TO CLIENT protocol-response[-2147483647][(secLvl 0)(overrides {})(force false)].
+25 Oct 2021 14:45:46 (dcatest04-5) [] requiresTLSForLogin ? false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] requiresTLSForData ? false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] requiresTLSForGPF ? false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] requiresTLSForSession ? false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] requiresTLSForTPC ? false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] server uses TLS ? false.
+25 Oct 2021 14:45:46 (dcatest04-5) [] no authentication or TLS enforced.
+25 Oct 2021 14:45:46 (dcatest04-5) [] server is not TPC destination; no TLS TPC check.
+25 Oct 2021 14:45:46 (dcatest04-5) [] doOnOpen, called cancel on reconnect timers for 554699a6-787a-465e-b40e-b1367cfd32f3
+25 Oct 2021 14:45:46 (dcatest04-5) [] READ 300 bytes, offset is now 300.
+25 Oct 2021 14:45:46 (dcatest04-5) [] READ 666 bytes, offset is now 144500685.
+25 Oct 2021 14:45:46 (dcatest04-5) [] READ 13265 bytes, offset is now 144283747.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 213447 bytes, offset is now 144497194.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 5680 bytes, offset is now 144265958.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 851 bytes, offset is now 144498588.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 388 bytes, offset is now 144266935.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 346 bytes, offset is now 144267281.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 382 bytes, offset is now 144499127.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 358 bytes, offset is now 144499628.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 391 bytes, offset is now 144500019.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 709 bytes, offset is now 144269953.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 120 bytes, offset is now 145200971.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 555 bytes, offset is now 144257116.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2885 bytes, offset is now 144200122.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 55165 bytes, offset is now 144255287.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2482 bytes, offset is now 145204131.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 224 bytes, offset is now 145201195.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 106560 bytes, offset is now 145200851.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 467 bytes, offset is now 144258124.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 276 bytes, offset is now 144257392.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 265 bytes, offset is now 144257657.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1612 bytes, offset is now 4930632.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 635 bytes, offset is now 144255922.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1706 bytes, offset is now 144269244.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 454 bytes, offset is now 145201649.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 143 bytes, offset is now 144499270.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 124 bytes, offset is now 144267521.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 157 bytes, offset is now 144498745.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 116 bytes, offset is now 144267397.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 165 bytes, offset is now 144266123.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 172 bytes, offset is now 144266547.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 118 bytes, offset is now 144256531.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 124 bytes, offset is now 144266247.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 128 bytes, offset is now 144266375.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 780 bytes, offset is now 4069726.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 688 bytes, offset is now 18258.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 160 bytes, offset is now 144256082.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 170 bytes, offset is now 79145795.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 796 bytes, offset is now 4617007.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 163 bytes, offset is now 144256413.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 171 bytes, offset is now 79002685.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2575 bytes, offset is now 26202948.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 3013 bytes, offset is now 26040832.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2576 bytes, offset is now 26006507.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 6430 bytes, offset is now 9325941.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 8487 bytes, offset is now 9334428.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 6935 bytes, offset is now 19434645.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 10156 bytes, offset is now 19444801.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1912 bytes, offset is now 19446713.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 166 bytes, offset is now 144270119.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 176 bytes, offset is now 78996941.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 3740 bytes, offset is now 26170939.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 330 bytes, offset is now 827065.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 933 bytes, offset is now 3278464.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 4005 bytes, offset is now 6054367.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 5267 bytes, offset is now 6059634.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 5161 bytes, offset is now 3283625.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 12909 bytes, offset is now 6072543.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 12913 bytes, offset is now 6085456.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13068 bytes, offset is now 6098524.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13998 bytes, offset is now 794101.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13265 bytes, offset is now 144283747.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 196 bytes, offset is now 145235690.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 206 bytes, offset is now 78820153.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2793 bytes, offset is now 26009300.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1022 bytes, offset is now 5390836.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 3716 bytes, offset is now 12310804.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1029 bytes, offset is now 5391865.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 3712 bytes, offset is now 12307088.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 12365 bytes, offset is now 17570.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 164 bytes, offset is now 144270457.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 172 bytes, offset is now 79015685.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 5010 bytes, offset is now 26188138.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 4240 bytes, offset is now 36898.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 4242 bytes, offset is now 41140.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 455 bytes, offset is now 197338.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 279 bytes, offset is now 1596.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 954 bytes, offset is now 42094.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 723 bytes, offset is now 199106.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 278 bytes, offset is now 1874.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 307 bytes, offset is now 42401.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13971 bytes, offset is now 56372.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14301 bytes, offset is now 70673.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13397 bytes, offset is now 84070.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 15751 bytes, offset is now 260303.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 15739 bytes, offset is now 276042.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 15740 bytes, offset is now 291782.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13802 bytes, offset is now 305584.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 5697 bytes, offset is now 311281.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 330 bytes, offset is now 311611.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1908 bytes, offset is now 313519.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 328 bytes, offset is now 313847.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 846 bytes, offset is now 314693.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 331 bytes, offset is now 315024.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 420 bytes, offset is now 824892.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14160 bytes, offset is now 98230.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14501 bytes, offset is now 112731.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13579 bytes, offset is now 126310.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2324 bytes, offset is now 363083.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2302 bytes, offset is now 365385.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2323 bytes, offset is now 367708.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1422 bytes, offset is now 369130.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 5858 bytes, offset is now 374988.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14999 bytes, offset is now 389987.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2081 bytes, offset is now 392068.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 321 bytes, offset is now 392389.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 753 bytes, offset is now 393142.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 331 bytes, offset is now 393473.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1343 bytes, offset is now 394816.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 3416 bytes, offset is now 398232.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 15599 bytes, offset is now 413831.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1047 bytes, offset is now 1317.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 177 bytes, offset is now 145316598.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 187 bytes, offset is now 78968499.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2564 bytes, offset is now 26132590.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 193 bytes, offset is now 39152223.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 192 bytes, offset is now 39152415.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 190 bytes, offset is now 39177581.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 201 bytes, offset is now 39140089.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 207 bytes, offset is now 39140296.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 203 bytes, offset is now 39140499.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 199 bytes, offset is now 39152614.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 203 bytes, offset is now 39140702.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 199 bytes, offset is now 39152813.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 203 bytes, offset is now 39140905.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 186 bytes, offset is now 39177767.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 188 bytes, offset is now 39177955.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 192 bytes, offset is now 39153005.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 201 bytes, offset is now 39141106.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 146 bytes, offset is now 145321141.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 156 bytes, offset is now 79261749.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 157 bytes, offset is now 79261906.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 9024 bytes, offset is now 79244486.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 163 bytes, offset is now 145328998.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 167 bytes, offset is now 79154690.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 175 bytes, offset is now 78998280.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 3471 bytes, offset is now 79265377.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14540 bytes, offset is now 79259026.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 161 bytes, offset is now 145344245.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 169 bytes, offset is now 79139940.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 4050 bytes, offset is now 79002330.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 174 bytes, offset is now 79154864.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 177 bytes, offset is now 79155041.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 177 bytes, offset is now 79140117.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 184 bytes, offset is now 79002514.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 5167 bytes, offset is now 79145284.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 178 bytes, offset is now 145353666.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 188 bytes, offset is now 78969662.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 3730 bytes, offset is now 26136320.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 633 bytes, offset is now 2085354.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2699 bytes, offset is now 6108947.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2122 bytes, offset is now 6111069.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 9757 bytes, offset is now 11098669.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1576 bytes, offset is now 11100245.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1571 bytes, offset is now 11101816.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13433 bytes, offset is now 1892840.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13430 bytes, offset is now 1906270.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13170 bytes, offset is now 1919440.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13183 bytes, offset is now 1932623.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 12396 bytes, offset is now 6123465.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 11396 bytes, offset is now 6134861.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 11395 bytes, offset is now 11113211.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1556 bytes, offset is now 11114767.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 159 bytes, offset is now 145412388.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 169 bytes, offset is now 79155210.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 4950 bytes, offset is now 26209453.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 989 bytes, offset is now 416841.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14789 bytes, offset is now 431630.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 10714 bytes, offset is now 138518.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 10818 bytes, offset is now 149336.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13098 bytes, offset is now 466432.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13243 bytes, offset is now 479675.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 12008 bytes, offset is now 491683.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13195 bytes, offset is now 504878.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13272 bytes, offset is now 518150.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 12130 bytes, offset is now 530280.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 15306 bytes, offset is now 545586.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 15313 bytes, offset is now 560899.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 15315 bytes, offset is now 576214.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 9329 bytes, offset is now 585543.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 15106 bytes, offset is now 600649.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 246 bytes, offset is now 3380.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 4261 bytes, offset is now 153597.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 161 bytes, offset is now 145566495.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 169 bytes, offset is now 79145453.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2583 bytes, offset is now 26190721.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1364 bytes, offset is now 10015921.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1936 bytes, offset is now 19451137.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 154 bytes, offset is now 145569570.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 164 bytes, offset is now 79235462.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2547 bytes, offset is now 26212000.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2572 bytes, offset is now 26193293.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2724 bytes, offset is now 26196017.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 6009 bytes, offset is now 26218009.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 164 bytes, offset is now 145576298.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 172 bytes, offset is now 79145625.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 4356 bytes, offset is now 26200373.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 12435 bytes, offset is now 6046788.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1992 bytes, offset is now 6048780.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13857 bytes, offset is now 2554446.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13796 bytes, offset is now 2568242.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14576 bytes, offset is now 2582818.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 10486 bytes, offset is now 631106.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14172 bytes, offset is now 2596990.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14439 bytes, offset is now 2611429.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13928 bytes, offset is now 2625357.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14194 bytes, offset is now 2639551.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14431 bytes, offset is now 2653982.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13924 bytes, offset is now 2667906.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14837 bytes, offset is now 2682743.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 14502 bytes, offset is now 2697245.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 13730 bytes, offset is now 2710975.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 251 bytes, offset is now 5205.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1178 bytes, offset is now 632635.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 177 bytes, offset is now 145756847.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 187 bytes, offset is now 78971784.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 2967 bytes, offset is now 26167199.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 353 bytes, offset is now 5415875.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 611 bytes, offset is now 15051692.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 390 bytes, offset is now 15052082.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 7273 bytes, offset is now 21093420.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 470 bytes, offset is now 21093890.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 466 bytes, offset is now 21094356.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 12736 bytes, offset is now 4943368.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 12744 bytes, offset is now 4956112.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 12929 bytes, offset is now 4969041.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 12923 bytes, offset is now 4981964.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 7012 bytes, offset is now 15059094.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 9582 bytes, offset is now 15068676.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 7300 bytes, offset is now 21101656.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 680 bytes, offset is now 21102336.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1260 bytes, offset is now 3134.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 298 bytes, offset is now 18556.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 304 bytes, offset is now 18860.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 1574 bytes, offset is now 4954.
+25 Oct 2021 14:45:48 (dcatest04-5) [] READ 260 bytes, offset is now 20417.
+25 Oct 2021 14:45:48 (dcatest04-5) [] doOnClose, called cancel on reconnect timers for 554699a6-787a-465e-b40e-b1367cfd32f3

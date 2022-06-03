@@ -1,0 +1,86 @@
+W1: OPEN admin shell
+W2: OPEN shell on fndcatemp1
+W3: OPEN browser dCacheView
+W4: OPEN this script, release path list, persistent path list, commands (sed demo_XX)
+
+======================================================
+
+SHOW well-known in BROWSER
+
+https://fndcatemp2.fnal.gov:2880/.well-known/wlcg-tape-rest-api
+
+======================================================
+
+(1) STAGE A SMALL LIST OF 50 FILES (so they complete) THEN RELEASE and CLEAR.
+
+
+- ARCHIVE INFO with the release paths, should show TAPE
+- SUBMIT
+- GET - to see whether they have completed
+- ARCHIVE INFO to check
+
+- ADMIN interface to check for pinning:  
+(no way to get info about the actual pinned state through REST)
+
+request info (gives equiv of GET)
+target ls -l -rid=
+
+pick a path
+
+\sn pnfsidof
+\s Pin Manager ls 
+
+- RELEASE
+
+\s Pin Manager ls 
+
+- DELETE
+- GET should return error
+
+======================================================
+
+(2) STAGE A LIST OF 9900 FILES, THEN CANCEL 1000.  FINALLY, CANCEL THE WHOLE, AND CLEAR.
+
+- SUBMIT
+- GET
+- CANCEL with paths
+- GET
+- CANCEL
+- GET
+- DELETE
+- GET should return error
+
+======================================================
+
+(3) QOS TRANSITION.  A DIRECTORY OF RESILIENT (TWO COPIES) FILES WILL BE MOVED TO TAPE:
+	FILES WILL BE MIGRATED FOR FLUSH, AND THEIR COPIES CACHED.
+
+- ARCHIVE INFO to show all DISK [prepare paths]
+
+\sn pnfsidof <path>
+\sn storageinfoof should show REPLICA ONLINE
+\sn cacheinfoof 
+\s pools rep ls shoudl show sticky
+
+- SUBMIT
+- GET (you will see status completed fairly quickly, because flush returns)
+- ARCHIVE INFO probably will still show DISK at this point
+
+ADMIN interface:  
+
+\sn storageinfoof should show NEARLINE CUSTODIAL
+\sn cacheinfoof
+\s pools rep ls should show cached + precious
+
+A look at the qos components:
+
+\s qos-verifier verify history
+\s qos-adjuster info
+\s qos-adjuster task details
+
+======================================================
+
+CLEAR ALL REQUESTS!
+
+(4) IN THE ADMIN INTERFACE, DO PRESTORE vs NO PRESTORE USING LOG_TARGET
+
